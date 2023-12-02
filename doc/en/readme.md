@@ -1,4 +1,4 @@
-[[ Русский ]](https://github.com/Maks1mio/YMusic-DRPC) - [[ > English < ]](https://github.com/Maks1mio/YMusic-DRPC/blob/main/doc/en/readme.md)
+[[ > English < ]](https://github.com/Maks1mio/YMusic-DRPC/blob/main/doc/en/readme.md) - [[ Русский ]](https://github.com/Maks1mio/YMusic-DRPC)
 
 **YandexMusic Discord Rich Presence Integration - Documentation**
 
@@ -11,7 +11,10 @@
    - Install YandexMusic in the default directory: `C:\Users\<YourUsername>\AppData\Local\Programs\YandexMusic`.
 
 2. **Download Discord Rich Presence Script:**
-   - Download the Discord Rich Presence script from [GitHub](<GitHub_Repository_URL>).
+   - Download the project files or clone the project using the console:
+    ```bash
+    git clone https://github.com/Maks1mio/YMusic-DRPC.git
+    ```
    - Extract the contents to the YandexMusic directory: `C:\Users\<YourUsername>\AppData\Local\Programs\YandexMusic`.
 
 3. **Install Dependencies:**
@@ -25,7 +28,7 @@
 
 - The script automatically detects whether to use `py` or `python` based on your system. If one fails, it tries the other.
 
-- The script launches a server on port 19582 and updates your Discord Rich Presence with YandexMusic information.
+- The script launches a server on port 19582 and updates your Discord Rich Presence with information from YandexMusic.
 
 ### Troubleshooting:
 
