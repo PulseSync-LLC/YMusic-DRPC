@@ -60,7 +60,7 @@
 
 - Buttons in Discord Rich Presence allow you to open the current track in the browser.
 
-- Make sure to follow any updates or changes to the script on the [GitHub repository](<GitHub_Repository_URL>).
+- Make sure to follow any updates or changes to the script on the [GitHub repository](https://github.com/Maks1mio/YMusic-DRPC).
 
 **Disclaimer:**
 This integration was developed solely for educational purposes. Compatibility with future versions of YandexMusic is not guaranteed. **Usage of this script for violating YandexMusic's rules may result in a ban on your account.**
