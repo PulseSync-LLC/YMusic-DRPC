@@ -11,7 +11,10 @@
    - Установите YandexMusic в стандартный каталог: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.
 
 2. **Скачайте файлы скрипта**
-   - Скачайте файлы проекты с [GitHub](<GitHub_Repository_URL>).
+   - Скачайте файлы проекты или склонируй проект с помошью консоли:
+    ```bash
+    git clone https://github.com/Maks1mio/YMusic-DRPC.git
+    ```
    - Распакуйте содержимое в каталог YandexMusic: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.
 
 3. **Установите зависимости:**
