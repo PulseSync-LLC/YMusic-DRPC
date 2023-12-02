@@ -1,3 +1,5 @@
+[[ Русский ]](https://github.com/Maks1mio/YMusic-DRPC) - [[ > English < ]](https://github.com/Maks1mio/YMusic-DRPC/blob/main/doc/en/readme.md)
+
 **YandexMusic Discord Rich Presence Integration - Documentation**
 
 *Note: The following instructions assume that YandexMusic BETA 5.0.3 is installed in the default directory ("AppData\Local\Programs\YandexMusic"). Ensure YandexMusic is closed before proceeding.*
