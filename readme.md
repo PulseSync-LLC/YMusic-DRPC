@@ -1,3 +1,5 @@
+[[ > Русский < ]](https://github.com/Maks1mio/YMusic-DRPC) - [[ English ]](https://github.com/Maks1mio/YMusic-DRPC/blob/main/doc/en/readme.md)
+
 **Интеграция Discord Rich Presence для YandexMusic - Документация**
 
 *Примечание: Следующие инструкции предполагают, что Яндекс Музыка BETA 5.0.3 установлен в стандартном каталоге ("AppData\Local\Programs\YandexMusic"). Убедитесь, что Яндекс Музыка закрыт перед выполнением следующих шагов.*
