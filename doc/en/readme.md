@@ -63,4 +63,4 @@
 - Make sure to follow any updates or changes to the script on the [GitHub repository](https://github.com/Maks1mio/YMusic-DRPC).
 
 **Disclaimer:**
-This integration was developed solely for educational purposes. Compatibility with future versions of YandexMusic is not guaranteed. **Usage of this script for violating YandexMusic's rules may result in a ban on your account.**
+This integration was developed for educational purposes only. Compatibility with future versions of Yandex Music is not guaranteed. **YandexMusic may ban your account for using this script to violate the rules.**
