@@ -11,11 +11,31 @@ from pypresence import Presence
 import requests
 import psutil
 
-data = {"playerBarTitle": "NaN", "artist": "NaN", "timecodes": ["00:00", "00:00"], "lastRequestUrl": [
-    {"url": "https://ya.ru", "idTrack": "https://ya.ru"}], "requestImgTrack": ['null', "ym"]}
+logger = logging.getLogger()
+
+app_path = r'.\\.\\Яндекс Музыка.exe'
+logger.info(app_path)
+
+app = application.Application(backend="uia").start(
+    app_path + ' --remote-debugging-port=9222 --remote-allow-origins=*')
+
+
+def get_websocket_url():
+    url = 'http://127.0.0.1:9222/json'
+    response = requests.get(url)
+    json_data = response.json()
+    for entry in json_data:
+        if 'devtoolsFrontendUrl' in entry and 'webSocketDebuggerUrl' in entry:
+            return entry['webSocketDebuggerUrl']
+
+
+websocket_url = get_websocket_url()
+
+dataStart = {"playerBarTitle": "Title", "artist": "Artist", "timecodes": [
+    "--:--", "--:--"], "LastTrackId": [{"idTrack": "0"}], "requestImgTrack": ["null", "ym"]}
 
 with open('YandexDiscordRPC/data.json', 'w', encoding='utf-8') as json_file:
-    json.dump(data, json_file, ensure_ascii=False)
+    json.dump(dataStart, json_file, ensure_ascii=False)
 
 logging.basicConfig(filename='YandexDiscordRPC\yandex_music.log', level=logging.INFO,
                     format='%(asctime)s [%(levelname)s] %(message)s')
@@ -30,18 +50,11 @@ formatter = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s')
 console_handler.setFormatter(formatter)
 file_handler.setFormatter(formatter)
 
-logger = logging.getLogger()
-
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
-app_path = r'.\\.\\Яндекс Музыка.exe'
-logger.info(app_path)
-
-app = application.Application(backend="uia").start(
-    app_path + ' --remote-debugging-port=9222 --remote-allow-origins=*')
-
 logger.info(app)
+
 
 def is_yandex_music_running():
     """Check if the Yandex Music process is running."""
@@ -55,21 +68,8 @@ def is_yandex_music_running():
 try:
     app.wait_cpu_usage_lower(threshold=1, timeout=60)
 
-    time.sleep(2)
-
     main_window = app.window(title_re=".*Яндекс.Музыка.*")
     logger.info(main_window)
-
-    def get_websocket_url():
-        url = 'http://127.0.0.1:9222/json'
-        response = requests.get(url)
-        json_data = response.json()
-
-        for entry in json_data:
-            if 'devtoolsFrontendUrl' in entry and 'webSocketDebuggerUrl' in entry:
-                return entry['webSocketDebuggerUrl']
-
-    websocket_url = get_websocket_url()
 
     if websocket_url:
         with open('YandexDiscordRPC\discordrpc.js', 'r') as file:
@@ -116,28 +116,37 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         self.send_response(200)
-        self.send_header('Content-type', 'text/html')
+        self.send_header('Content-type', 'application/json')
         self.send_header('Access-Control-Allow-Origin',
                          'music-application://desktop')
         self.end_headers()
 
         content_length = int(self.headers['Content-Length'])
-
         post_data = self.rfile.read(content_length)
-        data = json.loads(post_data)
+
+        try:
+            data = json.loads(post_data)
+        except json.decoder.JSONDecodeError as e:
+            logger.error("Error decoding JSON data: %s", e)
+            return
+
         with open('YandexDiscordRPC/data.json', 'w', encoding='utf-8') as json_file:
             json.dump(data, json_file, ensure_ascii=False)
 
 
 server_address = ('', 19582)
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+data_file_path = os.path.join(script_dir, 'data.json')
+
+httpd = HTTPServer(server_address, RequestHandler)
+logger.info('start httpd')
+
 client_id = '984031241357647892'
 RPC = Presence(client_id)
 logger.info('RPC connect')
 RPC.connect()
 logger.info('RPC connect done')
-
-script_dir = os.path.dirname(os.path.abspath(__file__))
-data_file_path = os.path.join(script_dir, 'data.json')
 
 
 def run_discord_rpc():
@@ -154,25 +163,25 @@ def run_discord_rpc():
                 with open(data_file_path, 'r', encoding='utf-8') as json_file:
                     try:
                         data = json.load(json_file)
+                        timecodes = data['timecodes']
+                        LastTrackId = data['LastTrackId']
                     except json.decoder.JSONDecodeError as e:
                         logger.error("Error decoding JSON data: %s", e)
                         time.sleep(1)
                         continue
 
-                    timecodes = data['timecodes']
-                    lastRequestUrl = data['lastRequestUrl']
                     requestImgTrack = data['requestImgTrack']
                     time_range = f"{timecodes[0]} - {timecodes[1]}" if len(
                         timecodes) == 2 else ""
 
                     time_range_str = str(time_range)
 
-                    id_track = lastRequestUrl[0]['idTrack']
+                    id_track = LastTrackId[0]['idTrack']
 
-                    buttons = [
-                        {"label": "✌️ Open In Browser",
-                            "url": f"https://music.yandex.ru/track/{id_track}"},
-                    ]
+                    buttons = [{
+                        "label": "✌️ Open in YandexMusic",
+                        "url": f"https://music.yandex.ru/track/{id_track}"
+                    }]
 
                     RPC.update(
                         state=time_range_str,
@@ -185,15 +194,13 @@ def run_discord_rpc():
                     )
             time.sleep(1)
     except Exception as e:
-        logger.error("An error occurred: %s", e)
+        print(e)
+        logger.exception("An error occurred: %s", e)
 
 
 discord_rpc_thread = threading.Thread(target=run_discord_rpc)
 discord_rpc_thread.start()
 logger.info('start discord_rpc_thread')
-
-httpd = HTTPServer(server_address, RequestHandler)
-logger.info('start httpd')
 
 try:
     print('Server is running on port 19582...')

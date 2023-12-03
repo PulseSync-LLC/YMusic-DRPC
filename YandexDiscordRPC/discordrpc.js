@@ -1,14 +1,15 @@
 function extractTrackId(url) {
-    const match = url.match(/track-id=(\d+)/);
+    const match = url.match(/tracks\/(\d+)/);
     return match ? match[1] : null;
 }
+
 
 function logPlayerBarInfo() {
     let titleText = '';
     let artistText = '';
     let ImgTrack = [];
     let timecodesArray = [];
-    let RequestUrl = [];
+    let LastTrack = [];
 
     const playerBarTitleElement = document.querySelector('[class*="PlayerBarDesktop_titleLink"]');
     const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_artistLink"]');
@@ -40,28 +41,24 @@ function logPlayerBarInfo() {
     }
 
     const allRequests = performance.getEntriesByType('resource');
-
-    const matchingRequests = allRequests.filter(request => request.name.includes('?track-id='));
+    const matchingRequests = allRequests.filter(request => request.name.includes('https://api.music.yandex.net/tracks/'));
 
     if (matchingRequests.length > 0) {
         const lastMatchingRequest = matchingRequests.pop();
-        RequestUrl.push({
-            url: lastMatchingRequest.name,
-            idTrack: extractTrackId(lastMatchingRequest.name)
+        const idTrack = extractTrackId(lastMatchingRequest.name);
+        LastTrack.push({
+            idTrack: idTrack
         });
     } else {
-        RequestUrl.push({
-            url: "https://ya.ru",
+        LastTrack.push({
             idTrack: "https://ya.ru"
         });
     }
-
-
     return {
         playerBarTitle: titleText,
         artist: artistText,
         timecodes: timecodesArray,
-        lastRequestUrl: RequestUrl,
+        LastTrackId: LastTrack,
         requestImgTrack: ImgTrack
     };
 }
