@@ -18,7 +18,8 @@ logger = logging.getLogger()
 logging.basicConfig(
     filename='YandexDiscordRPC/yandex_music.log',
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s'
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    encoding='utf-8'
 )
 
 console_handler = logging.StreamHandler(sys.stdout)
@@ -35,7 +36,7 @@ logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
 app_path = r'.\\Яндекс Музыка.exe'
-logger.info(app_path)
+logger.info(app_path.encode(sys.stdout.encoding, 'replace').decode('utf-8'))
 
 app = application.Application(backend="uia").start(
     app_path + ' --remote-debugging-port=9222 --remote-allow-origins=*'
@@ -60,8 +61,6 @@ data_start = {
 
 with open('YandexDiscordRPC/data.json', 'w', encoding='utf-8') as json_file:
     json.dump(data_start, json_file, ensure_ascii=False)
-
-logger.info(app)
 
 def is_yandex_music_running():
     for process in psutil.process_iter(['pid', 'name']):
