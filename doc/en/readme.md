@@ -26,7 +26,6 @@
    - Extract the contents to the YandexMusic directory: `C:\Users\<YourUsername>\AppData\Local\Programs\YandexMusic`.
 
 3. **Install Dependencies:**
-   - Open a Command Prompt in the YandexMusic directory.
    - Double-click on `install.cmd` to install all modules.
 
 4. **Run the Script:**
