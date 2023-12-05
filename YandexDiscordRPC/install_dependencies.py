@@ -1,6 +1,6 @@
 import subprocess
 
-dependencies = ["websockets", "pywinauto", "pypresence", "requests", "psutil", "GitPython"]
+dependencies = ["packaging", "websockets", "pywinauto", "pypresence", "requests", "psutil", "GitPython"]
 
 for package in dependencies:
     try:
