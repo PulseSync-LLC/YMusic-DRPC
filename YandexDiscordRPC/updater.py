@@ -27,13 +27,15 @@ def get_current_version():
     if os.path.exists(version_file):
         with open(version_file, 'r') as file:
             data = json.load(file)
+            print({'current version: ': data})
             return data.get('version', '')
     return ""
 
 def update_version_file(version):
-    data = {'version': version}
+    data = {'version: ': version}
     with open(version_file, 'w') as file:
         json.dump(data, file)
+        print(data)
 
 def copy_files():
     source_dir = os.path.join(local_path, "YandexDiscordRPC")
