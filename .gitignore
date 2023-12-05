@@ -75,3 +75,10 @@ ffmpeg.dll
 chrome_100_percent.pak
 chrome_200_percent.pak
 d3dcompiler_47.dll
+main_start.spec
+main.spec
+main_start.py
+note.todo
+icon.ico
+run_script.py
+start_dev.cmd
