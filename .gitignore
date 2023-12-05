@@ -80,5 +80,5 @@ main.spec
 main_start.py
 note.todo
 icon.ico
-run_script.py
-start_dev.cmd
+start_dev.py
+build_script.py

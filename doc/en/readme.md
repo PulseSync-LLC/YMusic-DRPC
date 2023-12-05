@@ -41,7 +41,7 @@
    - Double click on `install.cmd` to install all modules.
 
 4. **Run the Script:**
-   - Double click on `start.cmd` to run the Discord Rich Presence script.
+   - Double click on `YDRPC.exe` to run the Discord Rich Presence script.
 
 ### Usage:
 

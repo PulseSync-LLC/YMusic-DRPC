@@ -19,7 +19,6 @@ files_to_copy = [
 ]
 
 external_files_to_copy = [
-    {"name": "start.cmd", "destination": os.path.join(os.getcwd(), "start.cmd")},
     {"name": "install.cmd", "destination": os.path.join(os.getcwd(), "install.cmd")},
 ]
 
