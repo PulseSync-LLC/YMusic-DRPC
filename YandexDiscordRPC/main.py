@@ -35,7 +35,11 @@ file_handler.setFormatter(formatter)
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
 
-app_path = r'.\\Яндекс Музыка.exe'
+script_dir = os.path.dirname(os.path.abspath(__file__))
+app_path = os.path.join(script_dir, '..', '..', 'YandexMusic', 'Яндекс Музыка.exe')
+
+# Use raw string for Windows path
+app_path = r'{}'.format(app_path)
 logger.info(app_path.encode(sys.stdout.encoding, 'replace').decode('utf-8'))
 
 app = application.Application(backend="uia").start(

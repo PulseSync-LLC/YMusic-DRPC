@@ -22,7 +22,20 @@
     ```bash
     git clone https://github.com/Maks1mio/YMusic-DRPC.git
     ```
-   - Распакуйте содержимое в каталог YandexMusic: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.
+   - Склонируйте в каталог Programs: `C:\Users\<ВашеИмя>\AppData\Local\Programs`.
+
+    ### Структура каталогов:
+    ```markdown
+    | Local\Programs        | Files              |
+    |-----------------------|--------------------|
+    | YMusic-DRPC/          |                    |
+    | |-- YandexDiscordRPC/ |                    |
+    | |   |-- main.py       |                    |
+    | |   |-- другие файлы..|                    |
+    | YandexMusic/          |                    |
+    | |-- Яндекс Музыка.exe |                    |
+    | |-- другие файлы...   |                    |
+    ```  
 
 3. **Установите зависимости:**
    - Дважды щелкните `install.cmd`, чтобы установить все модули.
