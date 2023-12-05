@@ -1,61 +1,101 @@
 import os
-import shutil
-import configparser
-from git import Repo
+import re
+import requests
+from packaging import version
+from configparser import ConfigParser
 
-repo_url = "https://github.com/Maks1mio/YMusic-DRPC.git"
-local_path = "YMusic-DRPC"
-version_file = os.path.join(local_path, "YandexDiscordRPC", "version.ini")
+repo_url = "https://raw.githubusercontent.com/Maks1mio/YMusic-DRPC/main/"
+local_path = "YandexDiscordRPC"
+version_file = os.path.join(local_path, "version.ini")
+
+files_to_copy = [
+    "data.json",
+    "discordrpc.js",
+    "install_dependencies.py",
+    "main.py",
+    "updater.py",
+    "version.ini",
+    "yandex_music.log",
+]
+
+external_files_to_copy = [
+    {"name": "start.cmd", "destination": os.path.join(os.getcwd(), "start.cmd")},
+    {"name": "install.cmd", "destination": os.path.join(os.getcwd(), "install.cmd")},
+]
 
 def update_repository():
-    if os.path.exists(local_path):
-        repo = Repo(local_path)
-        origin = repo.remote(name='origin')
+    print("Updating repository...")
 
-        # Проверьте, есть ли изменения после fetch
-        print("Checking for changes after fetch...")
-        origin.fetch()
+    response = requests.get(f"{repo_url}YandexDiscordRPC/version.ini")
+    
+    if response.status_code == 200:
+        os.makedirs(os.path.dirname(version_file), exist_ok=True)
 
-        latest_tag = repo.tags[-1].name
-        current_version = get_current_version()
+        current_version = version.parse(get_current_version())
 
-        if current_version != latest_tag:
-            update_version_file(latest_tag)
-            print("Updating version.ini only...")
+        response_digits_match = re.search(r'\d+(\.\d+)*', response.text)
+        current_digits_match = re.search(r'\d+(\.\d+)*', str(current_version.public))
+
+        print(f"Last Version: {response_digits_match.group(0)}")
+        print(f"Current Install: {current_digits_match.group(0)}")
+
+        if response_digits_match.group(0) != current_digits_match.group(0):
+            print("Local version does not match latest version. Updating...")
+            print("Copying files...")
+            copy_files(files_to_copy)
+            copy_external_files(external_files_to_copy)
+            with open(version_file, 'w', encoding='utf-8') as local_version_file:
+                local_version_file.write(response.text)
+            print(f"Update complete {response_digits_match.group(0)}")
         else:
             print("No changes in version, skipping update.")
+    else:
+        print(f"Failed to retrieve latest version. Status code: {response.status_code}")
 
 def get_current_version():
-    config = configparser.ConfigParser()
+    config = read_version_file()
+    return config.get('Version', 'version', fallback='0.0.0')
+
+def read_version_file():
+    config = ConfigParser()
     if os.path.exists(version_file):
         config.read(version_file)
-        current_version = config.get('Version', 'version', fallback='0.0.0')
-        print({'current version: ': current_version})
-        return current_version
-    return "0.0.0"
+    return config
 
-def update_version_file(version):
-    config = configparser.ConfigParser()
-    config['Version'] = {'version': version}
-    with open(version_file, 'w') as config_file:
-        config.write(config_file)
-        print(f"Updated version to: {version}")
+def copy_files(files_to_copy, destination=local_path):
+    for file_path in files_to_copy:
+        source_file = f"{repo_url}{local_path}/{file_path}"
+        target_file = os.path.join(destination, file_path)
 
-def copy_files():
-    source_dir = os.path.join(local_path, "YandexDiscordRPC")
-    target_dir = "YandexDiscordRPC"
+        os.makedirs(os.path.dirname(target_file), exist_ok=True)
 
-    if os.path.exists(source_dir):
-        for filename in os.listdir(source_dir):
-            source_file = os.path.join(source_dir, filename)
-            target_file = os.path.join(target_dir, filename)
+        print(f"Copying {source_file} to {target_file}")
+        response = requests.get(source_file)
 
-            if os.path.isfile(source_file):
-                shutil.copy2(source_file, target_file)
+        if response.status_code == 200:
+            with open(target_file, 'w', encoding='utf-8') as local_file:
+                local_file.write(response.text)
+        else:
+            print(f"Failed to retrieve {source_file}. Status code: {response.status_code}")
+
+def copy_external_files(files_to_copy):
+    for file_info in files_to_copy:
+        source_file = f"{repo_url}{file_info['name']}"
+        target_file = file_info['destination']
+
+        os.makedirs(os.path.dirname(target_file), exist_ok=True)
+
+        print(f"Copying {source_file} to {target_file}")
+        response = requests.get(source_file)
+
+        if response.status_code == 200:
+            with open(target_file, 'w', encoding='utf-8') as local_file:
+                local_file.write(response.text)
+        else:
+            print(f"Failed to retrieve {source_file}. Status code: {response.status_code}")
 
 def main():
     update_repository()
-    copy_files()
 
 if __name__ == "__main__":
     main()
