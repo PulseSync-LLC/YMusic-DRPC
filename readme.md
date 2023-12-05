@@ -7,10 +7,9 @@
 **Скриншоты**
 
 ![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/c8af3316-db14-4fdd-85dc-23fc6e8d9406)
-<div align="center">
-  <img src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/8cb9421e-feac-454c-abad-6ce6e0b769fe.png" alt="Screenshot 2">
-  <img src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/20965613-eb89-41cf-99dc-6430b93d38e8.png" alt="Screenshot 3">
-</div>
+
+![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/8cb9421e-feac-454c-abad-6ce6e0b769fe)
+![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/20965613-eb89-41cf-99dc-6430b93d38e8)
 
 ### Этапы установки:
 
