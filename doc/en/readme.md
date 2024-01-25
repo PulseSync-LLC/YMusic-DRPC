@@ -45,7 +45,7 @@
 
 ### Usage:
 
-- The script automatically determines whether to use `py` or `python` depending on your system. If one doesn't work, it tries the other.
+- The script automatically determines whether to use `py` ~~or `python`~~ depending on your system. If one doesn't work, it tries the other.
 
 - The script starts a server on port 19582 and updates information about Yandex Music in your Discord Rich Presence.
 
