@@ -60,7 +60,8 @@ data_start = {
     "playerBarTitle": "Title",
     "artist": "Artist",
     "timecodes": ["--:--", "--:--"],
-    "requestImgTrack": ["null", "ym"]
+    "requestImgTrack": ["null", "ym"],
+    "linkTitle": "id",
 }
 
 with open('YandexDiscordRPC/data.json', 'w', encoding='utf-8') as json_file:
@@ -180,6 +181,7 @@ def run_discord_rpc():
 
                     requestImgTrack = data['requestImgTrack']
                     playerBarTitle = data['playerBarTitle']
+                    linkTitleID = data['linkTitle']
                     artist = data['artist']
                     time_range = f"{timecodes[0]} - {timecodes[1]}" if len(
                         timecodes) == 2 else ""
@@ -188,7 +190,7 @@ def run_discord_rpc():
 
                     buttons = [{
                         "label": "✌️ Open in YandexMusic",
-                        "url": f"https://music.yandex.ru/search?text={quote(playerBarTitle)}%20-%20{quote(artist)}"
+                        "url": f"https://music.yandex.ru/album/{quote(linkTitleID)}"
                     }]
 
                     RPC.update(
