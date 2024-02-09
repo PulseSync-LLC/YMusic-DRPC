@@ -82,3 +82,4 @@ note.todo
 icon.ico
 start_dev.py
 build_script.py
+*/lib/__pycache__
