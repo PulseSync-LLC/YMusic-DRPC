@@ -4,6 +4,7 @@ import os
 import sys
 import threading
 import time
+from urllib.request import HTTPDefaultErrorHandler
 import webbrowser
 from urllib.parse import quote
 from http.server import HTTPServer
@@ -46,8 +47,8 @@ def run_discord_rpc(RPC):
             if not is_yandex_music_running():
                 logger.info("Yandex Music is not running. Exiting the script.")
                 print('Shutting down the server...')
-                httpd.server_close()
-                discord_rpc_thread.join(timeout=5)
+                HTTPDefaultErrorHandler.server_close()
+                RPC.join(timeout=5)
                 break
 
             if os.path.exists('YandexDiscordRPC/data.json') and os.path.getsize('YandexDiscordRPC/data.json') > 0:
