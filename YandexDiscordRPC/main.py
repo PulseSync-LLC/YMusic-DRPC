@@ -1,12 +1,8 @@
 import asyncio
 import json
 import os
-import sys
 import threading
 import time
-from urllib.request import HTTPDefaultErrorHandler
-import webbrowser
-from urllib.parse import quote
 from http.server import HTTPServer
 
 from lib.discord_rpc_manager import start_discord_rpc, update_discord_rpc
@@ -31,8 +27,8 @@ def main():
         client_id = '984031241357647892'
         RPC = start_discord_rpc(client_id)
 
-        discord_rpc_thread = threading.Thread(target=run_discord_rpc, args=(RPC,))
-        discord_rpc_thread.start()
+        rpc_thread = threading.Thread(target=run_discord_rpc, args=(httpd, RPC))
+        rpc_thread.start()
 
         print('Server is running on port 19582...')
         logger.info('Server is running on port 19582...')
@@ -41,14 +37,15 @@ def main():
     except Exception as e:
         logger.error("An error occurred: %s", e)
 
-def run_discord_rpc(RPC):
+def run_discord_rpc(httpd, RPC):
+
     try:
         while True:
             if not is_yandex_music_running():
                 logger.info("Yandex Music is not running. Exiting the script.")
                 print('Shutting down the server...')
-                HTTPDefaultErrorHandler.server_close()
-                RPC.join(timeout=5)
+                httpd.server_close()
+                RPC.join(timeout=0.1)
                 break
 
             if os.path.exists('YandexDiscordRPC/data.json') and os.path.getsize('YandexDiscordRPC/data.json') > 0:
@@ -58,9 +55,9 @@ def run_discord_rpc(RPC):
                         update_discord_rpc(RPC, data)
                     except json.decoder.JSONDecodeError as e:
                         logger.error("Error decoding JSON data: %s", e)
-                        time.sleep(1)
+                        time.sleep(0.1)
                         continue
-            time.sleep(1)
+            time.sleep(0.1)  # Уменьшаем задержку между проверками до 0.1 секунды
     except Exception as e:
         logger.exception("An error occurred: %s", e)
 
