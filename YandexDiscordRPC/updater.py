@@ -4,7 +4,7 @@ import requests
 from packaging import version
 from configparser import ConfigParser
 
-repo_url = "https://raw.githubusercontent.com/Maks1mio/YMusic-DRPC/main/"
+repo_url = "https://raw.githubusercontent.com/Maks1mio/YMusic-DRPC/beta/"
 local_path = "YandexDiscordRPC"
 version_file = os.path.join(local_path, "version.ini")
 
