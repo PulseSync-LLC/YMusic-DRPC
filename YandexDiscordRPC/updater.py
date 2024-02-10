@@ -9,6 +9,12 @@ local_path = "YandexDiscordRPC"
 version_file = os.path.join(local_path, "version.ini")
 
 files_to_copy = [
+    "lib/application_manager.py"
+    "lib/discord_rpc_manager.py"
+    "lib/logging_config.py"
+    "lib/request_handler.py"
+    "lib/websocket_manager.py"
+    
     "data.json",
     "discordrpc.js",
     "install_dependencies.py",

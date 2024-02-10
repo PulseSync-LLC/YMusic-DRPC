@@ -57,7 +57,7 @@ def run_discord_rpc(httpd, RPC):
                         logger.error("Error decoding JSON data: %s", e)
                         time.sleep(0.1)
                         continue
-            time.sleep(0.1)  # Уменьшаем задержку между проверками до 0.1 секунды
+            time.sleep(0.1)
     except Exception as e:
         logger.exception("An error occurred: %s", e)
 
