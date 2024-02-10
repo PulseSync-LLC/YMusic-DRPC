@@ -3,26 +3,27 @@ import re
 import requests
 from packaging import version
 from configparser import ConfigParser
+import tkinter as tk
+from tkinter import ttk
+from threading import Thread
+from PIL import Image, ImageTk
 
 repo_url = "https://raw.githubusercontent.com/Maks1mio/YMusic-DRPC/beta/"
 local_path = "YandexDiscordRPC"
 version_file = os.path.join(local_path, "version.ini")
 
 files_to_copy = [
-    "assets/font/Sansation-Bold.ttf"
-    "assets/font/Sansation-Regular.ttf"
-    
-    "lib/application_manager.py"
-    "lib/discord_rpc_manager.py"
-    "lib/logging_config.py"
-    "lib/request_handler.py"
-    "lib/websocket_manager.py"
-    
+    "lib/application_manager.py",
+    "lib/discord_rpc_manager.py",
+    "lib/logging_config.py",
+    "lib/request_handler.py",
+    "lib/websocket_manager.py",
     "data.json",
     "discordrpc.js",
     "install_dependencies.py",
     "main.py",
-    "updater.py",
+    "obs.html",  # Добавлен файл "obs.html" в список файлов для копирования
+    # "updater.py",
     "version.ini",
     "yandex_music.log",
 ]
@@ -31,34 +32,77 @@ external_files_to_copy = [
     {"name": "install.cmd", "destination": os.path.join(os.getcwd(), "install.cmd")},
 ]
 
+fonts_to_download = [
+    {"name": "Sansation-Bold.ttf", "destination": os.path.join(local_path, "assets/font/Sansation-Bold.ttf")},
+    {"name": "Sansation-Regular.ttf", "destination": os.path.join(local_path, "assets/font/Sansation-Regular.ttf")},
+]
+
+icons_to_download = [
+    {"name": "icon.png", "destination": os.path.join(local_path, "assets/icon.png")},
+    {"name": "iconUpdater.png", "destination": os.path.join(local_path, "assets/iconUpdater.png")},
+]
+
 def update_repository():
-    print("Updating repository...")
+    root = tk.Tk()
+    root.title("Updating YMusic-DRPC")
+    root.geometry("400x150")
 
-    response = requests.get(f"{repo_url}YandexDiscordRPC/version.ini")
-    
-    if response.status_code == 200:
-        os.makedirs(os.path.dirname(version_file), exist_ok=True)
+    progress = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
+    progress.pack(pady=20)
 
-        current_version = version.parse(get_current_version())
+    label = tk.Label(root, text="Updating repository...")
+    label.pack()
 
-        response_digits_match = re.search(r'\d+(\.\d+)*', response.text)
-        current_digits_match = re.search(r'\d+(\.\d+)*', str(current_version.public))
+    def update():
+        response = requests.get(f"{repo_url}YandexDiscordRPC/version.ini")
+        
+        if response.status_code == 200:
+            os.makedirs(os.path.dirname(version_file), exist_ok=True)
 
-        print(f"Last Version: {response_digits_match.group(0)}")
-        print(f"Current Install: {current_digits_match.group(0)}")
+            current_version = version.parse(get_current_version())
 
-        if response_digits_match.group(0) != current_digits_match.group(0):
-            print("Local version does not match latest version. Updating...")
-            print("Copying files...")
-            copy_files(files_to_copy)
-            copy_external_files(external_files_to_copy)
-            with open(version_file, 'w', encoding='utf-8') as local_version_file:
-                local_version_file.write(response.text)
-            print(f"Update complete {response_digits_match.group(0)}")
+            response_digits_match = re.search(r'\d+(\.\d+)*', response.text)
+            current_digits_match = re.search(r'\d+(\.\d+)*', str(current_version.public))
+
+            print(f"Last Version: {response_digits_match.group(0)}")
+            print(f"Current Install: {current_digits_match.group(0)}")
+
+            if response_digits_match.group(0) != current_digits_match.group(0):
+                print("Local version does not match latest version. Updating...")
+                progress["maximum"] = len(files_to_copy) + len(external_files_to_copy) + len(fonts_to_download) + len(icons_to_download)
+                progress["value"] = 0
+
+                label.config(text="Copying files...")
+
+                root.update()
+
+                copy_files(files_to_copy)
+                progress.step(len(files_to_copy))
+
+                copy_external_files(external_files_to_copy)
+                progress.step(len(external_files_to_copy))
+
+                download_fonts(fonts_to_download)
+                progress.step(len(fonts_to_download))
+
+                download_icons(icons_to_download)
+                progress.step(len(icons_to_download))
+
+                with open(version_file, 'w', encoding='utf-8') as local_version_file:
+                    local_version_file.write(response.text)
+                label.config(text=f"Update complete {response_digits_match.group(0)}")
+                root.after(3000, root.destroy)  # Закрыть окно через 3 секунды
+            else:
+                label.config(text="No changes in version, skipping update.")
+                root.after(3000, root.destroy)  # Закрыть окно через 3 секунды
         else:
-            print("No changes in version, skipping update.")
-    else:
-        print(f"Failed to retrieve latest version. Status code: {response.status_code}")
+            label.config(f"Failed to retrieve latest version. Status code: {response.status_code}")
+            root.after(3000, root.destroy)  # Закрыть окно через 3 секунды
+
+    thread = Thread(target=update)
+    thread.start()
+
+    root.mainloop()
 
 def get_current_version():
     config = read_version_file()
@@ -78,6 +122,7 @@ def copy_files(files_to_copy, destination=local_path):
         os.makedirs(os.path.dirname(target_file), exist_ok=True)
 
         print(f"Copying {source_file} to {target_file}")
+
         response = requests.get(source_file)
 
         if response.status_code == 200:
@@ -94,11 +139,46 @@ def copy_external_files(files_to_copy):
         os.makedirs(os.path.dirname(target_file), exist_ok=True)
 
         print(f"Copying {source_file} to {target_file}")
+
         response = requests.get(source_file)
 
         if response.status_code == 200:
             with open(target_file, 'w', encoding='utf-8') as local_file:
                 local_file.write(response.text)
+        else:
+            print(f"Failed to retrieve {source_file}. Status code: {response.status_code}")
+
+def download_fonts(fonts_to_download):
+    for font_info in fonts_to_download:
+        source_file = f"{repo_url}YandexDiscordRPC/assets/font/{font_info['name']}"
+        target_file = font_info['destination']
+
+        os.makedirs(os.path.dirname(target_file), exist_ok=True)
+
+        print(f"Downloading {source_file} to {target_file}")
+
+        response = requests.get(source_file)
+
+        if response.status_code == 200:
+            with open(target_file, 'wb') as local_file:
+                local_file.write(response.content)
+        else:
+            print(f"Failed to retrieve {source_file}. Status code: {response.status_code}")
+
+def download_icons(icons_to_download):
+    for icon_info in icons_to_download:
+        source_file = f"{repo_url}YandexDiscordRPC/assets/{icon_info['name']}"
+        target_file = icon_info['destination']
+
+        os.makedirs(os.path.dirname(target_file), exist_ok=True)
+
+        print(f"Downloading {source_file} to {target_file}")
+
+        response = requests.get(source_file)
+
+        if response.status_code == 200:
+            with open(target_file, 'wb') as local_file:
+                local_file.write(response.content)
         else:
             print(f"Failed to retrieve {source_file}. Status code: {response.status_code}")
 
