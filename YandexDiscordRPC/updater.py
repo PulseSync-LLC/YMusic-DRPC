@@ -9,6 +9,9 @@ local_path = "YandexDiscordRPC"
 version_file = os.path.join(local_path, "version.ini")
 
 files_to_copy = [
+    "assets/font/Sansation-Bold.ttf"
+    "assets/font/Sansation-Regular.ttf"
+    
     "lib/application_manager.py"
     "lib/discord_rpc_manager.py"
     "lib/logging_config.py"
