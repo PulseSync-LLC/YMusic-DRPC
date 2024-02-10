@@ -22,8 +22,8 @@ files_to_copy = [
     "discordrpc.js",
     "install_dependencies.py",
     "main.py",
-    "obs.html",  # Добавлен файл "obs.html" в список файлов для копирования
-    # "updater.py",
+    "obs.html",
+    "updater.py",
     "version.ini",
     "yandex_music.log",
 ]
@@ -42,16 +42,38 @@ icons_to_download = [
     {"name": "iconUpdater.png", "destination": os.path.join(local_path, "assets/iconUpdater.png")},
 ]
 
+def center_window(window):
+    window.update_idletasks()
+    width = window.winfo_width()
+    height = window.winfo_height()
+    x_offset = (window.winfo_screenwidth() - width) // 2
+    y_offset = (window.winfo_screenheight() - height) // 2
+    window.geometry(f"+{x_offset}+{y_offset}")
+
 def update_repository():
     root = tk.Tk()
     root.title("Updating YMusic-DRPC")
-    root.geometry("400x150")
+    root.geometry("400x400") 
+    root.iconphoto(True, tk.PhotoImage(file="YandexDiscordRPC/assets/iconUpdater.png"))
+    root.overrideredirect(True)
+    
+    root.configure(bg="#0F0F0F")
 
-    progress = ttk.Progressbar(root, orient="horizontal", length=300, mode="determinate")
-    progress.pack(pady=20)
+    content_frame = tk.Frame(root, bg="#0F0F0F")
+    content_frame.pack(expand=True)
 
-    label = tk.Label(root, text="Updating repository...")
+    logo_img = tk.PhotoImage(file="YandexDiscordRPC/assets/iconUpdater.png")
+    logo_label = tk.Label(content_frame, image=logo_img, bg="#0F0F0F")
+    logo_label.pack(pady=10)
+
+    custom_font = ("Sansation-Bold", 12)
+    label = tk.Label(content_frame, text="Updating repository...", fg="white", bg="#0F0F0F", font=custom_font)  # Устанавливаем цвет текста
     label.pack()
+
+    progress = ttk.Progressbar(content_frame, orient="horizontal", length=300, mode="determinate", style="black.Horizontal.TProgressbar")  # Стилизуем прогрессбар
+    progress.pack(pady=10)
+
+    center_window(root)
 
     def update():
         response = requests.get(f"{repo_url}YandexDiscordRPC/version.ini")
@@ -91,13 +113,13 @@ def update_repository():
                 with open(version_file, 'w', encoding='utf-8') as local_version_file:
                     local_version_file.write(response.text)
                 label.config(text=f"Update complete {response_digits_match.group(0)}")
-                root.after(3000, root.destroy)  # Закрыть окно через 3 секунды
+                root.after(3000, root.destroy)
             else:
                 label.config(text="No changes in version, skipping update.")
-                root.after(3000, root.destroy)  # Закрыть окно через 3 секунды
+                root.after(3000, root.destroy)
         else:
             label.config(f"Failed to retrieve latest version. Status code: {response.status_code}")
-            root.after(3000, root.destroy)  # Закрыть окно через 3 секунды
+            root.after(3000, root.destroy)
 
     thread = Thread(target=update)
     thread.start()
