@@ -25,7 +25,7 @@ def update_discord_rpc(RPC, data):
         state=time_range_str,
         details=str(f"{playerBarTitle} - {artist}"),
         large_image=f"{requestImgTrack[1]}",
-        small_image='small_image_key',
-        small_text='Small Text',
+        small_image='ym',
+        small_text='Yandex Music',
         buttons=buttons,
     )
