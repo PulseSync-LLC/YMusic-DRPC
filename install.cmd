@@ -1,6 +1,6 @@
 @echo off
 if %errorlevel% neq 0 (
-    py .\YandexDiscordRPC\install_dependencies.py
+    pip install -r YandexDiscordRPC/requirements.txt
 ) else (
-    python .\YandexDiscordRPC\install_dependencies.py
+    python -m pip install -r YandexDiscordRPC/requirements.txt
 )
