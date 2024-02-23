@@ -1,0 +1,7 @@
+packaging
+websockets
+pywinauto
+pypresence
+requests
+psutil
+GitPython
