@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<style>
+    * {
+        transition: all 1s ease-in-out;
+    }
+
+    @font-face {
+        font-family: "Sansation";
+        src: url("assets/font/Sansation-Regular.ttf");
+    }
+
+    @font-face {
+        font-family: "Sansation";
+        src: url("assets/font/Sansation-Bold.ttf");
+        font-weight: bold;
+    }
+
+    body {
+        background: #000;
+        padding: 5px;
+        overflow: hidden;
+    }
+
+    .container {
+        width: 990px;
+        height: fit-content;
+        background: #fffffa49;
+        border: 2px solid rgba(255, 255, 255, 0.041);
+        overflow: hidden;
+        position: absolute;
+        border-radius: 10px;
+        bottom: 42px;
+        right: 42px;
+    }
+
+    #background {
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        position: absolute;
+        scale: 1.7;
+        top: 0;
+        left: calc(78px*3);
+        right: 0;
+        bottom: 0;
+        animation: moveBackground 12s ease-in-out infinite alternate;
+    }
+
+    .grayBackground {
+        z-index: 2;
+        background: linear-gradient(90deg, #333333 0%, rgba(51, 51, 51, 0.88) 100%);
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+    }
+
+    @keyframes moveBackground {
+        0% {
+            background-position: 0% 0%;
+            scale: 1.1;
+        }
+
+        100% {
+            background-position: 50% 100%;
+            scale: 1.7;
+        }
+    }
+
+
+    .track_container {
+        padding: 20px 40px;
+        z-index: 100;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 36px;
+    }
+
+    #trackImage {
+        height: calc(78px*3);
+        width: calc(78px*3);
+        border-radius: calc(3px*3);
+        display: flex;
+    }
+
+    .track_info {
+        display: flex;
+        width: calc(200px*3);
+        height: calc(60px*3);
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    #trackInfo {
+        overflow: hidden;
+        color: #FFF;
+        text-overflow: ellipsis;
+        font-family: 'Sansation';
+        font-size: 51px;
+        font-style: normal;
+        font-weight: bold;
+        line-height: normal;
+        margin: 0;
+        text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+    }
+
+    #artisInfo {
+        overflow: hidden;
+        color: #949494;
+        text-overflow: ellipsis;
+        font-family: 'Sansation';
+        font-size: 51px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin: 0;
+        text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+    }
+
+    progress {
+        display: flex;
+        height: 9px;
+        align-items: flex-start;
+        gap: 10px;
+        align-self: stretch;
+        border-radius: 18px;
+        background: #545454;
+        fill: #FFF;
+        border: none;
+        width: auto;
+    }
+
+    /* WebKit-specific styling */
+    progress::-webkit-progress-bar {
+        background-color: rgba(0, 0, 0, 0.50);
+        border-radius: calc(2px*3);
+    }
+
+    progress::-webkit-progress-value {
+        background-color: #fff;
+        border-radius: calc(2px*3);
+    }
+
+    /* Gecko-specific styling (Firefox) */
+    progress::-moz-progress-bar {
+        background-color: #fff;
+        border-radius: calc(2px*3);
+        width: max-content;
+    }
+
+    .markW {
+        position: absolute;
+        bottom: 390px;
+        right: 382px;
+        overflow: hidden;
+        color: #2ECDFF;
+        text-overflow: ellipsis;
+        font-family: 'Sansation';
+        font-size: 51px;
+        font-style: normal;
+        font-weight: bold;
+        line-height: normal;
+        margin: 0;
+    }
+
+    .markH {
+        position: absolute;
+        bottom: 150px;
+        right: 1130px;
+        overflow: hidden;
+        color: #2ECDFF;
+        text-overflow: ellipsis;
+        font-family: 'Sansation';
+        font-size: 51px;
+        font-style: normal;
+        font-weight: bold;
+        line-height: normal;
+        margin: 0;
+    }
+
+    .markBox {
+        position: absolute;
+        bottom: 0px;
+        right: 0px;
+        width: 1074px;
+        height: 358px;
+        outline: 2px solid #2ECDFF;
+    }
+</style>
+
+<body>
+    <div>
+        <div class="markW">width 1074px</div>
+        <div class="markH">height 358px</div>
+        <div class="markBox"></div>
+        <div class="container">
+            <div id="background" src="" alt=""></div>
+            <div class="grayBackground" src="" alt=""></div>
+            <div class="track_container">
+                <img id="trackImage"
+                    src="https://avatars.yandex.net/get-music-content/10641165/10757b03.a.27286879-1/1000x1000"
+                    alt="Track Image">
+                <div class="track_info">
+                    <div class="info_flex">
+                        <h1 id="trackInfo"></h1>
+                        <h1 id="artisInfo"></h1>
+                    </div>
+                    <progress class="amount-progress" id="progressBar" value="0" max="100"></progress>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function calculateProgress(currentTime, endTime) {
+            try {
+                console.log('Current Time:', currentTime);
+                console.log('End Time:', endTime);
+
+                const endTimeArray = endTime.split(':');
+                const totalDuration = parseInt(endTimeArray[0]) * 60 + parseInt(endTimeArray[1]);
+                console.log('Total Duration:', totalDuration);
+
+                const progress = (currentTime / totalDuration) * 100;
+                console.log('Raw Progress:', progress);
+
+                return isFinite(progress) && progress >= 0 ? Math.min(progress, 100) : 0;
+            } catch (error) {
+                console.error("Error calculating progress:", error);
+                return 0;
+            }
+        }
+
+        function updateTrackInfo() {
+            fetch('http://127.0.0.1:19582/track_info')
+                .then(response => response.json())
+                .then(data => {
+                    const trackInfoElement = document.getElementById('trackInfo');
+                    const artisInfoElement = document.getElementById('artisInfo');
+                    const trackImageElement = document.getElementById('trackImage');
+                    const backgroundElement = document.getElementById('background');
+                    const progressBarElement = document.getElementById('progressBar');
+
+                    trackInfoElement.innerText = `${data.playerBarTitle}`;
+                    artisInfoElement.innerText = `${data.artist}`;
+                    trackImageElement.src = data.requestImgTrack[1].replace('/100x100', '/1000x1000');
+                    backgroundElement.style.background = `url(${data.requestImgTrack[1].replace('/100x100', '/1000x1000')})`;
+                    backgroundElement.style.backgroundSize = 'cover';
+                    backgroundElement.style.backgroundRepeat = 'no-repeat';
+                    backgroundElement.style.backgroundPosition = '50%';
+
+                    const currentTimeArray = data.timecodes[0].split(':');
+                    const currentTime = parseInt(currentTimeArray[0]) * 60 + parseInt(currentTimeArray[1]);  // Convert timecodes to seconds
+
+                    console.log('Current Time:', currentTime);
+                    const progress = calculateProgress(currentTime, data.timecodes[1]);
+
+                    console.log('Progress:', progress);
+                    progressBarElement.value = progress;
+                    prg.innerHTML = progress;
+                })
+                .catch(error => console.error('Error fetching track info:', error));
+        }
+        setInterval(updateTrackInfo, 1500);
+        updateTrackInfo();
+    </script>
+</body>
+
+</html>

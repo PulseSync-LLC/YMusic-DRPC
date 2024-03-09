@@ -1,3 +1,4 @@
+pillow
 packaging
 websockets
 pywinauto
