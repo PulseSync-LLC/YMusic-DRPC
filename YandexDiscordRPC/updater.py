@@ -1,14 +1,15 @@
 import os
 import re
+import webbrowser
 import requests
 from packaging import version
 from configparser import ConfigParser
 import tkinter as tk
 from tkinter import ttk
 from threading import Thread
-from PIL import Image, ImageTk
 
-repo_url = "https://raw.githubusercontent.com/Maks1mio/YMusic-DRPC/beta/"
+# repo_url = "https://raw.githubusercontent.com/Maks1mio/YMusic-DRPC/beta/" * beta 
+repo_url = "https://raw.githubusercontent.com/Maks1mio/YMusic-DRPC/main/"
 local_path = "YandexDiscordRPC"
 version_file = os.path.join(local_path, "version.ini")
 
@@ -20,7 +21,6 @@ files_to_copy = [
     "lib/websocket_manager.py",
     "data.json",
     "discordrpc.js",
-    "install_dependencies.py",
     "main.py",
     "obs.html",
     "updater.py",
@@ -30,6 +30,7 @@ files_to_copy = [
 
 external_files_to_copy = [
     {"name": "install.cmd", "destination": os.path.join(os.getcwd(), "install.cmd")},
+    {"name": "start.cmd", "destination": os.path.join(os.getcwd(), "start.cmd")},
 ]
 
 fonts_to_download = [
@@ -72,6 +73,9 @@ def update_repository():
 
     progress = ttk.Progressbar(content_frame, orient="horizontal", length=300, mode="determinate", style="black.Horizontal.TProgressbar")  # Стилизуем прогрессбар
     progress.pack(pady=10)
+    
+    github_button = tk.Button(content_frame, text="Open GitHub", command=lambda: webbrowser.open("https://github.com/Maks1mio/YMusic-DRPC"), fg="#58a6ff", cursor="hand2", bd=0, bg="#0F0F0F", activebackground="#0F0F0F", relief="flat", underline=True)
+    github_button.pack(pady=10)
 
     center_window(root)
 

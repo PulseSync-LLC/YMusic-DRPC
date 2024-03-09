@@ -38,7 +38,6 @@ def main():
         logger.error("An error occurred: %s", e)
 
 def run_discord_rpc(httpd, RPC):
-
     try:
         while True:
             if not is_yandex_music_running():
