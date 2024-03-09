@@ -14,7 +14,7 @@
 ### Этапы установки:
 
 1. **Скачайте YandexMusic:**
-   - Скачайте YandexMusic BETA 5.0.10 с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
+   - Скачайте YandexMusic BETA 5.0.14 с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
    - Установите YandexMusic в стандартный каталог: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.
 
 2. **Скачайте файлы скрипта**
@@ -56,7 +56,7 @@
   - Убедитесь, что Яндекс Музыка закрыт перед запуском скрипта.
 
 - **Версия YandexMusic:**
-  - Этот скрипт разработан для Яндекс Музыка BETA 5.0.10
+  - Этот скрипт разработан для Яндекс Музыка BETA 5.0.14
 
 - **Зависимости:**
   - Если возникают проблемы с зависимостями, убедитесь, что ваша установка Python находится в системном PATH.
