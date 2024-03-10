@@ -20,12 +20,24 @@ def update_discord_rpc(RPC, data):
         "label": "✌️ Open in YandexMusic",
         "url": f"https://music.yandex.ru/album/{quote(linkTitleID)}"
     }]
+    
+    if artist:
+        details_str = f"{playerBarTitle} - {artist}"
+    else:
+        details_str = f"{playerBarTitle}"
+        
+    if requestImgTrack[1]:
+        track_image = f"{requestImgTrack[1]}"
+        small_image_set = 'ym'
+    else:
+        track_image = 'ym'
+        small_image_set = 'unset'
 
     RPC.update(
         state=time_range_str,
-        details=str(f"{playerBarTitle} - {artist}"),
-        large_image=f"{requestImgTrack[1]}",
-        small_image='ym',
+        details=details_str,
+        large_image=track_image,
+        small_image=small_image_set,
         small_text='Yandex Music',
         buttons=buttons,
     )

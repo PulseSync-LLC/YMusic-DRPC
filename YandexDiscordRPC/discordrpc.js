@@ -1,5 +1,5 @@
 function logPlayerBarInfo() {
-    const playerBarTitleElement = document.querySelector('[class*="PlayerBarTitle_titleLink"]');
+    const playerBarTitleElement = document.querySelector('[class*="PlayerBarTitle_title"]');
     const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_artistLink"]');
     const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
     const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
