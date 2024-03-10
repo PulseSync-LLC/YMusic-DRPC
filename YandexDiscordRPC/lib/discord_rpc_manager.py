@@ -21,13 +21,17 @@ def update_discord_rpc(RPC, data):
     else:
         details_str = f"{playerBarTitle}"
         
-    if requestImgTrack[1]:
-        track_image = f"{requestImgTrack[1]}"
-        small_image_set = 'ym'
+    if linkTitleID:
         buttons = [{
             "label": "✌️ Open in YandexMusic",
             "url": f"https://music.yandex.ru/album/{quote(linkTitleID)}"
         }]
+    else:
+        buttons = None
+        
+    if requestImgTrack[1]:
+        track_image = f"{requestImgTrack[1]}"
+        small_image_set = 'ym'
     else:
         track_image = 'ym'
         small_image_set = 'unset'
