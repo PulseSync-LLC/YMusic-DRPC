@@ -1,11 +1,12 @@
 function logPlayerBarInfo() {
-    const playerBarTitleElement = document.querySelector('[class*="PlayerBarTitle_title"]');
-    const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_artist"]');
+    const playerBarTitleElement = document.querySelector('[class*="Meta_albumLink"]');
+    const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artistLink"]');
     const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
     const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
-
     const titleText = playerBarTitleElement ? playerBarTitleElement.textContent.trim() : '';
-    const artistText = artistLinkElement ? artistLinkElement.textContent.trim() : '';
+
+    const artistTextElement = artistLinkElement ? artistLinkElement.querySelector('[class*="Meta_artistCaption"]') : null;
+    const artistText = artistTextElement ? artistTextElement.textContent.trim() : '';
 
     const linkTitle = playerBarTitleElement ? playerBarTitleElement.getAttribute('href') : '';
     const albumId = linkTitle ? linkTitle.split('=')[1] : '';
