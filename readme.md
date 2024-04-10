@@ -1,4 +1,11 @@
 [[ > Русский < ]](https://github.com/Maks1mio/YMusic-DRPC) - [[ English ]](https://github.com/Maks1mio/YMusic-DRPC/blob/main/doc/en/readme.md)
+![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/8e797094-3fac-4e3e-aedb-c9e3f3106cb3)
+
+<p align="center">
+   <a href="https://discord.gg/qy42uGTzRy">
+      <img width="250" alt="YMusic-DRPC приглашение" src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/405a8b18-1383-45d0-944a-8d7e4abf6e42">
+   </a>
+</p>
 
 **Интеграция Discord Rich Presence для YandexMusic - Документация**
 
