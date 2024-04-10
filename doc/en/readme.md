@@ -2,7 +2,7 @@
 
 **YandexMusic Discord Rich Presence Integration - Documentation**
 
-*Note: The following instructions assume that YandexMusic BETA 5.0.14 is installed in the default directory ("AppData\Local\Programs\YandexMusic"). Ensure YandexMusic is closed before proceeding.*
+*Note: The following instructions assume that YandexMusic BETA 5.0.19 is installed in the default directory ("AppData\Local\Programs\YandexMusic"). Ensure YandexMusic is closed before proceeding.*
 
 **Screenshots**
 
@@ -14,7 +14,7 @@
 ### Installation Steps:
 
 1. **Download YandexMusic:**
-   - Download YandexMusic BETA 5.0.14 from [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
+   - Download YandexMusic BETA 5.0.19 from [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
    - Install YandexMusic in the standard directory: `C:\Users\<YourUsername>\AppData\Local\Programs\YandexMusic`.
 
 2. **Download Script Files:**
@@ -56,7 +56,7 @@
   - Ensure Yandex Music is closed before running the script.
 
 - **YandexMusic Version:**
-  - This script is designed for Yandex Music BETA 5.0.14.
+  - This script is designed for Yandex Music BETA 5.0.19.
 
 - **Dependencies:**
   - If there are issues with dependencies, ensure your Python installation is in the system PATH.

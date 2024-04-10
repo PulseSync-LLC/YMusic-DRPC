@@ -1,12 +1,12 @@
 function logPlayerBarInfo() {
     const playerBarTitleElement = document.querySelector('[class*="Meta_albumLink"]');
-    const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artistLink"]');
+    const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artists"]');
     const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
     const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
     const titleText = playerBarTitleElement ? playerBarTitleElement.textContent.trim() : '';
 
-    const artistTextElement = artistLinkElement ? artistLinkElement.querySelector('[class*="Meta_artistCaption"]') : null;
-    const artistText = artistTextElement ? artistTextElement.textContent.trim() : '';
+    const artistTextElements = artistLinkElement ? artistLinkElement.querySelectorAll('[class*="Meta_artistCaption"]') : null;
+    const artistTexts = artistTextElements ? Array.from(artistTextElements).map(element => element.textContent.trim()) : [];
 
     const linkTitle = playerBarTitleElement ? playerBarTitleElement.getAttribute('href') : '';
     const albumId = linkTitle ? linkTitle.split('=')[1] : '';
@@ -16,7 +16,7 @@ function logPlayerBarInfo() {
 
     return {
         playerBarTitle: titleText,
-        artist: artistText,
+        artist: artistTexts.join(', '),
         timecodes: timecodesArray,
         requestImgTrack: ImgTrack,
         linkTitle: albumId
