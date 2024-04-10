@@ -24,7 +24,7 @@ def update_discord_rpc(RPC, data):
     if linkTitleID:
         buttons = [{
             "label": "✌️ Open in YandexMusic",
-            "url": f"https://music.yandex.ru/album/{quote(linkTitleID)}"
+            "url": f"yandexmusic://album/{quote(linkTitleID)}"
         }]
     else:
         buttons = None
