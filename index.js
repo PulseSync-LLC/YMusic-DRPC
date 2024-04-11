@@ -92,12 +92,12 @@ function createWindow() {
 
   setInterval(() => {
     console.log(metadata);
-    if (metadata !== undefined && metadata !== null && Object.keys(metadata).length !== 0) {
+    if (metadata && Object.keys(metadata).length) {
       updateDiscordRPC(rpc, metadata);
     } else {
-      noYMAppDiscordRPC(rpc)
+      noYMAppDiscordRPC(rpc);
     }
-  }, 1000);
+  }, 1000);  
 }
 
 app.on('ready', createWindow);
