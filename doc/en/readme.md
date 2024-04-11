@@ -13,7 +13,12 @@
 
 **Screenshots**
 
-![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/c8af3316-db14-4fdd-85dc-23fc6e8d9406)
+![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/433a2d4e-6836-438e-8100-151bf405546f)
 
-![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/8cb9421e-feac-454c-abad-6ce6e0b769fe)
-![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/20965613-eb89-41cf-99dc-6430b93d38e8)
+<p align="center">
+   <a href="https://discord.gg/qy42uGTzRy">
+      <img width="45%" alt="1" src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/cea9c24e-8249-4f84-8c8b-f7120475e3bb">
+      <img width="45%" alt="2" src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/f576e409-3378-4bf0-b153-b01a6d5c13c3">
+   </a>
+</p>
+
