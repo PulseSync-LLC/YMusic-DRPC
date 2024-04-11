@@ -1,0 +1,18 @@
+{
+  "name": "YMusic-DRPC",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "EvT",
+  "license": "MIT",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.3.1",
+    "electron": "^29.2.0"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "asar": "^3.2.0",
+    "discord-rpc": "^4.0.1"
+  }
+}

@@ -82,3 +82,5 @@ note.todo
 icon.ico
 start_dev.py
 build_script.py
+node_modules
+yarn.lock
