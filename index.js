@@ -10,15 +10,6 @@ const rpc = new RPC.Client({
   transport: "ipc"
 })
 
-rpc.on('ready', () => {
-  rpc.setActivity({
-    details: 'AFK',
-    largeImageText: 'YM MINI',
-    largeImageKey: 'ym',
-  })
-  console.log("RPC good")
-})
-
 rpc.login({
   clientId: "984031241357647892",
 })
@@ -80,7 +71,7 @@ function createWindow() {
       label: '✌️ Open in YandexMusic',
       url: `yandexmusic://album/${encodeURIComponent(linkTitle)}`
     }] : null;
-  
+
     RPC.setActivity({
       state: timeRange,
       details: details,
@@ -89,11 +80,22 @@ function createWindow() {
       smallImageText: 'Yandex Music',
       buttons: buttons
     });
-  };  
+  };
+
+  const noYMAppDiscordRPC = (RPC) => {
+    RPC.setActivity({
+      details: 'AFK',
+      largeImageText: 'YM MINI',
+      largeImageKey: 'ym',
+    });
+  };
 
   setInterval(() => {
-    if (metadata) {
+    console.log(metadata);
+    if (metadata !== undefined && metadata !== null && Object.keys(metadata).length !== 0) {
       updateDiscordRPC(rpc, metadata);
+    } else {
+      noYMAppDiscordRPC(rpc)
     }
   }, 1000);
 }
