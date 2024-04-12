@@ -59,7 +59,28 @@ body {
 .main {
     height: 100%;
     width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.main:hover {
     overflow-y: scroll;
+}
+
+::-webkit-scrollbar {
+    width: 8px; /* Ширина полосы прокрутки */
+}
+
+::-webkit-scrollbar-track {
+    background: #F4ECCA; /* Цвет фона */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #7f7679; /* Цвет полосы */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #f2ddc6;
 }
 
 .container {
