@@ -14,6 +14,13 @@ rpc.login({
   clientId: "984031241357647892",
 })
 
+const themesDir = path.join(__dirname, 'themes');
+
+if (!fs.existsSync(themesDir)) {
+  fs.mkdirSync(themesDir);
+}
+
+
 let metadata;
 
 function createWindow() {
