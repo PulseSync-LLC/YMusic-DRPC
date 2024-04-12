@@ -9,7 +9,7 @@
 
 **Интеграция Discord Rich Presence для YandexMusic - Документация**
 
-*Примечание: Следующие инструкции предполагают, что Яндекс Музыка BETA 5.0.19 установлен в стандартном каталоге ("AppData\Local\Programs\YandexMusic"). Убедитесь, что Яндекс Музыка закрыта*
+*Примечание: Следующие инструкции предполагают, что Яндекс Музыка BETA 5.0.19 установлен в стандартном каталоге ("AppData\Local\Programs\YandexMusic"). Убедитесь, что Яндекс Музыка закрыта.*
 
 **Скриншоты**
 
@@ -21,4 +21,54 @@
       <img width="45%" alt="2" src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/f576e409-3378-4bf0-b153-b01a6d5c13c3">
    </a>
 </p>
+
+### Этапы установки:
+
+1. **Скачайте YandexMusic:**
+   - Скачайте YandexMusic BETA 5.0.19 с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
+   - Установите YandexMusic в стандартный каталог: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.
+
+2. **Скачайте файлы приложения**
+   - Скачайте файлы проекта или склонируйте проект с помошью консоли:
+    ```bash
+    git clone https://github.com/Maks1mio/YMusic-DRPC.git - b patcher
+    ```
+   - Склонируйте в каталог Programs: `C:\Users\<ВашеИмя>\AppData\Local\Programs`.
+
+    ### Структура каталогов:
+    ```markdown
+    | Local\Programs        | Files              |
+    |-----------------------|--------------------|
+    | YMusic-DRPC/          |                    |
+    | |-- YandexDiscordRPC/ |                    |
+    | |   |-- index.js      |                    |
+    | |   |-- другие файлы..|                    |
+    | YandexMusic/          |                    |
+    | |-- Яндекс Музыка.exe |                    |
+    | |-- другие файлы...   |                    |
+    ```  
+3. **Установите Yarn и Electron:**
+   - Установите Yarn и Electron с помощью консоли:
+    ```bash
+    npm install --global yarn
+    npm i -g electron
+    ```
+   - Убедитесь, что Yarn и Electron установлен, запустив:
+    ```bash
+    yarn --version
+    electron --version
+    ```
+4. **Установите зависимости:**
+   - Установите зависимости с помощью консоли:
+    ```bash
+    yarm install
+    ```
+5. **Запустите приложение:**
+    - Запустите приложение с помощью консоли:
+     ```bash
+     yarn start
+     ```
+    - Нажмите кнопку `Patch`, для установки скрипта в Яндекс Музыку.
+
+
 
