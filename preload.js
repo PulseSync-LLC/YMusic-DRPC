@@ -8,5 +8,4 @@ contextBridge.exposeInMainWorld("drp", {
   clickClose: () => ipcRenderer.invoke("closeWin"),
   clickPatcher: () => ipcRenderer.invoke("patcherWin"),
   checkFileExists: () => ipcRenderer.invoke("checkFileExists"),
-  requestTrackInfo: () => ipcRenderer.invoke("requestTrackInfo"),
 });

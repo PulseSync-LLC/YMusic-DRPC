@@ -39,8 +39,3 @@ window.onload = () => {
         console.error("Ошибка при проверке файла:", err);
     });
 };
-
-
-setInterval(() => {
-    console.log(window.drp.requestTrackInfo())
-}, 1000);

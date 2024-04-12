@@ -63,10 +63,9 @@ function createWindow() {
     return fileExists;
   });
 
-  ipcMain.handle('requestTrackInfo', () => {
+  setInterval(() => {
     metadata = getTrackInfo()
-    return metadata;
-  });
+  }, 1000);
 
   const updateDiscordRPC = (RPC, data) => {
     const { playerBarTitle, artist, timecodes, requestImgTrack, linkTitle } = data;
@@ -104,7 +103,7 @@ function createWindow() {
     } else {
       noYMAppDiscordRPC(rpc);
     }
-  }, 1000);  
+  }, 1000);
 }
 
 app.on('ready', createWindow);
