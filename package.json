@@ -12,7 +12,6 @@
     "start": "electron ."
   },
   "dependencies": {
-    "asar": "^3.2.0",
     "discord-rpc": "^4.0.1"
   }
 }
