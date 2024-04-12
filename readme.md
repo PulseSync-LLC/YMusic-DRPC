@@ -1,4 +1,4 @@
-[[ > Русский < ]](https://github.com/Maks1mio/YMusic-DRPC) - [[ English ]](https://github.com/Maks1mio/YMusic-DRPC/blob/main/doc/en/readme.md)
+[[ > Русский < ]](https://github.com/Maks1mio/YMusic-DRPC/tree/patcher) - [[ English ]](https://github.com/Maks1mio/YMusic-DRPC/blob/patcher/doc/en/readme.md)
 ![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/8e797094-3fac-4e3e-aedb-c9e3f3106cb3)
 
 <p align="center">
