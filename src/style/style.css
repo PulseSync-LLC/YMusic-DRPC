@@ -1,27 +1,26 @@
 @font-face {
-    font-family: "Open Runde";
+    font-family: 'Open Runde';
     font-weight: 400;
     src: url(../assets/fonts/OpenRunde-Regular.otf);
 }
 
 @font-face {
-    font-family: "Open Runde";
+    font-family: 'Open Runde';
     font-weight: 500;
     src: url(../assets/fonts/OpenRunde-Medium.otf);
 }
 
 @font-face {
-    font-family: "Open Runde";
+    font-family: 'Open Runde';
     font-weight: 600;
     src: url(../assets/fonts/OpenRunde-Semibold.otf);
 }
 
 @font-face {
-    font-family: "Open Runde";
+    font-family: 'Open Runde';
     font-weight: 700;
     src: url(../assets/fonts/OpenRunde-Bold.otf);
 }
-
 
 /* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz@6..12&display=swap'); */
 
@@ -29,7 +28,7 @@
     font-family: 'Open Runde';
     /* font-style: normal;
     font-weight: 600; */
-    color: #F4ECCA;
+    color: #f4ecca;
     user-select: none;
 }
 
@@ -39,8 +38,8 @@
 
 body {
     display: flex;
-    background: #0F0E0E;
-    color: #F4ECCA;
+    background: #0f0e0e;
+    color: #f4ecca;
     padding: 0;
     margin: 0;
     flex-direction: column;
@@ -76,7 +75,7 @@ footer {
 
 .logoapp {
     border-radius: 12px;
-    background: #F4ECCA;
+    background: #f4ecca;
     height: 50px;
 }
 
@@ -99,7 +98,7 @@ footer {
     gap: 20px;
 }
 
-.logoplace>span {
+.logoplace > span {
     font-size: 22px;
     font-weight: 900;
 }
@@ -116,7 +115,7 @@ footer {
 
 .container {
     background: rgba(120, 120, 120, 0.2);
-    border: 1px solid #4C4C4B;
+    border: 1px solid #4c4c4b;
     border-radius: 15px;
     height: 100%;
     overflow-x: auto;
@@ -124,10 +123,10 @@ footer {
 }
 
 .button {
-    border: 2px solid #F4ECCA;
+    border: 2px solid #f4ecca;
     border-radius: 10px;
     background: #292822;
-    color: #F4ECCA;
+    color: #f4ecca;
     padding: 14px 23px;
     font-style: normal;
     font-weight: 500;
@@ -140,9 +139,9 @@ footer {
 }
 
 .button:disabled {
-    border: 2px solid #CAF4CE;
+    border: 2px solid #caf4ce;
     background: #364037;
-    color: #CAF4CE;
+    color: #caf4ce;
 }
 
 .vertical {
@@ -199,5 +198,5 @@ a:hover {
     font-size: 28px;
     line-height: 34px;
 
-    color: #F4ECCA;
+    color: #f4ecca;
 }

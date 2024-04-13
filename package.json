@@ -1,17 +1,30 @@
 {
-  "name": "YMusic-DRPC",
-  "version": "1.0.0",
-  "main": "index.js",
-  "author": "EvT",
-  "license": "MIT",
-  "devDependencies": {
-    "@electron-forge/cli": "^7.3.1",
-    "electron": "^29.2.0"
-  },
-  "scripts": {
-    "start": "electron ."
-  },
-  "dependencies": {
-    "discord-rpc": "^4.0.1"
-  }
+    "name": "YMusic-DRPC",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "EvT",
+    "license": "MIT",
+    "devDependencies": {
+        "@electron-forge/cli": "^7.3.1",
+        "electron": "^29.2.0"
+    },
+    "scripts": {
+        "start": "electron-forge start",
+        "package": "electron-forge package",
+        "make": "electron-forge make",
+        "publish": "electron-forge publish",
+        "lint": "eslint --ext .js,.jsx .",
+        "format": "prettier --write ."
+    },
+    "dependencies": {
+        "@electron/asar": "^3.2.0",
+        "discord-rpc": "^4.0.1",
+        "prettier": "^3.2.5",
+        "@electron-forge/maker-deb": "^7.4.0",
+        "@electron-forge/maker-dmg": "^7.4.0",
+        "@electron-forge/maker-rpm": "^7.4.0",
+        "@electron-forge/maker-squirrel": "^7.4.0",
+        "@electron-forge/maker-zip": "^7.4.0",
+        "@electron-forge/plugin-webpack": "^7.4.0"
+    }
 }

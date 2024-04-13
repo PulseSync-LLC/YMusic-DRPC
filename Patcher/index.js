@@ -1,60 +1,64 @@
-const { ipcMain } = require('electron');
-const { exec } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+const { ipcMain } = require('electron')
+const { exec } = require('child_process')
+const fs = require('fs')
+const path = require('path')
 
 function findRumScript(startDir) {
-    const files = fs.readdirSync(startDir);
+    const files = fs.readdirSync(startDir)
     for (const file of files) {
-        const filePath = path.join(startDir, file);
-        const stat = fs.statSync(filePath);
+        const filePath = path.join(startDir, file)
+        const stat = fs.statSync(filePath)
         if (stat.isDirectory()) {
-            const rumScriptPath = findRumScript(filePath);
+            const rumScriptPath = findRumScript(filePath)
             if (rumScriptPath) {
-                return rumScriptPath;
+                return rumScriptPath
             }
         } else if (file === 'rumScript.js') {
-            return filePath;
+            return filePath
         }
     }
-    return null;
+    return null
 }
 
 function patcherym() {
-    const appAsarPath = process.env.LOCALAPPDATA + "\\Programs\\YandexMusic\\resources\\app.asar";
-    const destinationDir = process.env.LOCALAPPDATA + "\\Programs\\YandexMusic\\resources\\app";
+    const appAsarPath =
+        process.env.LOCALAPPDATA +
+        '\\Programs\\YandexMusic\\resources\\app.asar'
+    const destinationDir =
+        process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources\\app'
 
-    const command = `asar extract "${appAsarPath}" "${destinationDir}"`;
+    const command = `asar extract "${appAsarPath}" "${destinationDir}"`
 
-    console.log(`Extracting app.asar to ${destinationDir}...`);
+    console.log(`Extracting app.asar to ${destinationDir}...`)
 
-    const appPath = process.env.LOCALAPPDATA + "\\Programs\\YandexMusic\\resources";
+    const appPath =
+        process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources'
 
-    const filePath = path.join(appPath, "patched.txt");
+    const filePath = path.join(appPath, 'patched.txt')
 
-    fs.writeFile(filePath, "done", (err) => {
+    fs.writeFile(filePath, 'done', err => {
         if (err) {
-            console.error("Ошибка при создании файла:", err);
+            console.error('Ошибка при создании файла:', err)
         } else {
-            console.log("Файл успешно создан по пути:", filePath);
+            console.log('Файл успешно создан по пути:', filePath)
         }
-    });
+    })
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error: ${error.message}`);
-            return;
+            console.error(`Error: ${error.message}`)
+            return
         }
         if (stderr) {
-            console.error(`stderr: ${stderr}`);
-            return;
+            console.error(`stderr: ${stderr}`)
+            return
         }
-        console.log(stdout);
+        console.log(stdout)
 
-        const rumScriptPath = findRumScript(destinationDir);
+        const rumScriptPath = findRumScript(destinationDir)
 
         if (rumScriptPath) {
-            let rumScriptContent = fs.readFileSync(rumScriptPath, 'utf8');
+            let rumScriptContent = fs.readFileSync(rumScriptPath, 'utf8')
 
             rumScriptContent += `
             let isScriptExecuted = false;
@@ -114,44 +118,51 @@ function patcherym() {
                     },
                     body: JSON.stringify(result),
                 });
-            }, 1000);`;
+            }, 1000);`
 
-            fs.writeFileSync(rumScriptPath, rumScriptContent);
+            fs.writeFileSync(rumScriptPath, rumScriptContent)
 
-            console.log(`Added script to ${rumScriptPath}`);
+            console.log(`Added script to ${rumScriptPath}`)
 
-            const packCommand = `asar pack "${destinationDir}" "${appAsarPath}"`;
-            console.log(`Packing app directory into app.asar...`);
+            const packCommand = `asar pack "${destinationDir}" "${appAsarPath}"`
+            console.log(`Packing app directory into app.asar...`)
             exec(packCommand, (packError, packStdout, packStderr) => {
                 if (packError) {
-                    console.error(`Error packing app directory: ${packError.message}`);
-                    return;
+                    console.error(
+                        `Error packing app directory: ${packError.message}`,
+                    )
+                    return
                 }
                 if (packStderr) {
-                    console.error(`stderr: ${packStderr}`);
-                    return;
+                    console.error(`stderr: ${packStderr}`)
+                    return
                 }
-                console.log(packStdout);
-                console.log(`App directory packed into ${appAsarPath}`);
+                console.log(packStdout)
+                console.log(`App directory packed into ${appAsarPath}`)
 
-                console.log(`Deleting source directory...`);
-                exec(`rmdir /s /q "${destinationDir}"`, (deleteError, deleteStdout, deleteStderr) => {
-                    if (deleteError) {
-                        console.error(`Error deleting source directory: ${deleteError.message}`);
-                        return;
-                    }
-                    if (deleteStderr) {
-                        console.error(`stderr: ${deleteStderr}`);
-                        return;
-                    }
-                    console.log(deleteStdout);
-                    console.log(`Source directory deleted`);
-                });
-            });
+                console.log(`Deleting source directory...`)
+                exec(
+                    `rmdir /s /q "${destinationDir}"`,
+                    (deleteError, deleteStdout, deleteStderr) => {
+                        if (deleteError) {
+                            console.error(
+                                `Error deleting source directory: ${deleteError.message}`,
+                            )
+                            return
+                        }
+                        if (deleteStderr) {
+                            console.error(`stderr: ${deleteStderr}`)
+                            return
+                        }
+                        console.log(deleteStdout)
+                        console.log(`Source directory deleted`)
+                    },
+                )
+            })
         } else {
-            console.log(`Could not find rumScript.js in ${destinationDir}`);
+            console.log(`Could not find rumScript.js in ${destinationDir}`)
         }
-    });
+    })
 }
 
-patcherym();
+patcherym()
