@@ -26,7 +26,7 @@ let metadata;
 function createWindow() {
   let win = new BrowserWindow({
     width: 815,
-    height: 600,
+    height: 900,
     minWidth: 815,
     minHeight: 577,
     frame: false,
