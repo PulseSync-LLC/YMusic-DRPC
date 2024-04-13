@@ -84,3 +84,5 @@ start_dev.py
 build_script.py
 node_modules
 yarn.lock
+/out
+/.idea
