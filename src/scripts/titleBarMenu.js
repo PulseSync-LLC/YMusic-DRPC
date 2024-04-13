@@ -1,6 +1,7 @@
 const closeApp = document.getElementById("close")
 const minimizeApp = document.getElementById("minimize")
 const patcherApp = document.getElementById("patch")
+const pathApp = document.getElementById("pathapp")
 
 minimizeApp.addEventListener('click', async (event) => {
     event.preventDefault();
@@ -25,6 +26,15 @@ patcherApp.addEventListener('click', async (event) => {
     event.preventDefault();
     try {
         await window.drp.clickPatcher();
+    } catch (error) {
+        console.error('Error closing window:', error);
+    }
+})
+
+pathApp.addEventListener('click', async (event) => {
+    event.preventDefault();
+    try {
+        await window.drp.pathAppOpen();
     } catch (error) {
         console.error('Error closing window:', error);
     }

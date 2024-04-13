@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, shell, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const { exec } = require('child_process');
 const url = require('url');
@@ -42,6 +42,11 @@ function createWindow() {
     slashes: true
   }));
 
+  win.webContents.setWindowOpenHandler((edata) => {
+    shell.openExternal(edata.url);
+    return { action: "deny" };
+  });
+
   // win.webContents.openDevTools();
 
   // Window
@@ -56,6 +61,10 @@ function createWindow() {
   ipcMain.handle('patcherWin', () => {
     require('./Patcher');
   });
+
+  ipcMain.handle('pathAppOpen', () => {
+    shell.openPath(path.join(__dirname))
+  })
 
   ipcMain.handle("checkFileExists", async () => {
     const fileExists = fs.existsSync(process.env.LOCALAPPDATA + "\\Programs\\YandexMusic\\resources\\patched.txt");
