@@ -99,7 +99,7 @@ footer {
     gap: 20px;
 }
 
-.logoplace>span {
+.logoplace > span {
     font-size: 22px;
     font-weight: 900;
 }
@@ -128,7 +128,7 @@ footer {
     transition: cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.15s;
     border: 0;
     border-radius: 10px;
-    background: #403E36;
+    background: #403e36;
     color: #f4ecca;
     padding: 14px 23px;
     font-style: normal;
@@ -160,11 +160,11 @@ footer {
     outline: 0;
 }
 
-.dizb{
+.dizb {
     opacity: 0.2;
 }
 
-.dizb:hover{
+.dizb:hover {
     font-size: 20px;
     opacity: 0.2;
     outline: 0;
@@ -232,9 +232,8 @@ a:hover {
     color: #f4ecca;
 }
 
-
 #style_select {
-    background: #403E36;
+    background: #403e36;
     padding: 14px 23px;
     border: 0;
     border-radius: 10px;
