@@ -5,8 +5,8 @@
     "author": "EvT",
     "license": "MIT",
     "devDependencies": {
-        "@electron-forge/cli": "^7.3.1",
-        "electron": "^29.2.0"
+        "@electron-forge/cli": "^7.4.0",
+        "electron": "^29.3.0"
     },
     "scripts": {
         "start": "electron-forge start",
