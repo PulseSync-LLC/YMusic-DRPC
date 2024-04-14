@@ -50,10 +50,10 @@
 3. **Установите Yarn и Electron:**
    - Установите Yarn, Electron  с помощью консоли:
     ```bash
-    npm install --global yarn
+    npm i -g yarn
     npm i -g electron
     npm i -g @electron-forge/cli
-    npm install --save-dev @electron-forge/cli
+    npm i --save-dev @electron-forge/cli
     ```
    - Убедитесь, что Yarn и Electron установлен, запустив:
     ```bash
