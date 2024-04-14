@@ -232,19 +232,50 @@ a:hover {
     color: #f4ecca;
 }
 
-#style_select {
-    background: #403e36;
-    padding: 14px 23px;
-    border: 0;
+.custom_select {
+    position: relative;
+    display: inline-block;
+    background: #363a40;
     border-radius: 10px;
-
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 24px;
+    border: 1px solid #fff;
 }
 
-#style_select:hover {
-    transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
-    opacity: 0.8;
-    outline: 8px solid #f4ecca;
+.select_selected {
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.select_items {
+    display: none;
+    position: absolute;
+    transform: translateY(5px);
+    background-color: #f9f9f9;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    overflow: hidden;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.select_items div {
+    padding: 12px 16px;
+    cursor: pointer;
+}
+
+.select_items div:hover {
+    background-color: #f1f1f1;
+}
+
+.imageTheme {
+    width: 59px;
+    border-radius: 8px;
+}
+
+.containerTheme {
+    background: #363a40;
+    display: flex;
+    gap: 22px;
+    align-items: center;
 }

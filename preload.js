@@ -6,7 +6,8 @@ contextBridge.exposeInMainWorld('drp', {
     clickPatcher: () => ipcRenderer.invoke('patcherWin'),
     pathAppOpen: () => ipcRenderer.invoke('pathAppOpen'),
     pathStyleOpen: () => ipcRenderer.invoke('pathStyleOpen'),
-    selectStyle: selectStyle => ipcRenderer.invoke('selectStyle', selectStyle),
+    selectStyle: (name, author) =>
+        ipcRenderer.invoke('selectStyle', name, author),
     getThemesList: () => ipcRenderer.invoke('getThemesList'),
     checkFileExists: () => ipcRenderer.invoke('checkFileExists'),
 })

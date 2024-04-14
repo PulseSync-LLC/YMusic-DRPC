@@ -50,41 +50,46 @@ pathStyle.addEventListener('click', async event => {
     }
 })
 
-window.onload = () => {}
-
-const styleSelect = document.getElementById('style_select')
-
-styleSelect.addEventListener('change', async event => {
-    event.preventDefault()
-    let selectedStyle = styleSelect.value // Получаем название файла стиля из свойства value
-    console.log(selectedStyle)
-    try {
-        await window.drp.selectStyle(selectedStyle) // Передаем название файла стиля в функцию
-        console.log('Выбран стиль:', selectedStyle)
-    } catch (error) {
-        console.error('Ошибка выбора стиля:', error)
-    }
-})
-
 window.onload = async () => {
-    window.drp
-        .checkFileExists()
-        .then(fileExists => {
-            if (fileExists) {
-                patcherApp.disabled = true
-            }
-        })
-        .catch(err => {
-            console.error('Ошибка при проверке файла:', err)
-        })
-
     try {
         let list = await window.drp.getThemesList()
-        list.forEach(folder => {
-            const option = document.createElement('option')
-            option.value = folder
-            option.textContent = folder
-            styleSelect.appendChild(option)
+        const selectItems = document.getElementById('select_items')
+
+        list.forEach(theme => {
+            const option = document.createElement('div')
+            option.className = 'containerTheme'
+            const img = document.createElement('img')
+            img.src = theme.path + theme.image
+            img.className = 'imageTheme'
+            const textContentOption = document.createElement('div')
+            textContentOption.textContent = theme.name
+            selectItems.appendChild(option)
+            option.appendChild(img)
+            option.appendChild(textContentOption)
+            option.addEventListener('click', () => {
+                document.getElementById('select_selected').innerHTML = `
+                <div class="containerTheme"><img class="imageTheme" src="${theme.path + theme.image}"><div>${theme.name} - ${theme.author}</div></div>
+                `
+                window.drp.selectStyle(theme.name, theme.author)
+            })
+        })
+
+        const selectSelected = document.getElementById('select_selected')
+        selectSelected.addEventListener('click', () => {
+            if (selectItems.style.display === 'block') {
+                selectItems.style.display = 'none'
+            } else {
+                selectItems.style.display = 'block'
+            }
+        })
+
+        document.addEventListener('click', function (event) {
+            var isClickInside = document
+                .getElementById('custom_select')
+                .contains(event.target)
+            if (!isClickInside) {
+                selectItems.style.display = 'none'
+            }
         })
     } catch (error) {
         console.error('Error getting themes list:', error)

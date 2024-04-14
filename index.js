@@ -125,40 +125,90 @@ function createWindow() {
     })
 
     ipcMain.handle('getThemesList', () => {
-        let folders = fs
-            .readdirSync(themesDir, { withFileTypes: true })
-            .filter(item => {
-                return (
-                    item.isDirectory() &&
-                    fs.existsSync(
-                        path.join(themesDir, item.name, 'metadata.json'),
-                    )
-                )
-            })
-            .map(item => item.name)
+        let confData = fs.readFileSync(confFilePath, 'utf8')
+        let conf = JSON.parse(confData)
+        let folders = []
 
-        if (!folders.includes('Default')) {
-            folders.unshift('Default')
-        }
+        folders.push({
+            name: 'Default',
+            image: 'url',
+            author: 'Your Name',
+            description: 'Default theme.',
+            version: '1.0.0',
+            css: 'style.css',
+            path: 'local',
+        })
+
+        // Поиск тем в самом каталоге themesDir
+        const themeFiles = fs.readdirSync(themesDir)
+        themeFiles.forEach(themeFile => {
+            const metadataPath = path.join(themesDir, themeFile)
+            if (
+                fs.statSync(metadataPath).isFile() &&
+                themeFile.endsWith('metadata.json')
+            ) {
+                const metadata = JSON.parse(
+                    fs.readFileSync(metadataPath, 'utf8'),
+                )
+                metadata.path = metadataPath
+                folders.push(metadata)
+            }
+        })
+
+        // Поиск тем в подкаталогах themesDir
+        const themeDirs = fs.readdirSync(themesDir)
+        themeDirs.forEach(themeDir => {
+            const metadataPath = path.join(themesDir, themeDir, 'metadata.json')
+            if (fs.existsSync(metadataPath)) {
+                const metadata = JSON.parse(
+                    fs.readFileSync(metadataPath, 'utf8'),
+                )
+                metadata.path = path.join(themesDir, themeDir, '/')
+                folders.push(metadata)
+            }
+        })
 
         return folders
     })
 
-    ipcMain.handle('selectStyle', (event, selectedStyle) => {
+    ipcMain.handle('selectStyle', async (event, name, author) => {
         try {
+            const themesDir = path.join(
+                process.env.LOCALAPPDATA,
+                'YDRPC Modification',
+                'themes',
+            )
+            const themeDirs = fs.readdirSync(themesDir)
+
+            let selectedStyle = ''
+
+            for (const themeDir of themeDirs) {
+                const metadataPath = path.join(
+                    themesDir,
+                    themeDir,
+                    'metadata.json',
+                )
+                if (fs.existsSync(metadataPath)) {
+                    const metadata = JSON.parse(
+                        fs.readFileSync(metadataPath, 'utf8'),
+                    )
+                    if (metadata.name === name && metadata.author === author) {
+                        selectedStyle = themeDir
+                        break
+                    }
+                }
+            }
+
+            if (!selectedStyle) {
+                throw new Error(
+                    `Не удалось найти тему с названием "${name}" и автором "${author}".`,
+                )
+            }
+
             let confData = fs.readFileSync(confFilePath, 'utf8')
             let conf = JSON.parse(confData)
-
-            const stylePath = path.join(themesDir, selectedStyle)
-            const metadataPath = path.join(stylePath, 'metadata.json')
-            if (!fs.existsSync(metadataPath)) {
-                selectedStyle = 'Default'
-                conf.select = selectedStyle
-                fs.writeFileSync(confFilePath, JSON.stringify(conf, null, 4))
-            } else {
-                conf.select = selectedStyle
-                fs.writeFileSync(confFilePath, JSON.stringify(conf, null, 4))
-            }
+            conf.select = selectedStyle
+            fs.writeFileSync(confFilePath, JSON.stringify(conf, null, 4))
 
             return true
         } catch (error) {
