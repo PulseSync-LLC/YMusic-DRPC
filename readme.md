@@ -1,5 +1,5 @@
 [[ > Русский < ]](https://github.com/Maks1mio/YMusic-DRPC/tree/patcher) - [[ English ]](https://github.com/Maks1mio/YMusic-DRPC/blob/patcher/doc/en/readme.md)
-![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/8e797094-3fac-4e3e-aedb-c9e3f3106cb3)
+![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/ee18b157-914d-495c-a4a0-7569ad0a2872)
 
 <p align="center">
    <a href="https://discord.gg/qy42uGTzRy">
