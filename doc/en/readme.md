@@ -27,7 +27,7 @@
 2. **Download Script Files:**
    - Download the project files or clone the project using the console:
      ```bash
-     git clone https://github.com/Maks1mio/YMusic-DRPC.git
+     git clone https://github.com/Maks1mio/YMusic-DRPC.git -b main
      ```
    - Clone it into the Programs directory: `C:\Users\<YourUsername>\AppData\Local\Programs`.
 
