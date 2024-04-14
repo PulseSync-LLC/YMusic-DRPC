@@ -14,10 +14,22 @@ rpc.login({
     clientId: '984031241357647892',
 })
 
-const themesDir = path.join(__dirname, 'themes')
+const ydrpcModification = path.join(process.env.LOCALAPPDATA, 'YDRPC Modification')
+
+if (!fs.existsSync(ydrpcModification)) {
+    fs.mkdirSync(ydrpcModification)
+}
+
+const themesDir = path.join(ydrpcModification, 'themes')
 
 if (!fs.existsSync(themesDir)) {
     fs.mkdirSync(themesDir)
+}
+
+const confFilePath = path.join(themesDir, 'conf.json')
+
+if (!fs.existsSync(confFilePath)) {
+    fs.writeFileSync(confFilePath, JSON.stringify({ "select": "default" }, null, 4))
 }
 
 let metadata
@@ -55,14 +67,14 @@ function createWindow() {
 
     tray = new Tray(path.join(__dirname, 'src', 'assets', 'appicon.png'))
     const contextMenu = Menu.buildFromTemplate([
-      { label: 'Show App', click: () => win.show() },
-      { label: 'Quit', click: () => app.quit() }
+        { label: 'Show App', click: () => win.show() },
+        { label: 'Quit', click: () => app.quit() }
     ])
     tray.setToolTip('YMusic DRPC')
-    tray.setContextMenu(contextMenu); 
-    
+    tray.setContextMenu(contextMenu);
+
     tray.on('click', () => {
-      win.show()
+        win.show()
     });
 
     ipcMain.handle('minimizeWin', () => {
@@ -70,8 +82,8 @@ function createWindow() {
     })
 
     ipcMain.handle("closeWin", () => {
-      win.hide();
-    });  
+        win.hide();
+    });
 
     ipcMain.handle('patcherWin', () => {
         require('./Patcher')
@@ -84,11 +96,65 @@ function createWindow() {
     ipcMain.handle('checkFileExists', async () => {
         const fileExists = fs.existsSync(
             process.env.LOCALAPPDATA +
-                '\\Programs\\YandexMusic\\resources\\patched.txt',
+            '\\Programs\\YandexMusic\\resources\\patched.txt',
         )
         console.log(fileExists)
         return fileExists
     })
+
+    ipcMain.handle('pathStyleOpen', async () => {
+        const folderPath = process.env.LOCALAPPDATA + '\\YDRPC Modification\\themes'
+
+        const fileExists = fs.existsSync(folderPath)
+
+        if (fileExists) {
+            shell.openPath(folderPath)
+            console.log('Folder opened:', folderPath)
+            return true
+        } else {
+            console.log('Folder does not exist:', folderPath)
+            return false
+        }
+    })
+
+    ipcMain.handle('getThemesList', () => {
+        let folders = fs.readdirSync(themesDir, { withFileTypes: true })
+                        .filter(item => {
+                            return item.isDirectory() && fs.existsSync(path.join(themesDir, item.name, 'metadata.json'));
+                        })
+                        .map(item => item.name);
+        
+        if (!folders.includes('Default')) {
+            folders.unshift('Default');
+        }
+    
+        return folders;
+    });
+    
+    ipcMain.handle('selectStyle', (event, selectedStyle) => {
+        try {
+            let confData = fs.readFileSync(confFilePath, 'utf8');
+            let conf = JSON.parse(confData);
+
+            const stylePath = path.join(themesDir, selectedStyle);
+            const metadataPath = path.join(stylePath, 'metadata.json');
+            if (!fs.existsSync(metadataPath)) {
+                selectedStyle = 'Default';
+                conf.select = selectedStyle;
+                fs.writeFileSync(confFilePath, JSON.stringify(conf, null, 4));
+            } else {
+                conf.select = selectedStyle;
+                fs.writeFileSync(confFilePath, JSON.stringify(conf, null, 4));
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Ошибка при выборе стиля:', error);
+            return false;
+        }
+    });
+
+
 
     setInterval(() => {
         metadata = getTrackInfo()
@@ -111,11 +177,11 @@ function createWindow() {
         const smallImage = requestImgTrack[1] ? 'ym' : 'unset'
         const buttons = linkTitle
             ? [
-                  {
-                      label: '✌️ Open in YandexMusic',
-                      url: `yandexmusic://album/${encodeURIComponent(linkTitle)}`,
-                  },
-              ]
+                {
+                    label: '✌️ Open in YandexMusic',
+                    url: `yandexmusic://album/${encodeURIComponent(linkTitle)}`,
+                },
+            ]
             : null
 
         RPC.setActivity({
@@ -137,7 +203,7 @@ function createWindow() {
     }
 
     setInterval(() => {
-        console.log(metadata)
+        // console.log(metadata)
         if (metadata && Object.keys(metadata).length) {
             updateDiscordRPC(rpc, metadata)
         } else {

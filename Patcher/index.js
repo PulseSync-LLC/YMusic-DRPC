@@ -20,6 +20,23 @@ function findRumScript(startDir) {
     return null
 }
 
+function findConfig(startDir) {
+    const files = fs.readdirSync(startDir)
+    for (const file of files) {
+        const filePath = path.join(startDir, file)
+        const stat = fs.statSync(filePath)
+        if (stat.isDirectory()) {
+            const rumScriptPath = findConfig(filePath)
+            if (rumScriptPath) {
+                return rumScriptPath
+            }
+        } else if (file === 'config.js') {
+            return filePath
+        }
+    }
+    return null
+}
+
 function patcherym() {
     const appAsarPath =
         process.env.LOCALAPPDATA +
@@ -118,11 +135,35 @@ function patcherym() {
                     },
                     body: JSON.stringify(result),
                 });
+            }, 1000);
+
+            setInterval(() => {
+                // Получаем путь к файлу стиля с другого сервера
+                const stylePath = 'http://127.0.0.1:19582/style';
+
+                // Создаем элемент link для подключения CSS стиля к HTML
+                const linkElement = document.createElement('link');
+                linkElement.rel = 'stylesheet';
+                linkElement.href = stylePath;
+
+                // Добавляем элемент link в head документа
+                document.head.appendChild(linkElement);
             }, 1000);`
 
             fs.writeFileSync(rumScriptPath, rumScriptContent)
 
             console.log(`Added script to ${rumScriptPath}`)
+        } else {
+            console.log(`Could not find rumScript.js in ${destinationDir}`)
+        }
+
+        const configPath = findConfig(destinationDir)
+
+        if (configPath) {
+            let configPathContent = fs.readFileSync(configPath, 'utf8')
+            let cfgReplace = configPathContent.replace("enableDevTools: false", "enableDevTools: true")
+
+            fs.writeFileSync(configPath, cfgReplace)
 
             const packCommand = `asar pack "${destinationDir}" "${appAsarPath}"`
             console.log(`Packing app directory into app.asar...`)
@@ -160,7 +201,7 @@ function patcherym() {
                 )
             })
         } else {
-            console.log(`Could not find rumScript.js in ${destinationDir}`)
+            console.log(`Could not find config.js in ${configPath}`)
         }
     })
 }

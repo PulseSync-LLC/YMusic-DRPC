@@ -1,8 +1,0 @@
-{
-    "image": "url",
-    "name": "Name theme",
-    "author": "Your Name",
-    "description": "A stylish theme.",
-    "version": "1.0.0",
-    "css": "style.css"
-}
