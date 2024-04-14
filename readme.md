@@ -31,7 +31,7 @@
 2. **Скачайте файлы приложения**
    - Скачайте файлы проекта или склонируйте проект с помошью консоли:
     ```bash
-    git clone https://github.com/Maks1mio/YMusic-DRPC.git - b patcher
+    git clone https://github.com/Maks1mio/YMusic-DRPC.git
     ```
    - Склонируйте в каталог Programs: `C:\Users\<ВашеИмя>\AppData\Local\Programs`.
 
@@ -68,7 +68,7 @@
      ```bash
      yarn start
      ```
-    - Нажмите кнопку `Patch`, для установки скрипта в Яндекс Музыку.
+    - Нажмите кнопку `Запатчить Яндекс Музыку`, для установки скрипта в Яндекс Музыку.
 
 
 
