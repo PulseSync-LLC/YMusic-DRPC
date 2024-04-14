@@ -1,4 +1,4 @@
-const { app, shell, BrowserWindow, ipcMain } = require('electron')
+const { app, shell, BrowserWindow, Tray, ipcMain, Menu } = require('electron')
 const path = require('path')
 const { exec } = require('child_process')
 const url = require('url')
@@ -21,13 +21,16 @@ if (!fs.existsSync(themesDir)) {
 }
 
 let metadata
+let tray = null
 
 function createWindow() {
     let win = new BrowserWindow({
-        width: 815,
+        width: 615,
         height: 900,
-        minWidth: 815,
+        minWidth: 615,
         minHeight: 577,
+        maxWidth: 615,
+        icon: path.join(__dirname, 'src', 'assets', 'appicon.png'),
         frame: false,
         webPreferences: {
             nodeIntegration: true,
@@ -50,14 +53,25 @@ function createWindow() {
 
     // win.webContents.openDevTools();
 
-    // Window
+    tray = new Tray(path.join(__dirname, 'src', 'assets', 'appicon.png'))
+    const contextMenu = Menu.buildFromTemplate([
+      { label: 'Show App', click: () => win.show() },
+      { label: 'Quit', click: () => app.quit() }
+    ])
+    tray.setToolTip('YMusic DRPC')
+    tray.setContextMenu(contextMenu); 
+    
+    tray.on('click', () => {
+      win.show()
+    });
+
     ipcMain.handle('minimizeWin', () => {
         win.minimize()
     })
 
-    ipcMain.handle('closeWin', () => {
-        app.quit()
-    })
+    ipcMain.handle("closeWin", () => {
+      win.hide();
+    });  
 
     ipcMain.handle('patcherWin', () => {
         require('./Patcher')
