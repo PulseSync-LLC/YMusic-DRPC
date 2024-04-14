@@ -48,10 +48,12 @@
     | |-- другие файлы...   |                    |
     ```  
 3. **Установите Yarn и Electron:**
-   - Установите Yarn и Electron с помощью консоли:
+   - Установите Yarn, Electron  с помощью консоли:
     ```bash
-    npm install --global yarn
+    npm i -g yarn
     npm i -g electron
+    npm i -g @electron-forge/cli
+    npm i --save-dev @electron-forge/cli
     ```
    - Убедитесь, что Yarn и Electron установлен, запустив:
     ```bash
@@ -61,8 +63,11 @@
 4. **Установите зависимости:**
    - Установите зависимости с помощью консоли:
     ```bash
+    yarn global add @electron-forge/cli
     yarn install
     ```
+   - В случае возникновения ошибки `info There appears to be trouble with your network connection. Retrying...` рекомендуется перезагурзить компьютер. После повторите `yarn install` в директории проекта.
+    
 5. **Запустите приложение:**
     - Запустите приложение с помощью консоли:
      ```bash
