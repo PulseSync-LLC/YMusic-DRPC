@@ -27,7 +27,7 @@
 2. **Скачайте файлы скрипта**
    - Скачайте файлы проекты или склонируй проект с помошью консоли:
     ```bash
-    git clone https://github.com/Maks1mio/YMusic-DRPC.git
+    git clone https://github.com/Maks1mio/YMusic-DRPC.git -b main
     ```
    - Склонируйте в каталог Programs: `C:\Users\<ВашеИмя>\AppData\Local\Programs`.
 
