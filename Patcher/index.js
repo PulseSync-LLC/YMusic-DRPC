@@ -161,7 +161,10 @@ function patcherym() {
 
         if (configPath) {
             let configPathContent = fs.readFileSync(configPath, 'utf8')
-            let cfgReplace = configPathContent.replace("enableDevTools: false", "enableDevTools: true")
+            let cfgReplace = configPathContent.replace(
+                'enableDevTools: false',
+                'enableDevTools: true',
+            )
 
             fs.writeFileSync(configPath, cfgReplace)
 
