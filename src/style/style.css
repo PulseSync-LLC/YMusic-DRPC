@@ -129,6 +129,7 @@ footer {
 .button {
     cursor: pointer;
     transition: cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.15s;
+    width: -webkit-fill-available;
     border: 0;
     border-radius: 10px;
     background: var(--color3);
@@ -179,6 +180,13 @@ footer {
     flex-direction: column;
     width: 100%;
     gap: 15px;
+}
+
+.horizontal {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 15px; 
 }
 
 .dialog_container {

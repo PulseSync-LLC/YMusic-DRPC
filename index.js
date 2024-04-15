@@ -91,8 +91,14 @@ function createWindow() {
         win.hide()
     })
 
-    ipcMain.handle('patcherWin', () => {
+    ipcMain.handle('patcherWin', (event) => {
         require('./Patcher')
+        return
+    })
+
+    ipcMain.handle('unpatcherWin', async(event) => {
+        require('./PatcherBack')
+        return
     })
 
     ipcMain.handle('pathAppOpen', async () => {
@@ -129,17 +135,16 @@ function createWindow() {
         let conf = JSON.parse(confData)
         let folders = []
 
-        folders.push({
-            name: 'Default',
-            image: 'url',
-            author: 'Your Name',
-            description: 'Default theme.',
-            version: '1.0.0',
-            css: 'style.css',
-            path: 'local',
-        })
+        // folders.push({
+        //     name: 'Default',
+        //     image: 'url',
+        //     author: 'Your Name',
+        //     description: 'Default theme.',
+        //     version: '1.0.0',
+        //     css: 'style.css',
+        //     path: 'local',
+        // })
 
-        // Поиск тем в самом каталоге themesDir
         const themeFiles = fs.readdirSync(themesDir)
         themeFiles.forEach(themeFile => {
             const metadataPath = path.join(themesDir, themeFile)
@@ -155,7 +160,6 @@ function createWindow() {
             }
         })
 
-        // Поиск тем в подкаталогах themesDir
         const themeDirs = fs.readdirSync(themesDir)
         themeDirs.forEach(themeDir => {
             const metadataPath = path.join(themesDir, themeDir, 'metadata.json')

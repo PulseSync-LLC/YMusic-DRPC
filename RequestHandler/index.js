@@ -63,23 +63,21 @@ const server = http.createServer((req, res) => {
             let confData = fs.readFileSync(confPath, 'utf8')
             let conf = JSON.parse(confData)
             let stylePath = themesPath + conf.select
-
-            if (!fs.existsSync(stylePath)) {
+    
+            const setDefaultTheme = () => {
                 stylePath = themesPath + 'Default'
                 conf.select = 'Default'
                 fs.writeFileSync(confPath, JSON.stringify(conf, null, 4))
+                return '{}'
             }
-
+    
             let cssContent
-            if (conf.select === 'Default') {
-                cssContent = '{}'
+            if (!fs.existsSync(stylePath) || conf.select === 'Default') {
+                cssContent = setDefaultTheme()
             } else {
                 const metadataPath = path.join(stylePath, 'metadata.json')
                 if (!fs.existsSync(metadataPath)) {
-                    stylePath = themesPath + 'Default'
-                    conf.select = 'Default'
-                    fs.writeFileSync(confPath, JSON.stringify(conf, null, 4))
-                    cssContent = '{}'
+                    cssContent = setDefaultTheme()
                 } else {
                     const styleContent = fs.readFileSync(metadataPath, 'utf8')
                     const style = JSON.parse(styleContent)
@@ -87,7 +85,7 @@ const server = http.createServer((req, res) => {
                     cssContent = fs.readFileSync(styleCSS, 'utf8')
                 }
             }
-
+    
             res.writeHead(200, { 'Content-Type': 'text/css' })
             res.end(cssContent)
         } catch (error) {
@@ -96,7 +94,7 @@ const server = http.createServer((req, res) => {
             res.end(JSON.stringify({ error: 'Error reading style file' }))
         }
         return
-    }
+    }    
 
     res.writeHead(404, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Not found' }))

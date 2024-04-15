@@ -4,6 +4,7 @@ contextBridge.exposeInMainWorld('drp', {
     clickMinimize: () => ipcRenderer.invoke('minimizeWin'),
     clickClose: () => ipcRenderer.invoke('closeWin'),
     clickPatcher: () => ipcRenderer.invoke('patcherWin'),
+    clickUnpatcher: () => ipcRenderer.invoke('unpatcherWin'),
     pathAppOpen: () => ipcRenderer.invoke('pathAppOpen'),
     pathStyleOpen: () => ipcRenderer.invoke('pathStyleOpen'),
     selectStyle: (name, author) =>

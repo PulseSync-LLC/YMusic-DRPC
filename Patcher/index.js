@@ -37,12 +37,29 @@ function findConfig(startDir) {
     return null
 }
 
+function copyFile(filePath) {
+    const copyCommand = `copy "${filePath}" "${filePath}.copy"`;
+    exec(copyCommand, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Ошибка при копировании файла: ${error}`);
+            return;
+        }
+        if (stderr) {
+            console.error(`Ошибка при выполнении команды: ${stderr}`);
+            return;
+        }
+        console.log(`Файл успешно скопирован в ${filePath}.copy`);
+    });
+}
+
 function patcherym() {
     const appAsarPath =
         process.env.LOCALAPPDATA +
         '\\Programs\\YandexMusic\\resources\\app.asar'
     const destinationDir =
         process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources\\app'
+
+    copyFile(appAsarPath);
 
     const command = `asar extract "${appAsarPath}" "${destinationDir}"`
 
@@ -138,27 +155,20 @@ function patcherym() {
             }, 1000);
 
             
-            // let previousLinkElement = null;
-
-            // setInterval(() => {
-            //     const stylePath = 'http://127.0.0.1:19582/style.css';
+            function updateStyle() {
+                var link = document.getElementById('dynamic-style');
+                if (!link) {
+                    link = document.createElement('link');
+                    link.id = 'dynamic-style';
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
+                    document.head.appendChild(link);
+                }
+                link.href = 'http://127.0.0.1:19582/style.css';
+            }
             
-            //     const newLinkElement = document.createElement('link');
-            //     newLinkElement.rel = 'stylesheet';
-            //     newLinkElement.href = stylePath;
-            
-            //     document.head.appendChild(newLinkElement);
-            
-            //     if (previousLinkElement) {
-            //         setTimeout(() => {
-            //             if (previousLinkElement.parentNode) {
-            //                 previousLinkElement.parentNode.removeChild(previousLinkElement);
-            //             }
-            //         }, 1000);
-            //     }
-            
-            //     previousLinkElement = newLinkElement;
-            // }, 1000);
+            // Вызываем функцию обновления стиля каждые две секунды
+            setInterval(updateStyle, 2000);
             
             `
 

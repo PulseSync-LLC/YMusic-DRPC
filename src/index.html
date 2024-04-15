@@ -1,205 +1,137 @@
 <!doctype html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
-        />
-        <link rel="stylesheet" href="style/style.css" />
-        <title>YMusic DRPC</title>
-    </head>
 
-    <body>
-        <header class="nav-bar">
-            <rb class="logoplace">
-                <img class="logoapp" src="assets/logoapp.png" alt="" />
-                <span>YMusic DRPC</span>
-            </rb>
-            <div>
-                <button id="minimize" class="button-title">
-                    <svg
-                        width="25"
-                        height="25"
-                        viewBox="0 0 25 25"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <g clip-path="url(#clip0_2_24)">
-                            <path
-                                d="M5.5 12.5H19.5"
-                                stroke="var(--color1)"
-                                stroke-width="3"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_2_24">
-                                <rect
-                                    width="24"
-                                    height="24"
-                                    fill="white"
-                                    transform="translate(0.5 0.5)"
-                                />
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </button>
-                <button id="close" class="button-title">
-                    <svg
-                        width="25"
-                        height="25"
-                        viewBox="0 0 25 25"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <g clip-path="url(#clip0_2_26)">
-                            <path
-                                d="M18.5 6.5L6.5 18.5"
-                                stroke="var(--color1)"
-                                stroke-width="3"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                            <path
-                                d="M6.5 6.5L18.5 18.5"
-                                stroke="var(--color1)"
-                                stroke-width="3"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            />
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_2_26">
-                                <rect
-                                    width="24"
-                                    height="24"
-                                    fill="white"
-                                    transform="translate(0.5 0.5)"
-                                />
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </button>
-            </div>
-        </header>
-        <div class="main">
-            <div class="container">
-                <div class="main_option">
-                    <div class="H1">Основные настройки</div>
-                    <div class="vertical">
-                        <button class="button" id="pathapp">
-                            Директория приложения
-                        </button>
-                        <button class="button dizb">
-                            Проверить обновление
-                        </button>
-                        <div class="dialog_container">
-                            <span>Патчер Яндекс Музыки</span>
+<head>
+    <meta charset="UTF-8" />
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com" />
+    <link rel="stylesheet" href="style/style.css" />
+    <title>YMusic DRPC</title>
+</head>
+
+<body>
+    <header class="nav-bar">
+        <rb class="logoplace">
+            <img class="logoapp" src="assets/logoapp.png" alt="" />
+            <span>YMusic DRPC</span>
+        </rb>
+        <div>
+            <button id="minimize" class="button-title">
+                <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_2_24)">
+                        <path d="M5.5 12.5H19.5" stroke="var(--color1)" stroke-width="3" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_2_24">
+                            <rect width="24" height="24" fill="white" transform="translate(0.5 0.5)" />
+                        </clipPath>
+                    </defs>
+                </svg>
+            </button>
+            <button id="close" class="button-title">
+                <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_2_26)">
+                        <path d="M18.5 6.5L6.5 18.5" stroke="var(--color1)" stroke-width="3" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path d="M6.5 6.5L18.5 18.5" stroke="var(--color1)" stroke-width="3" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_2_26">
+                            <rect width="24" height="24" fill="white" transform="translate(0.5 0.5)" />
+                        </clipPath>
+                    </defs>
+                </svg>
+            </button>
+        </div>
+    </header>
+    <div class="main">
+        <div class="container">
+            <div class="main_option">
+                <div class="H1">Основные настройки</div>
+                <div class="vertical">
+                    <button class="button" id="pathapp">
+                        Директория приложения
+                    </button>
+                    <button class="button dizb">
+                        Проверить обновление
+                    </button>
+                    <div class="dialog_container">
+                        <span>Патчер Яндекс Музыки</span>
+                        <div class="horizontal">
                             <button class="button" id="patch">
-                                Запатчить Яндекс музыку
+                                Запатчить
+                            </button>
+                            <button class="button" id="unpatch">
+                                Анпатчнуть
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="main_option">
-                    <div class="H1">Стилизация</div>
-                    <div class="vertical">
-                        <button class="button" id="pathstyle">
-                            Директория со стилями
-                        </button>
-                        <button class="button dizb">CSS Editor</button>
-                        <div class="dialog_container">
-                            <span>Выбор стилей</span>
-                            <div class="custom_select" id="custom_select">
-                                <div
-                                    class="select_selected"
-                                    id="select_selected"
-                                >
-                                    Выберите стиль
-                                </div>
-                                <div class="select_items" id="select_items">
-                                    <!-- Здесь будут добавлены элементы списка -->
-                                </div>
+            </div>
+            <div class="main_option">
+                <div class="H1">Стилизация</div>
+                <div class="vertical">
+                    <button class="button" id="pathstyle">
+                        Директория со стилями
+                    </button>
+                    <button class="button dizb">CSS Editor</button>
+                    <div class="dialog_container">
+                        <span>Выбор стилей</span>
+                        <div class="custom_select" id="custom_select">
+                            <div class="select_selected" id="select_selected">
+                                Выберите стиль
+                            </div>
+                            <div class="select_items" id="select_items">
+                                <!-- Здесь будут добавлены элементы списка -->
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="main_option">
-                    <div class="H1">Остальное</div>
-                    <div class="vertical">
-                        <span>В разработке</span>
-                    </div>
+            </div>
+            <div class="main_option">
+                <div class="H1">Остальное</div>
+                <div class="vertical">
+                    <span>В разработке</span>
                 </div>
             </div>
         </div>
-        <footer>
-            <a href="https://github.com/Maks1mio" target="_blank"
-                >Created by EvT</a
-            >
-            <a
-                class="svg_link"
-                href="https://github.com/Maks1mio/YMusic-DRPC"
-                target="_blank"
-                ><svg
-                    width="36"
-                    height="35"
-                    viewBox="0 0 36 35"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <g clip-path="url(#clip0_41_548)">
-                        <path
-                            d="M18 2C26.5637 2 33.5 9.11169 33.5 17.8921C33.4992 21.2218 32.4799 24.4675 30.5857 27.1723C28.6915 29.877 26.0177 31.9046 22.9406 32.9696C22.1656 33.1286 21.875 32.6319 21.875 32.2148C21.875 31.6784 21.8944 29.97 21.8944 27.8445C21.8944 26.3546 21.41 25.401 20.8481 24.9044C24.2969 24.5071 27.92 23.1563 27.92 17.0577C27.92 15.3096 27.3194 13.8992 26.3312 12.7867C26.4862 12.3894 27.0287 10.7605 26.1762 8.57534C26.1762 8.57534 24.8781 8.13831 21.9138 10.2043C20.6738 9.8467 19.3563 9.66792 18.0388 9.66792C16.7213 9.66792 15.4038 9.8467 14.1638 10.2043C11.1994 8.15817 9.90125 8.57534 9.90125 8.57534C9.04875 10.7605 9.59125 12.3894 9.74625 12.7867C8.75813 13.8992 8.1575 15.3295 8.1575 17.0577C8.1575 23.1364 11.7613 24.5071 15.21 24.9044C14.7644 25.3017 14.3575 25.997 14.2219 27.03C13.3306 27.4472 11.1025 28.1226 9.7075 25.7189C9.41688 25.2421 8.545 24.0701 7.32438 24.09C6.02625 24.1098 6.80125 24.8448 7.34375 25.1428C8.0025 25.5202 8.75813 26.9307 8.9325 27.3876C9.2425 28.2815 10.25 29.9899 14.1444 29.2549C14.1444 30.5858 14.1638 31.8373 14.1638 32.2148C14.1638 32.6319 13.8731 33.1087 13.0981 32.9696C10.011 31.9161 7.3258 29.8926 5.42348 27.1862C3.52115 24.4798 2.49829 21.228 2.5 17.8921C2.5 9.11169 9.43625 2 18 2Z"
-                            fill="var(--color1)"
-                        />
-                    </g>
-                    <defs>
-                        <clipPath id="clip0_41_548">
-                            <rect
-                                width="35"
-                                height="35"
-                                fill="white"
-                                transform="translate(0.5)"
-                            />
-                        </clipPath>
-                    </defs>
-                </svg>
-            </a>
-            <a
-                class="svg_link"
-                href="https://discord.gg/qy42uGTzRy"
-                target="_blank"
-            >
-                <svg
-                    width="36"
-                    height="35"
-                    viewBox="0 0 36 35"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <g clip-path="url(#clip0_41_552)">
-                        <path
-                            d="M28.76 7.92621C26.7232 7.01338 24.5729 6.3658 22.3644 6C22.0621 6.5289 21.7887 7.07308 21.5452 7.63023C19.1925 7.28319 16.8 7.28319 14.4474 7.63023C14.2037 7.07313 13.9303 6.52897 13.6281 6C11.4181 6.36888 9.26652 7.01802 7.22775 7.93099C3.18026 13.7932 2.08304 19.5098 2.63164 25.1452C5.00195 26.8596 7.65501 28.1635 10.4755 29C11.1106 28.1638 11.6726 27.2768 12.1554 26.3483C11.2383 26.0129 10.353 25.5991 9.50993 25.1118C9.73182 24.9544 9.94882 24.7919 10.1585 24.6345C12.6116 25.7637 15.2891 26.3494 17.9999 26.3494C20.7108 26.3494 23.3882 25.7637 25.8413 24.6345C26.0534 24.8039 26.2705 24.9662 26.4899 25.1118C25.6451 25.6 24.7584 26.0144 23.8396 26.3507C24.3219 27.2788 24.8839 28.1651 25.5194 29C28.3423 28.1668 30.9975 26.8637 33.3683 25.1476C34.0119 18.6124 32.2686 12.9482 28.76 7.92621ZM12.8503 21.6795C11.3216 21.6795 10.0585 20.3214 10.0585 18.6506C10.0585 16.9797 11.2777 15.6096 12.8455 15.6096C14.4133 15.6096 15.6665 16.9797 15.6397 18.6506C15.6129 20.3214 14.4084 21.6795 12.8503 21.6795ZM23.1494 21.6795C21.6183 21.6795 20.3601 20.3214 20.3601 18.6506C20.3601 16.9797 21.5793 15.6096 23.1494 15.6096C24.7198 15.6096 25.9633 16.9797 25.9363 18.6506C25.9096 20.3214 24.7075 21.6795 23.1494 21.6795Z"
-                            fill="var(--color1)"
-                        />
-                    </g>
-                    <defs>
-                        <clipPath id="clip0_41_552">
-                            <rect
-                                width="35"
-                                height="35"
-                                fill="white"
-                                transform="translate(0.5)"
-                            />
-                        </clipPath>
-                    </defs>
-                </svg>
-            </a>
-        </footer>
-    </body>
+    </div>
+    <footer>
+        <a href="https://github.com/Maks1mio" target="_blank">Created by EvT</a>
+        <a class="svg_link" href="https://github.com/Maks1mio/YMusic-DRPC" target="_blank"><svg width="36" height="35"
+                viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_41_548)">
+                    <path
+                        d="M18 2C26.5637 2 33.5 9.11169 33.5 17.8921C33.4992 21.2218 32.4799 24.4675 30.5857 27.1723C28.6915 29.877 26.0177 31.9046 22.9406 32.9696C22.1656 33.1286 21.875 32.6319 21.875 32.2148C21.875 31.6784 21.8944 29.97 21.8944 27.8445C21.8944 26.3546 21.41 25.401 20.8481 24.9044C24.2969 24.5071 27.92 23.1563 27.92 17.0577C27.92 15.3096 27.3194 13.8992 26.3312 12.7867C26.4862 12.3894 27.0287 10.7605 26.1762 8.57534C26.1762 8.57534 24.8781 8.13831 21.9138 10.2043C20.6738 9.8467 19.3563 9.66792 18.0388 9.66792C16.7213 9.66792 15.4038 9.8467 14.1638 10.2043C11.1994 8.15817 9.90125 8.57534 9.90125 8.57534C9.04875 10.7605 9.59125 12.3894 9.74625 12.7867C8.75813 13.8992 8.1575 15.3295 8.1575 17.0577C8.1575 23.1364 11.7613 24.5071 15.21 24.9044C14.7644 25.3017 14.3575 25.997 14.2219 27.03C13.3306 27.4472 11.1025 28.1226 9.7075 25.7189C9.41688 25.2421 8.545 24.0701 7.32438 24.09C6.02625 24.1098 6.80125 24.8448 7.34375 25.1428C8.0025 25.5202 8.75813 26.9307 8.9325 27.3876C9.2425 28.2815 10.25 29.9899 14.1444 29.2549C14.1444 30.5858 14.1638 31.8373 14.1638 32.2148C14.1638 32.6319 13.8731 33.1087 13.0981 32.9696C10.011 31.9161 7.3258 29.8926 5.42348 27.1862C3.52115 24.4798 2.49829 21.228 2.5 17.8921C2.5 9.11169 9.43625 2 18 2Z"
+                        fill="var(--color1)" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_41_548">
+                        <rect width="35" height="35" fill="white" transform="translate(0.5)" />
+                    </clipPath>
+                </defs>
+            </svg>
+        </a>
+        <a class="svg_link" href="https://discord.gg/qy42uGTzRy" target="_blank">
+            <svg width="36" height="35" viewBox="0 0 36 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g clip-path="url(#clip0_41_552)">
+                    <path
+                        d="M28.76 7.92621C26.7232 7.01338 24.5729 6.3658 22.3644 6C22.0621 6.5289 21.7887 7.07308 21.5452 7.63023C19.1925 7.28319 16.8 7.28319 14.4474 7.63023C14.2037 7.07313 13.9303 6.52897 13.6281 6C11.4181 6.36888 9.26652 7.01802 7.22775 7.93099C3.18026 13.7932 2.08304 19.5098 2.63164 25.1452C5.00195 26.8596 7.65501 28.1635 10.4755 29C11.1106 28.1638 11.6726 27.2768 12.1554 26.3483C11.2383 26.0129 10.353 25.5991 9.50993 25.1118C9.73182 24.9544 9.94882 24.7919 10.1585 24.6345C12.6116 25.7637 15.2891 26.3494 17.9999 26.3494C20.7108 26.3494 23.3882 25.7637 25.8413 24.6345C26.0534 24.8039 26.2705 24.9662 26.4899 25.1118C25.6451 25.6 24.7584 26.0144 23.8396 26.3507C24.3219 27.2788 24.8839 28.1651 25.5194 29C28.3423 28.1668 30.9975 26.8637 33.3683 25.1476C34.0119 18.6124 32.2686 12.9482 28.76 7.92621ZM12.8503 21.6795C11.3216 21.6795 10.0585 20.3214 10.0585 18.6506C10.0585 16.9797 11.2777 15.6096 12.8455 15.6096C14.4133 15.6096 15.6665 16.9797 15.6397 18.6506C15.6129 20.3214 14.4084 21.6795 12.8503 21.6795ZM23.1494 21.6795C21.6183 21.6795 20.3601 20.3214 20.3601 18.6506C20.3601 16.9797 21.5793 15.6096 23.1494 15.6096C24.7198 15.6096 25.9633 16.9797 25.9363 18.6506C25.9096 20.3214 24.7075 21.6795 23.1494 21.6795Z"
+                        fill="var(--color1)" />
+                </g>
+                <defs>
+                    <clipPath id="clip0_41_552">
+                        <rect width="35" height="35" fill="white" transform="translate(0.5)" />
+                    </clipPath>
+                </defs>
+            </svg>
+        </a>
+    </footer>
+</body>
+
 </html>
 
 <script src="scripts/titleBarMenu.js"></script>

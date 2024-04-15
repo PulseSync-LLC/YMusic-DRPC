@@ -1,6 +1,7 @@
 const closeApp = document.getElementById('close')
 const minimizeApp = document.getElementById('minimize')
 const patcherApp = document.getElementById('patch')
+const unpatcherApp = document.getElementById('unpatch')
 const pathApp = document.getElementById('pathapp')
 const pathStyle = document.getElementById('pathstyle')
 
@@ -22,11 +23,24 @@ closeApp.addEventListener('click', async event => {
     }
 })
 
+
 patcherApp.addEventListener('click', async event => {
     patcherApp.disabled = true
     event.preventDefault()
     try {
         await window.drp.clickPatcher()
+        unpatcherApp.disabled = true
+    } catch (error) {
+        console.error('Error closing window:', error)
+    }
+})
+
+unpatcherApp.addEventListener('click', async event => {
+    unpatcherApp.disabled = true
+    event.preventDefault()
+    try {
+        await window.drp.clickUnpatcher()
+        patcherApp.disabled = true
     } catch (error) {
         console.error('Error closing window:', error)
     }
@@ -56,6 +70,10 @@ window.onload = async () => {
         .then(fileExists => {
             if (fileExists) {
                 patcherApp.disabled = true
+                unpatcherApp.disabled = false
+            } else {
+                patcherApp.disabled = false
+                unpatcherApp.disabled = true
             }
         })
         .catch(err => {
