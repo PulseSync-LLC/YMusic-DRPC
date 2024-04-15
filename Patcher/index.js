@@ -102,9 +102,9 @@ function patcherym() {
 
                 if (bodyElement && !isScriptExecuted) {
                     const customHtmlElement = document.createElement('div');
-                    customHtmlElement.style = "position: absolute; top: -10px;"
+                    customHtmlElement.style = "position: absolute; top: -10px; color: #fff;"
 
-                    customHtmlElement.innerHTML = '<p>YMusic-DRPC 2.0.5</p>';
+                    customHtmlElement.innerHTML = '<p class="YMDRCP">YMusic-DRPC 2.0.5</p>';
 
                     bodyElement.appendChild(customHtmlElement);
 
@@ -186,9 +186,17 @@ function patcherym() {
             let cfgReplace = configPathContent.replace(
                 'enableDevTools: false',
                 'enableDevTools: true',
-            )
+                )
 
             fs.writeFileSync(configPath, cfgReplace)
+
+            let configPathContentweb = fs.readFileSync(configPath, 'utf8')
+            let websecReplace = configPathContentweb.replace(
+                'enableWebSecurity: true',
+                'enableWebSecurity: false',
+                )
+
+            fs.writeFileSync(configPath, websecReplace)
 
             const packCommand = `asar pack "${destinationDir}" "${appAsarPath}"`
             console.log(`Packing app directory into app.asar...`)
