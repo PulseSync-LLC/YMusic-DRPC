@@ -137,18 +137,30 @@ function patcherym() {
                 });
             }, 1000);
 
-            setInterval(() => {
-                // Получаем путь к файлу стиля с другого сервера
-                const stylePath = 'http://127.0.0.1:19582/style';
+            
+            // let previousLinkElement = null;
 
-                // Создаем элемент link для подключения CSS стиля к HTML
-                const linkElement = document.createElement('link');
-                linkElement.rel = 'stylesheet';
-                linkElement.href = stylePath;
-
-                // Добавляем элемент link в head документа
-                document.head.appendChild(linkElement);
-            }, 1000);`
+            // setInterval(() => {
+            //     const stylePath = 'http://127.0.0.1:19582/style.css';
+            
+            //     const newLinkElement = document.createElement('link');
+            //     newLinkElement.rel = 'stylesheet';
+            //     newLinkElement.href = stylePath;
+            
+            //     document.head.appendChild(newLinkElement);
+            
+            //     if (previousLinkElement) {
+            //         setTimeout(() => {
+            //             if (previousLinkElement.parentNode) {
+            //                 previousLinkElement.parentNode.removeChild(previousLinkElement);
+            //             }
+            //         }, 1000);
+            //     }
+            
+            //     previousLinkElement = newLinkElement;
+            // }, 1000);
+            
+            `
 
             fs.writeFileSync(rumScriptPath, rumScriptContent)
 

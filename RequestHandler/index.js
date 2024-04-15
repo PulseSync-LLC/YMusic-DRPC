@@ -57,7 +57,7 @@ const server = http.createServer((req, res) => {
 
     const path = require('path')
 
-    if (req.method === 'GET' && req.url === '/style') {
+    if (req.method === 'GET' && req.url === '/style.css') {
         try {
             const confPath = themesPath + 'conf.json'
             let confData = fs.readFileSync(confPath, 'utf8')
