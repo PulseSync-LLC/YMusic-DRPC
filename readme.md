@@ -49,7 +49,7 @@
     ```
 3. **Установите Node.Js
    - Загрузите и установите Node.Js перейдя по [ссылке](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (загрузка начнется автоматически).
-3. **Установите Yarn и Electron:**
+4. **Установите Yarn и Electron:**
    - Установите Yarn, Electron и @electron-forge/cli с помощью консоли:
     ```bash
     npm i -g yarn
@@ -62,7 +62,7 @@
     yarn --version
     electron --version
     ```
-4. **Установите зависимости:**
+5. **Установите зависимости:**
    - Установите зависимости с помощью консоли:
     ```bash
     yarn global add @electron-forge/cli
@@ -70,7 +70,7 @@
     ```
    - В случае возникновения ошибки `info There appears to be trouble with your network connection. Retrying...` рекомендуется перезагурзить компьютер. После повторите `yarn install` в директории проекта.
     
-5. **Запустите приложение:**
+6. **Запустите приложение:**
     - Запустите приложение с помощью консоли:
      ```bash
      yarn start
