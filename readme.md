@@ -46,9 +46,11 @@
     | YandexMusic/          |                    |
     | |-- Яндекс Музыка.exe |                    |
     | |-- другие файлы...   |                    |
-    ```  
+    ```
+3. **Установите Node.Js
+   - Загрузите и установите Node.Js перейдя по [ссылке](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (загрузка начнется автоматически).
 3. **Установите Yarn и Electron:**
-   - Установите Yarn, Electron  с помощью консоли:
+   - Установите Yarn, Electron и @electron-forge/cli с помощью консоли:
     ```bash
     npm i -g yarn
     npm i -g electron
