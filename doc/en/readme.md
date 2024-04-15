@@ -47,8 +47,11 @@
     | |-- Яндекс Музыка.exe |                    |
     | |-- other files...    |                    |
     ```  
-3. **Install Yarn and Electron:**
-   - Install Yarn and Electron using the console:
+3. **Install Node.Js
+   - Download and install Node.Js by following the [link](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (the download will start automatically).
+
+4. **Install Yarn and Electron:**
+   - Install Yarn, Electron and @electron-forge/cli using the console:
     ```bash
     npm install --global yarn
     npm i -g electron
@@ -58,12 +61,15 @@
     yarn --version
     electron --version
     ```
-4. **Install Dependencies:**
+5. **Install Dependencies:**
    - Install dependencies using the console:
     ```bash
+    yarn global add @electron-forge/cli
     yarn install
     ```
-5. **Run the Application:**
+   - If an error occurs, `info There appears to be trouble with your network connection. Retrying...` it is recommended to reboot your computer. Then repeat `yarn install` in the project directory.
+  
+6. **Run the Application:**
     - Run the application using the console:
      ```bash
      yarn start
