@@ -75,6 +75,8 @@
      yarn start
      ```
     - Click the `Patch` button to install the script into Yandex Music.
+7. **Errors and other problems:**
+    - Errors and problems during installation or operation of the application can always occur. You can create an `issue` with a description of your problem or write about the problem on the discord silver [YandexMusic DRPC](https://discord.gg/qy42uGTzRy ) where they will try to help you.
 
 
 
