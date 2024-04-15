@@ -24,22 +24,25 @@
 
 /* @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz@6..12&display=swap'); */
 
+:root {
+    --bg: #181b1e;
+    --color1: #cadbf4;
+    --color2: #2e343b;
+    --color3: #363a40;
+}
+
 * {
     font-family: 'Open Runde';
     /* font-style: normal;
     font-weight: 600; */
-    color: #f4ecca;
+    color: var(--color1);
     user-select: none;
-}
-
-:root {
-    --color2: #a9a9a933;
 }
 
 body {
     display: flex;
-    background: #0f0e0e;
-    color: #f4ecca;
+    background: var(--bg);
+    color: var(--color1);
     padding: 0;
     margin: 0;
     flex-direction: column;
@@ -75,7 +78,7 @@ footer {
 
 .logoapp {
     border-radius: 12px;
-    background: #f4ecca;
+    background: var(--color1);
     height: 50px;
 }
 
@@ -128,24 +131,26 @@ footer {
     transition: cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.15s;
     border: 0;
     border-radius: 10px;
-    background: #403e36;
-    color: #f4ecca;
+    background: var(--color3);
+    color: var(--color1);
     padding: 14px 23px;
+    outline: 0px solid var(--color1);
     font-style: normal;
     font-weight: 500;
-    font-size: 20px;
-    line-height: 24px;
-    outline: 0px solid #f4ecca;
+    font-size: 18px;
+    line-height: 22px;
+    display: flex;
 }
 
 .button:hover {
     transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
-    font-size: 21px;
+    font-size: 17px;
     opacity: 0.8;
-    outline: 8px solid #f4ecca;
+    outline: 4px solid var(--color1);
 }
 
 .button:disabled {
+    font-size: 18px;
     cursor: not-allowed;
     opacity: 0.5;
     background: #364037;
@@ -153,7 +158,6 @@ footer {
 }
 
 .button:disabled:hover {
-    font-size: 20px;
     opacity: 0.5;
     background: #364037;
     color: #caf4ce;
@@ -165,7 +169,7 @@ footer {
 }
 
 .dizb:hover {
-    font-size: 20px;
+    font-size: 17px;
     opacity: 0.2;
     outline: 0;
 }
@@ -214,13 +218,13 @@ a:hover {
 
     padding: 28px 40px;
     gap: 20px;
-    background: rgba(19, 19, 19, 0.2);
+    background: #24272b1c;
     border-bottom: 3px solid rgba(0, 0, 0, 0.3);
 }
 
 .main_option:hover {
     transition: cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.05s;
-    background: rgba(83, 83, 83, 0.1);
+    background: #24272b8c;
 }
 
 .H1 {
@@ -229,15 +233,23 @@ a:hover {
     font-size: 28px;
     line-height: 34px;
 
-    color: #f4ecca;
+    color: var(--color1);
 }
 
 .custom_select {
     position: relative;
     display: inline-block;
-    background: #363a40;
+    background: var(--color3);
     border-radius: 10px;
-    border: 1px solid #fff;
+    transition: cubic-bezier(0.455, 0.03, 0.515, 0.955) 0.15s;
+    outline: 0px solid var(--color1);
+    /* border: 1px solid #fff; */
+}
+
+.custom_select:hover {
+    transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
+    font-size: 16px;
+    outline: 4px solid var(--color1);
 }
 
 .select_selected {
@@ -246,26 +258,41 @@ a:hover {
     border-radius: 4px;
 }
 
+/* .select_selected:hover {
+    transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
+    scale: 0.9;
+} */
+
 .select_items {
+    transform: translateY(2px);
+    scale: 0.9;
+    transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
     display: none;
     position: absolute;
-    transform: translateY(5px);
+    bottom: 100%;
     background-color: #f9f9f9;
     width: 100%;
     border-radius: 10px;
-    border: 1px solid #fff;
     overflow: hidden;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
 
 .select_items div {
+    transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
     padding: 12px 16px;
     cursor: pointer;
 }
 
 .select_items div:hover {
-    background-color: #f1f1f1;
+    background: #2a2d31;
+    padding: 12px 25px;
+}
+
+.select_items:hover {
+    transform: translateY(-25px);
+    scale: 1.1;
+    outline: 4px solid var(--color1);
 }
 
 .imageTheme {
@@ -274,7 +301,7 @@ a:hover {
 }
 
 .containerTheme {
-    background: #363a40;
+    background: var(--color3);
     display: flex;
     gap: 22px;
     align-items: center;

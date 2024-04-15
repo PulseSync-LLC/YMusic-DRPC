@@ -51,6 +51,17 @@ pathStyle.addEventListener('click', async event => {
 })
 
 window.onload = async () => {
+    window.drp
+        .checkFileExists()
+        .then(fileExists => {
+            if (fileExists) {
+                patcherApp.disabled = true
+            }
+        })
+        .catch(err => {
+            console.error('Ошибка при проверке файла:', err)
+        })
+
     try {
         let list = await window.drp.getThemesList()
         const selectItems = document.getElementById('select_items')
