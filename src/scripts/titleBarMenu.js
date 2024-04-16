@@ -66,7 +66,18 @@ pathStyle.addEventListener('click', async event => {
 
 function selectorSelectTheme(theme) {
     document.getElementById('select_selected').innerHTML = `
-<div class="containerTheme"><img class="imageTheme" src="${theme.path + theme.image}"><div>${theme.name} - ${theme.author}</div></div>
+<div class="containerTheme">
+    <div class="containerInfo">
+        <img class="imageTheme" src="${theme.path + theme.image}">
+        <m>
+            <span class="themeName">${theme.name} - </span><span class="themeAuthor">${theme.author}</span>
+            <div class="themeVersion">${theme.version}</div>
+        <m/>
+    </div>
+    <svg width="40" height="41" viewBox="0 0 40 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M13.5334 15.9833L20 22.45L26.4667 15.9833C27.1167 15.3333 28.1667 15.3333 28.8167 15.9833C29.4667 16.6333 29.4667 17.6833 28.8167 18.3333L21.1667 25.9833C20.5167 26.6334 19.4667 26.6334 18.8167 25.9833L11.1667 18.3333C10.5167 17.6833 10.5167 16.6333 11.1667 15.9833C11.8167 15.35 12.8834 15.3333 13.5334 15.9833Z" fill="#CADBF4"/>
+    </svg>
+</div>
 `
 }
 
@@ -106,7 +117,7 @@ window.onload = async () => {
             img.src = theme.path + theme.image
             img.className = 'imageTheme'
             const textContentOption = document.createElement('div')
-            textContentOption.textContent = theme.name
+            textContentOption.textContent = `${theme.name} - ${theme.author} (${theme.version})`
             selectItems.appendChild(option)
             option.appendChild(img)
             option.appendChild(textContentOption)

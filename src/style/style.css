@@ -102,7 +102,7 @@ footer {
     gap: 20px;
 }
 
-.logoplace > span {
+.logoplace>span {
     font-size: 22px;
     font-weight: 900;
 }
@@ -163,14 +163,16 @@ footer {
     background: #364037;
     color: #caf4ce;
     outline: 0;
+    font-size: 17px;
 }
 
 .dizb {
+    cursor: not-allowed;
     opacity: 0.2;
 }
 
 .dizb:hover {
-    font-size: 17px;
+    /* font-size: 17px; */
     opacity: 0.2;
     outline: 0;
 }
@@ -186,7 +188,7 @@ footer {
     display: flex;
     flex-direction: row;
     width: 100%;
-    gap: 15px; 
+    gap: 15px;
 }
 
 .dialog_container {
@@ -261,15 +263,15 @@ a:hover {
 }
 
 .select_selected {
+    transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
     cursor: pointer;
     padding: 8px;
     border-radius: 4px;
 }
 
-/* .select_selected:hover {
-    transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
-    scale: 0.9;
-} */
+.select_selected:hover {
+    padding: 8px 16px;
+}
 
 .select_items {
     transform: translateY(2px);
@@ -288,6 +290,8 @@ a:hover {
 
 .select_items div {
     transition: cubic-bezier(0, 0.513, 0.1, 0.955) 0.45s;
+    display: flex;
+    justify-content: flex-start;
     padding: 12px 16px;
     cursor: pointer;
 }
@@ -311,6 +315,36 @@ a:hover {
 .containerTheme {
     background: var(--color3);
     display: flex;
+    justify-content: space-between;
+    padding-right: 10px;
+    align-items: center;
+}
+
+.containerInfo {
+    display: flex;
+    flex-direction: row;
     gap: 22px;
     align-items: center;
+}
+
+.themeName {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 24px;
+}
+
+.themeAuthor {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 21px;
+    opacity: 0.89;
+}
+
+.themeVersion {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 21px;
 }
