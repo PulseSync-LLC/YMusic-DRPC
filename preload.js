@@ -7,6 +7,7 @@ contextBridge.exposeInMainWorld('drp', {
     clickUnpatcher: () => ipcRenderer.invoke('unpatcherWin'),
     pathAppOpen: () => ipcRenderer.invoke('pathAppOpen'),
     pathStyleOpen: () => ipcRenderer.invoke('pathStyleOpen'),
+    checkSelectedStyle: () => ipcRenderer.invoke('checkSelectedStyle'),
     selectStyle: (name, author) =>
         ipcRenderer.invoke('selectStyle', name, author),
     getThemesList: () => ipcRenderer.invoke('getThemesList'),

@@ -64,6 +64,12 @@ pathStyle.addEventListener('click', async event => {
     }
 })
 
+function selectorSelectTheme(theme) {
+    document.getElementById('select_selected').innerHTML = `
+<div class="containerTheme"><img class="imageTheme" src="${theme.path + theme.image}"><div>${theme.name} - ${theme.author}</div></div>
+`
+}
+
 window.onload = async () => {
     window.drp
         .checkFileExists()
@@ -78,6 +84,15 @@ window.onload = async () => {
         })
         .catch(err => {
             console.error('Ошибка при проверке файла:', err)
+        })
+
+    window.drp
+        .checkSelectedStyle()
+        .then(theme => {
+            selectorSelectTheme(theme)
+        })
+        .catch(error => {
+            console.error("Error checking selected style:", error)
         })
 
     try {
@@ -96,9 +111,7 @@ window.onload = async () => {
             option.appendChild(img)
             option.appendChild(textContentOption)
             option.addEventListener('click', () => {
-                document.getElementById('select_selected').innerHTML = `
-                <div class="containerTheme"><img class="imageTheme" src="${theme.path + theme.image}"><div>${theme.name} - ${theme.author}</div></div>
-                `
+                selectorSelectTheme(theme)
                 window.drp.selectStyle(theme.name, theme.author)
             })
         })

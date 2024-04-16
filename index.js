@@ -130,6 +130,18 @@ function createWindow() {
         }
     })
 
+    ipcMain.handle('checkSelectedStyle', () => {
+        let confData = fs.readFileSync(confFilePath, 'utf8')
+        let themeDir = JSON.parse(confData).select
+
+        let fileCheck = path.join(themesDir, themeDir, 'metadata.json')
+        let jsonData = fs.readFileSync(fileCheck, 'utf8')
+        let theme = JSON.parse(jsonData)
+        theme.path = path.join(themesDir, themeDir, "\\")
+        console.log(theme)
+        return theme
+    })
+
     ipcMain.handle('getThemesList', () => {
         let confData = fs.readFileSync(confFilePath, 'utf8')
         let conf = JSON.parse(confData)
