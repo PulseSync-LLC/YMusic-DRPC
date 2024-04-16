@@ -65,7 +65,7 @@
      
     ```
 5. **Установите зависимости:**
-   - Установите зависимости с помощью консоли:
+   - Установите зависимости в директорию проекта `C:\Users\<ВашеИмя>\AppData\Local\Programs\YMusic-DRPC` с помощью консоли:
     ```bash
     yarn global add @electron-forge/cli
     yarn install
