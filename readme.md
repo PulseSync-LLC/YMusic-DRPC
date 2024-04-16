@@ -56,28 +56,38 @@
     npm i -g electron
     npm i -g @electron-forge/cli
     npm i --save-dev @electron-forge/cli
+     
     ```
    - Убедитесь, что Yarn и Electron установлен, запустив:
     ```bash
     yarn --version
     electron --version
+     
     ```
 5. **Установите зависимости:**
    - Установите зависимости с помощью консоли:
     ```bash
     yarn global add @electron-forge/cli
     yarn install
+     
     ```
-   - В случае возникновения ошибки `info There appears to be trouble with your network connection. Retrying...` рекомендуется перезагурзить компьютер. После повторите `yarn install` в директории проекта.
+   5.1 **Ошибка There appears to be trouble with your network connection.**
+      - В случае возникновения ошибки `info There appears to be trouble with your network connection. Retrying...` рекомендуется перезагурзить компьютер. После повторите `yarn install` в директории проекта.
+      - Если перезагрузка не помогла, возможно Yarn пытается установить пакеты через Proxy, которые по умолчанию в нём неопределенны, в таком случае просто удалите их введя следующие команды в консоль:
+        ```bash
+        yarn config delete https-proxy
+        yarn config delete proxy
+         
+        ```
     
-6. **Запустите приложение:**
+7. **Запустите приложение:**
     - Запустите приложение с помощью консоли:
      ```bash
      yarn start
      ```
     - Нажмите кнопку `Запатчить Яндекс Музыку`, для установки скрипта в Яндекс Музыку.
 
-7. **Ошибки и прочие проблемы:**
+8. **Ошибки и прочие проблемы:**
    - Ошибки и проблемы при установке или работе приложения могут возникнуть всегда. Вы можете создать `issue` c описанием вашей проблемы или написать о проблеме на дискорд серевере [YandexMusic DRPC](https://discord.gg/qy42uGTzRy) где вам постараются помочь.
 
 
