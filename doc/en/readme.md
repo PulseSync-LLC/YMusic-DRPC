@@ -64,7 +64,7 @@
      
     ```
 5. **Install Dependencies:**
-   - Install dependencies using the console:
+   - Install the dependencies in the project directory `C:\Users\<YourName>\AppData\Local\Programs\YMusic-DRPC` using the console:
     ```bash
     yarn global add @electron-forge/cli
     yarn install
