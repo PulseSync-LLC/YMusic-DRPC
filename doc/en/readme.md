@@ -77,7 +77,7 @@
        yarn config delete https-proxy
        yarn config delete proxy
        
-       ```
+      ```
   
 6. **Run the Application:**
     - Run the application using the console:
