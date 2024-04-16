@@ -55,19 +55,29 @@
     ```bash
     npm install --global yarn
     npm i -g electron
+     
     ```
    - Verify Yarn and Electron installations by running:
     ```bash
     yarn --version
     electron --version
+     
     ```
 5. **Install Dependencies:**
    - Install dependencies using the console:
     ```bash
     yarn global add @electron-forge/cli
     yarn install
+     
     ```
-   - If an error occurs, `info There appears to be trouble with your network connection. Retrying...` it is recommended to reboot your computer. Then repeat `yarn install` in the project directory.
+   5.1 **Error There appears to be trouble with your network connection.**
+      - In case of error `info There appears to be trouble with your network connection. Retrying...` it is recommended to restart the computer. Then repeat `yarn install` in the project directory.
+      - If the reboot did not help, Yarn may be trying to install packages via Proxy, which are undefined by default in it, in which case just delete them by entering the following commands into the console:
+      ```bash
+       yarn config delete https-proxy
+       yarn config delete proxy
+       
+       ```
   
 6. **Run the Application:**
     - Run the application using the console:
