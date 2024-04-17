@@ -31,7 +31,7 @@
 2. **Download Application Files:**
    - Download project files or clone the project using the console:
     ```bash
-    git clone https://github.com/Maks1mio/YMusic-DRPC.git
+    git clone https://github.com/PulseSync-Official/YMusic-DRPC.git
     ```
    - Clone into the Programs directory: `C:\Users\<YourName>\AppData\Local\Programs`.
 
