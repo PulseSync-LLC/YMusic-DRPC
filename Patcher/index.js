@@ -104,7 +104,7 @@ function patcherym() {
                     const customHtmlElement = document.createElement('div');
                     customHtmlElement.style = "position: absolute;top: -7px;right: 140px;color: rgb(255 255 255 / 29%);font-family: var(--ym-font-text);font-style: normal;font-weight: 100;letter-spacing: normal;line-height: var(--ym-font-line-height-label-s);"
 
-                    customHtmlElement.innerHTML = '<p class="YMDRCP">YMusic-DRPC 2.0.5</p>';
+                    customHtmlElement.innerHTML = '<p class="YMDRPC">YMusic-DRPC 2.0.5</p>';
 
                     bodyElement.appendChild(customHtmlElement);
 
