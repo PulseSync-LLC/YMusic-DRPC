@@ -1,9 +1,9 @@
-[[ > English < ]](https://github.com/Maks1mio/YMusic-DRPC/blob/patcher/doc/en/readme.md) - [[ Русский ]](https://github.com/Maks1mio/YMusic-DRPC/tree/patcher)
-![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/ee18b157-914d-495c-a4a0-7569ad0a2872)
+[[ > English < ]](https://github.com/PulseSync-Official/YMusic-DRPC/blob/patcher/doc/en/readme.md) - [[ Русский ]](https://github.com/PulseSync-Official/YMusic-DRPC/tree/patcher)
+![image](https://github.com/PulseSync-Official/YMusic-DRPC/assets/44835662/ee18b157-914d-495c-a4a0-7569ad0a2872)
 
 <p align="center">
    <a href="https://discord.gg/qy42uGTzRy">
-      <img width="250" alt="YMusic-DRPC invite" src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/e4604edc-4bea-4bcc-80e4-49d3ec6bce33">
+      <img width="250" alt="YMusic-DRPC invite" src="https://github.com/PulseSync-Official/YMusic-DRPC/assets/44835662/e4604edc-4bea-4bcc-80e4-49d3ec6bce33">
    </a>
 </p>
 
@@ -13,11 +13,11 @@
 
 **Screenshots**
 
-![image](https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/433a2d4e-6836-438e-8100-151bf405546f)
+![image](https://github.com/PulseSync-Official/YMusic-DRPC/assets/44835662/433a2d4e-6836-438e-8100-151bf405546f)
 
 <p align="center">
-     <img width="45%" alt="1" src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/cea9c24e-8249-4f84-8c8b-f7120475e3bb">
-     <img width="45%" alt="2" src="https://github.com/Maks1mio/YMusic-DRPC/assets/44835662/f576e409-3378-4bf0-b153-b01a6d5c13c3">
+     <img width="45%" alt="1" src="https://github.com/PulseSync-Official/YMusic-DRPC/assets/44835662/cea9c24e-8249-4f84-8c8b-f7120475e3bb">
+     <img width="45%" alt="2" src="https://github.com/PulseSync-Official/YMusic-DRPC/assets/44835662/f576e409-3378-4bf0-b153-b01a6d5c13c3">
 </p>
 
 ### Installation Steps:
