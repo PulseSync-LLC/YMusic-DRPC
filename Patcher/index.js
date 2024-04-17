@@ -102,7 +102,7 @@ function patcherym() {
 
                 if (bodyElement && !isScriptExecuted) {
                     const customHtmlElement = document.createElement('div');
-                    customHtmlElement.style = "position: absolute; top: -10px; color: #fff;"
+                    customHtmlElement.style = "position: absolute;top: -7px;right: 140px;color: rgb(255 255 255 / 29%);font-family: var(--ym-font-text);font-style: normal;font-weight: 100;letter-spacing: normal;line-height: var(--ym-font-line-height-label-s);"
 
                     customHtmlElement.innerHTML = '<p class="YMDRCP">YMusic-DRPC 2.0.5</p>';
 
@@ -122,6 +122,17 @@ function patcherym() {
                 const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artists"]');
                 const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
                 const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
+                imgElements.forEach(img => {
+                    if (img.src && img.src.includes('/100x100')) {
+                        img.src = img.src.replace('/100x100', '/1000x1000');
+                    }
+                    if (img.srcset && img.srcset.includes('/100x100')) {
+                        img.srcset = img.srcset.replace('/100x100', '/1000x1000');
+                    }
+                    if (img.srcset && img.srcset.includes('/200x200 2x')) {
+                        img.srcset = img.srcset.replace('/200x200 2x', '/1000x1000 2x');
+                    }
+                });
                 const titleText = playerBarTitleElement ? playerBarTitleElement.textContent.trim() : '';
 
                 const artistTextElements = artistLinkElement ? artistLinkElement.querySelectorAll('[class*="Meta_artistCaption"]') : null;
@@ -132,6 +143,7 @@ function patcherym() {
 
                 const timecodesArray = Array.from(timecodeElements, (element) => element.textContent.trim());
                 const ImgTrack = imgElements.length > 0 ? Array.from(imgElements, (element) => element.src) : [[None, 'ym']];
+
 
                 return {
                     playerBarTitle: titleText,

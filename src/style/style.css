@@ -348,3 +348,10 @@ a:hover {
     font-size: 17px;
     line-height: 21px;
 }
+
+
+.warn {
+    font-size: 12px;
+    font-weight: 400;
+    color: #fdff6c;
+}
