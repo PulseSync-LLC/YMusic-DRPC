@@ -45,10 +45,10 @@
     | |-- Яндекс Музыка.exe |                    |
     | |-- other files...    |                    |
     ```  
-3. **Install Node.Js
+3. **Install Node.Js:**
    - Download and install Node.Js by following the [link](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (the download will start automatically).
 
-4. **Install git**
+4. **Install git:**
    - Download git using this link [ссылке](https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe ) (the download will start automatically).
 
 5. **Install Yarn and Electron:**
