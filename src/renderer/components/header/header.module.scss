@@ -1,0 +1,10 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    height: fit-content;
+    -webkit-app-region: drag;
+    background: var(--color2);
+    padding: 15px 40px;
+    border-radius: 0 0 15px 15px;
+}

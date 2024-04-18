@@ -43,6 +43,7 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
     width: 40,
     height: 40,
 })
+
 let metadata
 let tray = null
 const createWindow = (): void => {

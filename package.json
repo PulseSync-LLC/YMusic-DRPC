@@ -27,6 +27,8 @@
         "@typescript-eslint/eslint-plugin": "^7.7.0",
         "@typescript-eslint/parser": "^7.7.0",
         "@vercel/webpack-asset-relocator-loader": "1.7.3",
+        "sass": "^1.62.1",
+        "sass-loader": "^13.2.2",
         "css-loader": "^7.1.1",
         "electron": "30.0.1",
         "eslint": "^9.0.0",
