@@ -9,7 +9,7 @@
 
 **YandexMusic Discord Rich Presence Integration - Documentation**
 
-*Note: The following instructions assume that YandexMusic BETA 5.0.19 is installed in the default directory ("AppData\Local\Programs\YandexMusic"). Ensure YandexMusic is closed*
+*Note: The following instructions assume that YandexMusic BETA 5.0.19+ is installed in the default directory ("AppData\Local\Programs\YandexMusic"). Ensure YandexMusic is closed*
 
 **Screenshots**
 
@@ -23,7 +23,7 @@
 ### Installation Steps:
 
 1. **Download YandexMusic:**
-   - Download YandexMusic BETA 5.0.19 from [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
+   - Download YandexMusic BETA 5.0.19+ from [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
    - Install YandexMusic to the standard directory: `C:\Users\<YourName>\AppData\Local\Programs\YandexMusic`.
 
 2. **Download Application Files:**
@@ -48,7 +48,10 @@
 3. **Install Node.Js
    - Download and install Node.Js by following the [link](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (the download will start automatically).
 
-4. **Install Yarn and Electron:**
+4. **Install git**
+   - Download git using this link [ссылке](https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe ) (the download will start automatically).
+
+5. **Install Yarn and Electron:**
    - Install Yarn, Electron and @electron-forge/cli using the console:
     ```bash
     npm install --global yarn
@@ -61,14 +64,14 @@
     electron --version
      
     ```
-5. **Install Dependencies:**
+6. **Install Dependencies:**
    - Install the dependencies in the project directory `C:\Users\<YourName>\AppData\Local\Programs\YMusic-DRPC` using the console:
     ```bash
     yarn global add @electron-forge/cli
     yarn install
      
     ```
-   5.1 **Error There appears to be trouble with your network connection.**
+   6.1 **Error There appears to be trouble with your network connection.**
       - In case of error `info There appears to be trouble with your network connection. Retrying...` it is recommended to restart the computer. Then repeat `yarn install` in the project directory.
       - If the reboot did not help, Yarn may be trying to install packages via Proxy, which are undefined by default in it, in which case just delete them by entering the following commands into the console:
       ```bash
@@ -77,13 +80,13 @@
        
       ```
   
-6. **Run the Application:**
+7. **Run the Application:**
     - Run the application using the console:
      ```bash
      yarn start
      ```
     - Click the `Patch` button to install the script into Yandex Music.
-7. **Errors and other problems:**
+8. **Errors and other problems:**
     - Errors and problems during installation or operation of the application can always occur. You can create an `issue` with a description of your problem or write about the problem on the discord silver [YandexMusic DRPC](https://discord.gg/qy42uGTzRy ) where they will try to help you.
 
 

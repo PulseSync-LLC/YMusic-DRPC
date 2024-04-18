@@ -9,7 +9,7 @@
 
 **Интеграция Discord Rich Presence для YandexMusic - Документация**
 
-*Примечание: Следующие инструкции предполагают, что Яндекс Музыка BETA 5.0.19 установлен в стандартном каталоге ("AppData\Local\Programs\YandexMusic"). Убедитесь, что Яндекс Музыка закрыта.*
+*Примечание: Следующие инструкции предполагают, что Яндекс Музыка BETA 5.0.19+ установлен в стандартном каталоге ("AppData\Local\Programs\YandexMusic"). Убедитесь, что Яндекс Музыка закрыта.*
 
 **Скриншоты**
 
@@ -23,7 +23,7 @@
 ### Этапы установки:
 
 1. **Скачайте YandexMusic:**
-   - Скачайте YandexMusic BETA 5.0.19 с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
+   - Скачайте YandexMusic BETA 5.0.19+ с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
    - Установите YandexMusic в стандартный каталог: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.
 
 2. **Скачайте файлы приложения**
@@ -47,7 +47,11 @@
     ```
 3. **Установите Node.Js
    - Загрузите и установите Node.Js перейдя по [ссылке](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (загрузка начнется автоматически).
-4. **Установите Yarn и Electron:**
+
+4. **Установите git**
+   - Скачайте git по этой [ссылке](https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe) (загрузка начнется автоматически).
+
+5. **Установите Yarn и Electron:**
    - Установите Yarn, Electron и @electron-forge/cli с помощью консоли:
     ```bash
     npm i -g yarn
@@ -62,14 +66,14 @@
     electron --version
      
     ```
-5. **Установите зависимости:**
+6. **Установите зависимости:**
    - Установите зависимости в директорию проекта `C:\Users\<ВашеИмя>\AppData\Local\Programs\YMusic-DRPC` с помощью консоли:
     ```bash
     yarn global add @electron-forge/cli
     yarn install
      
     ```
-   5.1 **Ошибка There appears to be trouble with your network connection.**
+   6.1 **Ошибка There appears to be trouble with your network connection.**
       - В случае возникновения ошибки `info There appears to be trouble with your network connection. Retrying...` рекомендуется перезагурзить компьютер. После повторите `yarn install` в директории проекта.
       - Если перезагрузка не помогла, возможно Yarn пытается установить пакеты через Proxy, которые по умолчанию в нём неопределенны, в таком случае просто удалите их введя следующие команды в консоль:
         ```bash
