@@ -6,12 +6,19 @@ const fs = require('fs')
 const RPC = require('discord-rpc')
 const getTrackInfo = require('./RequestHandler')
 
+let rpcConnected = false;
 const rpc = new RPC.Client({
     transport: 'ipc',
 })
 
 rpc.login({
     clientId: '984031241357647892',
+}).catch((e) => {
+    console.error("discord-rpc: Ошибка при подключении: " + e)
+})
+rpc.on('connected', () => {
+    console.log('discord-rpc: connected')
+    rpcConnected = true
 })
 
 const ydrpcModification = path.join(
@@ -279,7 +286,8 @@ function createWindow() {
         })
     }
 
-    setInterval(() => {
+   setInterval(() => {
+        if(!rpcConnected) return;
         // console.log(metadata)
         if (metadata && Object.keys(metadata).length) {
             updateDiscordRPC(rpc, metadata)
@@ -287,6 +295,7 @@ function createWindow() {
             noYMAppDiscordRPC(rpc)
         }
     }, 1000)
+
 }
 
 app.on('ready', createWindow)
