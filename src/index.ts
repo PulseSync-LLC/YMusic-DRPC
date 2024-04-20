@@ -54,7 +54,7 @@ const createWindow = (): void => {
         backgroundColor: '#08070d',
         width: 615,
         height: 900,
-        minWidth: 615,
+        minWidth: 1000,
         minHeight: 577,
         //maxWidth: 615,
         icon,
