@@ -26,7 +26,10 @@
    - Скачайте YandexMusic BETA 5.0.19+ с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
    - Установите YandexMusic в стандартный каталог: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.
 
-2. **Скачайте файлы приложения**
+2. **Установите git:**
+   - Скачайте git по этой [ссылке](https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe) (загрузка начнется автоматически).
+
+3. **Скачайте файлы приложения**
    - Скачайте файлы проекта или склонируйте проект с помошью консоли:
     ```bash
     git clone https://github.com/PulseSync-Official/YMusic-DRPC.git
@@ -45,11 +48,9 @@
     | |-- Яндекс Музыка.exe |                    |
     | |-- другие файлы...   |                    |
     ```
-3. **Установите Node.Js:**
+4. **Установите Node.Js:**
    - Загрузите и установите Node.Js перейдя по [ссылке](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (загрузка начнется автоматически).
 
-4. **Установите git:**
-   - Скачайте git по этой [ссылке](https://github.com/git-for-windows/git/releases/download/v2.44.0.windows.1/Git-2.44.0-64-bit.exe) (загрузка начнется автоматически).
 
 5. **Установите Yarn и Electron:**
    - Установите Yarn, Electron и @electron-forge/cli с помощью консоли:
