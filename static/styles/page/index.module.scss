@@ -1,3 +1,6 @@
 .page {
     font-family: 'Open Runde', sans-serif;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    overflow-y: scroll;
 }

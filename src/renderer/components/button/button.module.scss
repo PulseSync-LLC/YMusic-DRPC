@@ -1,0 +1,40 @@
+.button {
+    transition: ease-in-out all 0.1s;
+
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 25px;
+    gap: 10px;
+
+    width: 349px;
+    height: 48px;
+
+    background: #2a2e3400;
+    border: 1px solid #3c434f00;
+    border-radius: 12px;
+
+    font-family: 'Open Runde';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+
+    text-align: center;
+    color: #CADBF4;
+
+    &:hover {
+        background: #343941;
+        border: 1px solid #3c434f;
+        &:disabled {
+            opacity: 0.2;
+            background: #2a2e3400;
+            border: 1px solid #3c434f00;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.2;
+    }
+}

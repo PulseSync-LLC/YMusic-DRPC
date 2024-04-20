@@ -1,8 +1,8 @@
 {
-    "name": "yamusicapp",
-    "productName": "YaMusicApp",
+    "name": "pulsesyncapp",
+    "productName": "PulseSync",
     "version": "1.0.0",
-    "description": "YandexMusic app for desktops",
+    "description": "PulseSync app for desktops",
     "main": ".webpack/main",
     "scripts": {
         "start": "electron-forge start",
@@ -13,7 +13,7 @@
         "format": "prettier --write ."
     },
     "keywords": [],
-    "author": "d1m0s23",
+    "author": "EvT",
     "license": "MIT",
     "devDependencies": {
         "@electron-forge/cli": "^7.4.0",
