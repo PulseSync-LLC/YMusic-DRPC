@@ -24,7 +24,6 @@ export const rendererConfig: Configuration = {
             stream: require.resolve('stream-browserify'),
             os: require.resolve('os-browserify'),
             url: require.resolve('url'),
-            path: require.resolve('path-browserify'),
         },
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
     },

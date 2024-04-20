@@ -1,0 +1,43 @@
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    z-index: 500;
+
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.btn {
+    padding: 10px;
+
+    cursor: pointer;
+    background-color: var(--medium);
+    border-radius: 100px;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1.3em 1.5em;
+    .headerAvatar {
+        display: flex;
+        flex: 0 0 auto;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        width: 48px;
+        height: 48px;
+
+        cursor: pointer;
+    }
+}
+
+.avatar {
+    border-radius: 60px;
+    cursor: pointer;
+}

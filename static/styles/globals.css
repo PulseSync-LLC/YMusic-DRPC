@@ -1,0 +1,77 @@
+@font-face {
+    font-family: 'Open Runde';
+    font-weight: 400;
+    src: url(../../static/assets/fonts/OpenRunde-Regular.otf);
+}
+
+@font-face {
+    font-family: 'Open Runde';
+    font-weight: 500;
+    src: url(../../static/assets/fonts/OpenRunde-Medium.otf);
+}
+
+@font-face {
+    font-family: 'Open Runde';
+    font-weight: 600;
+    src: url(../../static/assets/fonts/OpenRunde-Semibold.otf);
+}
+
+@font-face {
+    font-family: 'Open Runde';
+    font-weight: 700;
+    src: url(../../static/assets/fonts/OpenRunde-Bold.otf);
+}
+:root {
+    --white: #f0f0f0;
+    --primary: #ffcc66;
+    --red: #ed4245;
+
+    --medium: #131317;
+    --mediumer: #1c1c22;
+    --dark: #08070d;
+
+    --gray: #777;
+    --grayer: #25252d;
+}
+
+html,
+body,
+#root {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+body {
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+
+    background-color: var(--dark);
+}
+
+::-webkit-scrollbar {
+    z-index: 100;
+}
+
+h1,
+h2 {
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 500;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --white: black;
+        --medium: #e9ecef;
+        --mediumer: #adb5bd;
+        --dark: #ced4da;
+    }
+}

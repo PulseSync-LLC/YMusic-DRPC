@@ -1,6 +1,6 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { Presence } from 'discord-rpc'
 import { Track } from 'yandex-music-client'
-import { SetActivity } from '@xhayper/discord-rpc/dist/structures/ClientUser'
 
 declare global {
     interface Window {
@@ -39,7 +39,7 @@ declare global {
             removeListener: (channel: string) => void
         }
         discordRPC: {
-            setActivity: (props: SetActivity) => void
+            setActivity: (props: Presence) => void
             clearActivity: () => void
         }
     }

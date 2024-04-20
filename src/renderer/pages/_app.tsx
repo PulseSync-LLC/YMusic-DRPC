@@ -1,27 +1,25 @@
-import React, { useContext, useEffect, useReducer, useState } from 'react'
-import Header from '../components/header'
+import React from 'react'
+import { createHashRouter, RouterProvider } from 'react-router-dom'
+import IndexPage from './index'
+import { Toaster } from 'react-hot-toast'
+import { CssVarsProvider } from '@mui/joy'
 
 function app() {
-    // window.discordRPC.setActivity({
-    //     details: 'test',
-    //     state: `test`,
-    //     largeImageKey: `https://avatars.yandex.net/get-music-content/5280749/e947e174.a.17393402-1/200x200`,
-    //     largeImageText: 'heheheha',
-    //     smallImageKey: 'ym',
-    //     smallImageText: `YaMusicApp v1`,
-    //     startTimestamp: null,
-    //     buttons: [
-    //         {
-    //             label: 'Открыть трек',
-    //             url: `https://music.yandex.ru`,
-    //         },
-    //     ],
-    // })
+    const router = createHashRouter([
+        {
+            path: '/',
+            element: <IndexPage />,
+        },
+    ])
+
     return (
-        <>
-            <Header />
-            <div className="app-wrapper">345</div>
-        </>
+        <div className="app-wrapper">
+            <Toaster />
+            <CssVarsProvider>
+                <RouterProvider router={router} />
+            </CssVarsProvider>
+        </div>
     )
 }
+
 export default app

@@ -1,0 +1,19 @@
+.container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 1em;
+}
+
+@media (min-width: 600px) {
+    .container {
+        width: 80%;
+        margin: auto;
+    }
+}
+
+@media (min-width: 900px) {
+    .container {
+        width: 99%;
+        margin: auto;
+    }
+}

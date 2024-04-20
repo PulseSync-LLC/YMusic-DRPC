@@ -1,10 +1,10 @@
-import {app, BrowserWindow, ipcMain, Menu, Tray, shell} from 'electron'
+import { app, BrowserWindow, ipcMain, Menu, Tray, shell } from 'electron'
 import process from 'process'
 import { getNativeImg } from './main/utils'
-import './main/modules/index'
-import path from "path";
-import fs from "fs";
-import {getTrackInfo} from "./main/modules/httpServer";
+//import './main/modules/index'
+import path from 'path'
+import fs from 'fs'
+import { getTrackInfo } from './main/modules/httpServer'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -56,7 +56,7 @@ const createWindow = (): void => {
         height: 900,
         minWidth: 615,
         minHeight: 577,
-        maxWidth: 615,
+        //maxWidth: 615,
         icon,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -114,12 +114,12 @@ ipcMain.on('closeWin', () => {
 })
 
 ipcMain.on('patcherWin', event => {
-    import("./main/modules/patcher/patch")
+    import('./main/modules/patcher/patch')
     return
 })
 
 ipcMain.on('unpatcherWin', async event => {
-    require('./PatcherBack')
+    import('./main/modules/patcher/unpatch')
     return
 })
 
