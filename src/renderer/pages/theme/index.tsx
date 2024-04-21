@@ -8,7 +8,7 @@ export default function ThemePage() {
     return (
         <Layout title="Стилизация">
             <div className={styles.page}>
-                <Container titleName={'Стилизация'}>sffsfs</Container>
+                <Container titleName={'Стилизация'}>Скоро</Container>
             </div>
         </Layout>
     )
