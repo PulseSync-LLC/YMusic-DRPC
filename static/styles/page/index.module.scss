@@ -12,7 +12,20 @@
     align-items: flex-start;
     padding: 0px;
     gap: 15px;
-    
+
     width: 100%;
     height: fit-content;
+
+    .container_witch_text {
+        display: flex;
+        flex-direction: column;
+        color: #FFFFFF;
+        gap: 12px;
+        width: 100%;
+
+        .container_patcher {
+            display: flex;
+            width: 100%;
+        }
+    }
 }

@@ -1,0 +1,54 @@
+.button {
+    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 23px;
+    gap: 16px;
+
+    background: #34394100;
+    border: 1px solid #3c434f00;
+
+    width: 100%;
+    height: 127px;
+
+    border-radius: 10px;
+
+    .icon_box {
+        transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+
+        background: #343941;
+        border-radius: 12px;
+    }
+
+    &:hover {
+        background: #343941;
+        border: 1px solid #3c434f;
+
+        .icon_box {
+            background: #3B4350;
+        }
+
+        &:disabled {
+            opacity: 0.2;
+            background: #2a2e3400;
+            border: 1px solid #3c434f00;
+
+            .icon_box {
+                background: #343941;
+            }
+        }
+    }
+
+    &:disabled {
+        opacity: 0.2;
+    }
+}

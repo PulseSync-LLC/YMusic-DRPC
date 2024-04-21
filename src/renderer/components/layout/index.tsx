@@ -2,8 +2,8 @@ import styles from './layout.module.scss'
 import React from 'react'
 import { Helmet } from 'react-helmet'
 import Header from './header'
-import ButtonNav from '../button'
-import { MdHandyman, MdStyle } from 'react-icons/md'
+import ButtonNav from '../button_nav'
+import { MdConnectWithoutContact, MdDescription, MdHandyman, MdHeadset, MdHome, MdStyle } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
 
 interface p {
@@ -25,17 +25,46 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                         <NavLink to="/" className={({ isActive, isPending }) =>
                             isPending ? "pending" : isActive ? "active" : ""}>
                             <ButtonNav>
-                                <MdHandyman size={24} />
+                                <MdHome size={24} />
                                 Основные настройки
                             </ButtonNav>
                         </NavLink>
-                        <NavLink to="/theme" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}>
-                            <ButtonNav>
+                        {/* <NavLink to="/trackinfo" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}> */}
+                            <ButtonNav disabled>
+                                <MdHeadset size={24} />
+                                Информация о треке
+                            </ButtonNav>
+                        {/* </NavLink> */}
+                        {/* <NavLink to="/theme" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}> */}
+                            <ButtonNav disabled>
                                 <MdStyle size={24} />
                                 Стилизация
                             </ButtonNav>
-                        </NavLink>
+                        {/* </NavLink> */}
+                        {/* <NavLink to="/script" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}> */}
+                            <ButtonNav disabled>
+                                <MdDescription size={24} />
+                                Скриптинг
+                            </ButtonNav>
+                        {/* </NavLink> */}
+                        {/* <NavLink to="/joint" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}> */}
+                            <ButtonNav disabled>
+                                <MdConnectWithoutContact size={24} />
+                                Совместное прослушивание
+                            </ButtonNav>
+                        {/* </NavLink> */}
+                        <div className={styles.line}></div>
+                        {/* <NavLink to="/other" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}> */}
+                            <ButtonNav disabled>
+                                <MdHandyman size={24} />
+                                Остальное
+                            </ButtonNav>
+                        {/* </NavLink> */}
                     </div>
                     {children}
                 </div>

@@ -4,6 +4,7 @@ import React from 'react'
 import FiMinus from './../../../../static/assets/icons/minus.svg'
 import Minimize from './../../../../static/assets/icons/minimize.svg'
 import Close from './../../../../static/assets/icons/close.svg'
+import { MdDownload } from 'react-icons/md'
 
 interface p {
     goBack?: boolean
@@ -22,16 +23,21 @@ const Header: React.FC<p> = ({ goBack }) => {
                         />
                         <span>PulseSync</span>
                     </div>
-                    <div className={styles.button_container}>
-                        <button id="hide" className={styles.button_title}>
-                            <FiMinus/>
+                    <div className={styles.event_container}>
+                        <button className={styles.update_download}>
+                            <MdDownload size={26} />
                         </button>
-                        <button id="minimize" className={styles.button_title}>
-                            <Minimize />
-                        </button>
-                        <button id="close" className={styles.button_title}>
-                            <Close />
-                        </button>
+                        <div className={styles.button_container}>
+                            <button id="hide" className={styles.button_title}>
+                                <FiMinus />
+                            </button>
+                            <button id="minimize" className={styles.button_title}>
+                                <Minimize />
+                            </button>
+                            <button id="close" className={styles.button_title}>
+                                <Close />
+                            </button>
+                        </div>
                     </div>
                 </div>
             </header>

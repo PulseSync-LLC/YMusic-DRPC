@@ -32,22 +32,55 @@
             }
         }
 
-        .button_container {
+        .event_container {
             display: flex;
-            gap: 2px;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
 
-            .button_title {
+            width: fit-content;
+            height: fit-content;
+
+            .update_download {
+                transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
                 cursor: pointer;
                 display: flex;
-                width: fit-content;
-                height: fit-content;
-                border: 0;
-                padding: 16px;
-                background: #353c4500;
+                flex-direction: row;
+                align-items: center;
+                padding: 14px;
                 -webkit-app-region: no-drag;
 
+                background-color: #75ff9c17;
+                border: none;
+
                 &:hover {
-                    background: #353c45;
+                    background-color: #353C45;
+                }
+
+                >svg {
+                    fill: #75FF9C;
+                }
+            }
+
+            .button_container {
+                display: flex;
+                gap: 2px;
+
+                .button_title {
+                    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+                    cursor: pointer;
+                    display: flex;
+                    width: fit-content;
+                    height: fit-content;
+                    border: 0;
+                    padding: 16px;
+                    background: #353c4500;
+                    -webkit-app-region: no-drag;
+
+                    &:hover {
+                        background: #353c45;
+                    }
                 }
             }
         }
