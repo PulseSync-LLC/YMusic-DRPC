@@ -12,6 +12,10 @@ rules.push({
     test: /\.scss$/,
     use: ['style-loader', 'css-loader', 'sass-loader'],
 })
+rules.push({
+    test: /\.svg$/,
+    use: ['@svgr/webpack'],
+})
 
 export const rendererConfig: Configuration = {
     module: {

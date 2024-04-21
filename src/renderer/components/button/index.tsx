@@ -8,9 +8,14 @@ interface p extends ButtonHTMLAttributes<HTMLButtonElement> {
     disabled?: boolean
 }
 
-const Button: React.FC<p> = ({ onClick, style, children, disabled}) => {
+const Button: React.FC<p> = ({ onClick, style, children, disabled }) => {
     return (
-        <button className={styles.button} onClick={onClick} style={style} disabled={disabled}>
+        <button
+            className={styles.button}
+            onClick={onClick}
+            style={style}
+            disabled={disabled}
+        >
             {children}
         </button>
     )

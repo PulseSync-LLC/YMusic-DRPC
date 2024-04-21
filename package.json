@@ -55,6 +55,7 @@
         "@emotion/react": "^11.11.0",
         "@emotion/styled": "^11.11.0",
         "@mui/joy": "^5.0.0-alpha.80",
+        "@svgr/webpack": "^8.1.0",
         "@xhayper/discord-rpc": "^1.1.2",
         "axios": "^1.4.0",
         "cors-anywhere": "^0.4.4",

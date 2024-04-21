@@ -31,9 +31,8 @@
 
 * {
     user-select: none;
-    font-family: 'Open Runde';
+    font-family: 'Open Runde', serif;
     color: var(--color1);
-    user-select: none;
 }
 
 body {

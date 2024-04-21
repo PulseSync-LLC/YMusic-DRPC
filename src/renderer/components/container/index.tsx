@@ -13,7 +13,7 @@ const Container: React.FC<p> = ({ titleName, children, className }) => {
             <div className={`${styles.container} ${className}`}>
                 <div className={styles.title}>{titleName}</div>
                 {children}
-                </div>
+            </div>
         </>
     )
 }

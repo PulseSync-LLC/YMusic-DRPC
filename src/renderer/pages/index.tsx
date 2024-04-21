@@ -10,9 +10,7 @@ export default function IndexPage() {
     return (
         <Layout title="Главная">
             <div className={styles.page}>
-                <Container titleName={'Основные настройки'}>
-                    sfa
-                </Container>
+                <Container titleName={'Основные настройки'}>sfa</Container>
             </div>
         </Layout>
     )
