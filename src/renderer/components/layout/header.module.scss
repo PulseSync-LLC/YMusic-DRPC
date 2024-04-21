@@ -5,7 +5,7 @@
     height: fit-content;
     -webkit-app-region: drag;
     background: var(--color2);
-    padding: 10px 25px;
+    padding: 0 25px;
     border-radius: 0;
     width: -webkit-fill-available;
 
@@ -28,7 +28,7 @@
 
             span {
                 font-size: 18px;
-                font-weight: 900;
+                font-weight: 500;
             }
         }
 
@@ -42,10 +42,9 @@
                 width: fit-content;
                 height: fit-content;
                 border: 0;
-                padding: 10px;
+                padding: 16px;
                 background: #353c4500;
                 -webkit-app-region: no-drag;
-                border-radius: 10px;
 
                 &:hover {
                     background: #353C45;

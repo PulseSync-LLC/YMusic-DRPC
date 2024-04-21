@@ -5,6 +5,8 @@ import Header from './header'
 
 import ButtonNav from '../button'
 
+import Minus from '../../../../static/assets/icons/Minus.svg';
+
 interface p {
     title: string
     children: any
@@ -26,6 +28,7 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                 <Header goBack={goBack} />
                 <div className={styles.main_window}>
                     <div className={styles.navigation_bar}>
+                        <Minus></Minus>
                         <ButtonNav style={active}>
                             <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_199_1214)">
