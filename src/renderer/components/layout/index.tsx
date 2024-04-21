@@ -3,18 +3,13 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import Header from './header'
 import ButtonNav from '../button'
-import { MdHandyman } from 'react-icons/md'
-import { Link } from 'react-router-dom'
+import { MdHandyman, MdStyle } from 'react-icons/md'
+import { NavLink } from 'react-router-dom'
 
 interface p {
     title: string
     children: any
     goBack?: boolean
-}
-
-const active: React.CSSProperties = {
-    background: '#2a2e34',
-    border: '1px solid #3c434f',
 }
 
 const Layout: React.FC<p> = ({ title, children, goBack }) => {
@@ -27,26 +22,20 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                 <Header goBack={goBack} />
                 <div className={styles.main_window}>
                     <div className={styles.navigation_bar}>
-                        <Link to="/">
-                            <ButtonNav style={active}>
+                        <NavLink to="/" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}>
+                            <ButtonNav>
                                 <MdHandyman size={24} />
-                                main
+                                Основные настройки
                             </ButtonNav>
-                        </Link>
-                        <Link to="/theme">
-                            <ButtonNav style={active}>
-                                <MdHandyman size={24} />
-                                theme
+                        </NavLink>
+                        <NavLink to="/theme" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}>
+                            <ButtonNav>
+                                <MdStyle size={24} />
+                                Стилизация
                             </ButtonNav>
-                        </Link>
-                        <ButtonNav>
-                            <MdHandyman size={24} />
-                            Просто кнопка
-                        </ButtonNav>
-                        <ButtonNav disabled>
-                            <MdHandyman size={24} />
-                            Disabled
-                        </ButtonNav>
+                        </NavLink>
                     </div>
                     {children}
                 </div>

@@ -39,6 +39,11 @@ a {
     text-decoration: none;
 }
 
+a.active>button {
+        background: #2a2e34;
+        border: 1px solid #3c434f;
+}
+
 body {
     display: flex;
     background: var(--bg);

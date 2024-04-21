@@ -1,7 +1,8 @@
 import Layout from '../../components/layout'
 import Container from '../../components/container'
 
-import styles from './theme.module.scss'
+import styles from '../../../../static/styles/page/index.module.scss'
+// import theme from './theme.module.scss'
 
 export default function ThemePage() {
     return (

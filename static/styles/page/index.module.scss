@@ -4,3 +4,15 @@
     height: -webkit-fill-available;
     overflow-y: scroll;
 }
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 15px;
+    
+    width: 100%;
+    height: fit-content;
+}

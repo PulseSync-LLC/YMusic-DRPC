@@ -1,6 +1,6 @@
 import React from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
-import IndexPage from './index'
+import IndexPage from './main/index'
 import ThemePage from './theme/index'
 import { Toaster } from 'react-hot-toast'
 import { CssVarsProvider } from '@mui/joy'

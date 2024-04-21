@@ -1,0 +1,115 @@
+.checkbox {
+    cursor: pointer;
+    transition: ease-in-out all .1s;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 14px 23px;
+    border-radius: 10px;
+    background: #343941;
+    border: 1px solid #3c434f;
+    font-family: "Open Runde";
+    font-style: normal;
+    font-weight: 400;
+    width: 100%;
+    font-size: 16px;
+    line-height: 22px;
+    text-align: center;
+    justify-content: space-between;
+
+    &:hover {
+        background: #373d46;
+        border: 1px solid #3c434f;
+
+        &:disabled {
+            opacity: 0.2;
+            background: #2a2e3400;
+            border: 1px solid #3c434f00;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.2;
+    }
+
+    .input_checkbox{
+        display: none;
+    }
+    
+    .children_content{
+        display: flex;
+        gap: 10px;
+        color: #cadbf4;
+    }
+
+    .custom_checkbox {
+        transition: cubic-bezier(0.68, -0.55, 0.265, 1.55) all .1s;
+        position: relative;
+        box-sizing: border-box;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 2px;
+        gap: 25px;
+
+        width: 81px;
+        height: 22px;
+
+        background: #CADBF4;
+        border-radius: 40px;
+
+        .checkbox_slider {
+            transition: cubic-bezier(0.95, 0.05, 0.795, 0.035) all .1s;
+            position: absolute;
+            left: 2px;
+            box-sizing: border-box;
+
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            padding: 9px 24px;
+            gap: 10px;
+
+            background: rgba(0, 0, 0, 0.83);
+            border-radius: 47px;
+        }
+    }
+}
+
+.active {
+    background: #364037;
+    border: 1px solid #3B503D;
+
+    &:hover {
+        background: #3c473d;
+        border: 1px solid #3B503D;
+
+        &:disabled {
+            opacity: 0.2;
+            background: #2a2e3400;
+            border: 1px solid #3c434f00;
+        }
+    }
+
+    .children_content{
+        display: flex;
+        gap: 10px;
+        color: #CAF4CE;
+    }
+
+    .custom_checkbox {
+        background: #CAF4CE;
+
+        .checkbox_slider {
+            padding: 9px 26px;
+            left: 27px;
+        }
+    }
+
+    & svg {
+        fill: #CAF4CE;
+    }
+}
