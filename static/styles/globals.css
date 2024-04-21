@@ -35,6 +35,10 @@
     color: var(--color1);
 }
 
+a {
+    text-decoration: none;
+}
+
 body {
     display: flex;
     background: var(--bg);

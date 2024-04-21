@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet'
 import Header from './header'
 import ButtonNav from '../button'
 import { MdHandyman } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 
 interface p {
     title: string
@@ -26,10 +27,18 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                 <Header goBack={goBack} />
                 <div className={styles.main_window}>
                     <div className={styles.navigation_bar}>
-                        <ButtonNav style={active}>
-                            <MdHandyman size={24} />
-                            Активная кнопка
-                        </ButtonNav>
+                        <Link to="/">
+                            <ButtonNav style={active}>
+                                <MdHandyman size={24} />
+                                main
+                            </ButtonNav>
+                        </Link>
+                        <Link to="/theme">
+                            <ButtonNav style={active}>
+                                <MdHandyman size={24} />
+                                theme
+                            </ButtonNav>
+                        </Link>
                         <ButtonNav>
                             <MdHandyman size={24} />
                             Просто кнопка

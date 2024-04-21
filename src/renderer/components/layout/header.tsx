@@ -1,7 +1,7 @@
 import styles from './header.module.scss'
 import React from 'react'
 
-import { FiMinus } from 'react-icons/fi'
+import FiMinus from './../../../../static/assets/icons/minus.svg'
 import Minimize from './../../../../static/assets/icons/minimize.svg'
 import Close from './../../../../static/assets/icons/close.svg'
 
@@ -24,7 +24,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                     </div>
                     <div className={styles.button_container}>
                         <button id="hide" className={styles.button_title}>
-                            <FiMinus size={24} />
+                            <FiMinus/>
                         </button>
                         <button id="minimize" className={styles.button_title}>
                             <Minimize />
