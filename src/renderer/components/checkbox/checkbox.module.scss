@@ -1,6 +1,6 @@
 .checkbox {
     cursor: pointer;
-    transition: ease-in-out all .1s;
+    transition: ease-in-out all 0.1s;
     box-sizing: border-box;
     display: flex;
     flex-direction: row;
@@ -9,7 +9,7 @@
     border-radius: 10px;
     background: #343941;
     border: 1px solid #3c434f;
-    font-family: "Open Runde";
+    font-family: 'Open Runde';
     font-style: normal;
     font-weight: 400;
     width: 100%;
@@ -33,11 +33,11 @@
         opacity: 0.2;
     }
 
-    .input_checkbox{
+    .input_checkbox {
         display: none;
     }
-    
-    .children_content{
+
+    .children_content {
         display: flex;
         gap: 10px;
         color: #cadbf4;
@@ -57,7 +57,7 @@
         width: 81px;
         height: 22px;
 
-        background: #CADBF4;
+        background: #cadbf4;
         border-radius: 40px;
 
         .checkbox_slider {
@@ -81,11 +81,11 @@
 
 .active {
     background: #364037;
-    border: 1px solid #3B503D;
+    border: 1px solid #3b503d;
 
     &:hover {
         background: #3c473d;
-        border: 1px solid #3B503D;
+        border: 1px solid #3b503d;
 
         &:disabled {
             opacity: 0.2;
@@ -94,14 +94,14 @@
         }
     }
 
-    .children_content{
+    .children_content {
         display: flex;
         gap: 10px;
-        color: #CAF4CE;
+        color: #caf4ce;
     }
 
     .custom_checkbox {
-        background: #CAF4CE;
+        background: #caf4ce;
 
         .checkbox_slider {
             padding: 9px 26px;
@@ -110,6 +110,6 @@
     }
 
     & svg {
-        fill: #CAF4CE;
+        fill: #caf4ce;
     }
 }

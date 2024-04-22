@@ -2,98 +2,101 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { exec } from 'child_process'
 
-function findRumScript(startDir: string): string {
-    const files = fs.readdirSync(startDir)
-    for (const file of files) {
-        const filePath = path.join(startDir, file)
-        const stat = fs.statSync(filePath)
-        if (stat.isDirectory()) {
-            const rumScriptPath = findRumScript(filePath)
-            if (rumScriptPath) {
-                return rumScriptPath
+class Patcher {
+    constructor() {}
+
+    static findRumScript(startDir: string): string {
+        const files = fs.readdirSync(startDir)
+        for (const file of files) {
+            const filePath = path.join(startDir, file)
+            const stat = fs.statSync(filePath)
+            if (stat.isDirectory()) {
+                const rumScriptPath = this.findRumScript(filePath)
+                if (rumScriptPath) {
+                    return rumScriptPath
+                }
+            } else if (file === 'rumScript.js') {
+                return filePath
             }
-        } else if (file === 'rumScript.js') {
-            return filePath
         }
+        return null
     }
-    return null
-}
 
-function findConfig(startDir: string): string {
-    const files = fs.readdirSync(startDir)
-    for (const file of files) {
-        const filePath = path.join(startDir, file)
-        const stat = fs.statSync(filePath)
-        if (stat.isDirectory()) {
-            const rumScriptPath = findConfig(filePath)
-            if (rumScriptPath) {
-                return rumScriptPath
+    static findConfig(startDir: string): string {
+        const files = fs.readdirSync(startDir)
+        for (const file of files) {
+            const filePath = path.join(startDir, file)
+            const stat = fs.statSync(filePath)
+            if (stat.isDirectory()) {
+                const rumScriptPath = this.findConfig(filePath)
+                if (rumScriptPath) {
+                    return rumScriptPath
+                }
+            } else if (file === 'config.js') {
+                return filePath
             }
-        } else if (file === 'config.js') {
-            return filePath
         }
+        return null
     }
-    return null
-}
 
-function copyFile(filePath: string) {
-    const copyCommand = `copy "${filePath}" "${filePath}.copy"`
-    exec(copyCommand, (error: any, stdout: any, stderr: any) => {
-        if (error) {
-            console.error(`Ошибка при копировании файла: ${error}`)
-            return
-        }
-        if (stderr) {
-            console.error(`Ошибка при выполнении команды: ${stderr}`)
-            return
-        }
-        console.log(`Файл успешно скопирован в ${filePath}.copy`)
-    })
-}
+    static copyFile(filePath: string) {
+        const copyCommand = `copy "${filePath}" "${filePath}.copy"`
+        exec(copyCommand, (error: any, stdout: any, stderr: any) => {
+            if (error) {
+                console.error(`Ошибка при копировании файла: ${error}`)
+                return
+            }
+            if (stderr) {
+                console.error(`Ошибка при выполнении команды: ${stderr}`)
+                return
+            }
+            console.log(`Файл успешно скопирован в ${filePath}.copy`)
+        })
+    }
 
-function patcherym() {
-    const appAsarPath =
-        process.env.LOCALAPPDATA +
-        '\\Programs\\YandexMusic\\resources\\app.asar'
-    const destinationDir =
-        process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources\\app'
+    static patchRum() {
+        const appAsarPath =
+            process.env.LOCALAPPDATA +
+            '\\Programs\\YandexMusic\\resources\\app.asar'
+        const destinationDir =
+            process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources\\app'
 
-    copyFile(appAsarPath)
+        this.copyFile(appAsarPath)
 
-    const command = `asar extract "${appAsarPath}" "${destinationDir}"`
+        const command = `asar extract "${appAsarPath}" "${destinationDir}"`
 
-    console.log(`Extracting app.asar to ${destinationDir}...`)
+        console.log(`Extracting app.asar to ${destinationDir}...`)
 
-    const appPath =
-        process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources'
+        const appPath =
+            process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources'
 
-    const filePath = path.join(appPath, 'patched.txt')
+        const filePath = path.join(appPath, 'patched.txt')
 
-    fs.writeFile(filePath, 'done', err => {
-        if (err) {
-            console.error('Ошибка при создании файла:', err)
-        } else {
-            console.log('Файл успешно создан по пути:', filePath)
-        }
-    })
+        fs.writeFile(filePath, 'done', err => {
+            if (err) {
+                console.error('Ошибка при создании файла:', err)
+            } else {
+                console.log('Файл успешно создан по пути:', filePath)
+            }
+        })
 
-    exec(command, (error: any, stdout: any, stderr: any) => {
-        if (error) {
-            console.error(`Error: ${error.message}`)
-            return
-        }
-        if (stderr) {
-            console.error(`stderr: ${stderr}`)
-            return
-        }
-        console.log(stdout)
+        exec(command, (error: any, stdout: any, stderr: any) => {
+            if (error) {
+                console.error(`Error: ${error.message}`)
+                return
+            }
+            if (stderr) {
+                console.error(`stderr: ${stderr}`)
+                return
+            }
+            console.log(stdout)
 
-        const rumScriptPath = findRumScript(destinationDir)
+            const rumScriptPath = this.findRumScript(destinationDir)
 
-        if (rumScriptPath) {
-            let rumScriptContent = fs.readFileSync(rumScriptPath, 'utf8')
+            if (rumScriptPath) {
+                let rumScriptContent = fs.readFileSync(rumScriptPath, 'utf8')
 
-            rumScriptContent += `
+                rumScriptContent += `
             let isScriptExecuted = false;
 
             function addHtmlToBody() {
@@ -183,78 +186,79 @@ function patcherym() {
             
             `
 
-            fs.writeFileSync(rumScriptPath, rumScriptContent)
+                fs.writeFileSync(rumScriptPath, rumScriptContent)
 
-            console.log(`Added script to ${rumScriptPath}`)
-        } else {
-            console.log(`Could not find rumScript.js in ${destinationDir}`)
-        }
+                console.log(`Added script to ${rumScriptPath}`)
+            } else {
+                console.log(`Could not find rumScript.js in ${destinationDir}`)
+            }
 
-        const configPath = findConfig(destinationDir)
+            const configPath = this.findConfig(destinationDir)
 
-        if (configPath) {
-            let configPathContent = fs.readFileSync(configPath, 'utf8')
-            let cfgReplace = configPathContent.replace(
-                'enableDevTools: false',
-                'enableDevTools: true',
-            )
+            if (configPath) {
+                let configPathContent = fs.readFileSync(configPath, 'utf8')
+                let cfgReplace = configPathContent.replace(
+                    'enableDevTools: false',
+                    'enableDevTools: true',
+                )
 
-            fs.writeFileSync(configPath, cfgReplace)
+                fs.writeFileSync(configPath, cfgReplace)
 
-            let configPathContentweb = fs.readFileSync(configPath, 'utf8')
-            let websecReplace = configPathContentweb.replace(
-                'enableWebSecurity: true',
-                'enableWebSecurity: false',
-            )
+                let configPathContentweb = fs.readFileSync(configPath, 'utf8')
+                let websecReplace = configPathContentweb.replace(
+                    'enableWebSecurity: true',
+                    'enableWebSecurity: false',
+                )
 
-            fs.writeFileSync(configPath, websecReplace)
+                fs.writeFileSync(configPath, websecReplace)
 
-            const packCommand = `asar pack "${destinationDir}" "${appAsarPath}"`
-            console.log(`Packing app directory into app.asar...`)
-            exec(
-                packCommand,
-                (packError: any, packStdout: any, packStderr: any) => {
-                    if (packError) {
-                        console.error(
-                            `Error packing app directory: ${packError.message}`,
+                const packCommand = `asar pack "${destinationDir}" "${appAsarPath}"`
+                console.log(`Packing app directory into app.asar...`)
+                exec(
+                    packCommand,
+                    (packError: any, packStdout: any, packStderr: any) => {
+                        if (packError) {
+                            console.error(
+                                `Error packing app directory: ${packError.message}`,
+                            )
+                            return
+                        }
+                        if (packStderr) {
+                            console.error(`stderr: ${packStderr}`)
+                            return
+                        }
+                        console.log(packStdout)
+                        console.log(`App directory packed into ${appAsarPath}`)
+
+                        console.log(`Deleting source directory...`)
+                        exec(
+                            `rmdir /s /q "${destinationDir}"`,
+                            (
+                                deleteError: any,
+                                deleteStdout: any,
+                                deleteStderr: any,
+                            ) => {
+                                if (deleteError) {
+                                    console.error(
+                                        `Error deleting source directory: ${deleteError.message}`,
+                                    )
+                                    return
+                                }
+                                if (deleteStderr) {
+                                    console.error(`stderr: ${deleteStderr}`)
+                                    return
+                                }
+                                console.log(deleteStdout)
+                                console.log(`Source directory deleted`)
+                            },
                         )
-                        return
-                    }
-                    if (packStderr) {
-                        console.error(`stderr: ${packStderr}`)
-                        return
-                    }
-                    console.log(packStdout)
-                    console.log(`App directory packed into ${appAsarPath}`)
-
-                    console.log(`Deleting source directory...`)
-                    exec(
-                        `rmdir /s /q "${destinationDir}"`,
-                        (
-                            deleteError: any,
-                            deleteStdout: any,
-                            deleteStderr: any,
-                        ) => {
-                            if (deleteError) {
-                                console.error(
-                                    `Error deleting source directory: ${deleteError.message}`,
-                                )
-                                return
-                            }
-                            if (deleteStderr) {
-                                console.error(`stderr: ${deleteStderr}`)
-                                return
-                            }
-                            console.log(deleteStdout)
-                            console.log(`Source directory deleted`)
-                        },
-                    )
-                },
-            )
-        } else {
-            console.log(`Could not find config.js in ${configPath}`)
-        }
-    })
+                    },
+                )
+            } else {
+                console.log(`Could not find config.js in ${configPath}`)
+            }
+        })
+    }
 }
 
-patcherym()
+export default Patcher

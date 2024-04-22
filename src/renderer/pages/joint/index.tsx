@@ -8,7 +8,9 @@ export default function JointPage() {
     return (
         <Layout title="Совместное прослушивание">
             <div className={styles.page}>
-                <Container titleName={'Совместное прослушивание'}>Скоро</Container>
+                <Container titleName={'Совместное прослушивание'}>
+                    Скоро
+                </Container>
             </div>
         </Layout>
     )

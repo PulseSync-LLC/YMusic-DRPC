@@ -21,12 +21,16 @@ declare global {
                 setTrack: (track: Track, currentPercent: number) => void
                 setPlaying: (value: boolean) => void
             }
+            patcher: {
+                patch: () => void
+                repatch: () => void
+                depatch: () => void
+            }
             request: (url: string, config: AxiosRequestConfig) => AxiosResponse
             corsAnywherePort: () => number
             musicDevice: () => string
             authorize: () => string
             version: () => string
-            setTheme: (theme: 'dark' | 'light' | 'system') => void
             downloadTrack: (data: any) => void
             receive: (
                 channel: string,
@@ -37,8 +41,11 @@ declare global {
                 func: (event: any, ...arg: any[]) => void,
             ) => void
             removeListener: (channel: string) => void
+            autoStartMusic: (val: boolean) => void
         }
-        discordRPC: {
+
+        discordRpc: {
+            enableRpc: (val: boolean) => void
             setActivity: (props: Presence) => void
             clearActivity: () => void
         }

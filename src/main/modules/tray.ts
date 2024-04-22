@@ -8,14 +8,14 @@ let tray: Tray
 let menu: Menu
 const ICON_EXT = '@2x.png'
 
-const playPauseItem: any = {
-    label: 'Слушать',
-    icon: null,
-    click: () => mainWindow.webContents.send('player-pause'),
-}
+// const playPauseItem: any = {
+//     label: 'Слушать',
+//     icon: null,
+//     click: () => mainWindow.webContents.send('player-pause'),
+// }
 
 function createTray() {
-    const icon = getNativeImg('icon.light', '.png', 'icon').resize({
+    const icon = getNativeImg('appicon', '.png', 'icon').resize({
         width: 16,
         height: 16,
     })
@@ -23,7 +23,7 @@ function createTray() {
     tray = new Tray(icon)
     menu = new Menu()
 
-    menu.append(new MenuItem(playPauseItem))
+    // menu.append(new MenuItem(playPauseItem))
 
     menu.append(
         new MenuItem({
@@ -38,19 +38,25 @@ function createTray() {
             click: app.quit,
         }),
     )
+    menu.append(
+        new MenuItem({
+            label: 'Открыть',
+            click: app.show,
+        }),
+    )
 
     tray.setContextMenu(menu)
 }
 
-ipcMain.on('player-setTrack', (event, track: Track) => {
-    tray.setTitle(truncate(track.title, 30))
-})
+// ipcMain.on('player-setTrack', (event, track: Track) => {
+//     tray.setTitle(truncate(track.title, 30))
+// })
 
-ipcMain.on('player-playing', (event, playing) => {
-    playPauseItem.icon = playing
-        ? getNativeImg('pause', ICON_EXT, 'touchbar')
-        : getNativeImg('play', ICON_EXT, 'touchbar')
-    playPauseItem.label = playing ? 'Пауза' : 'Слушать'
-})
+// ipcMain.on('player-playing', (event, playing) => {
+//     playPauseItem.icon = playing
+//         ? getNativeImg('pause', ICON_EXT, 'touchbar')
+//         : getNativeImg('play', ICON_EXT, 'touchbar')
+//     playPauseItem.label = playing ? 'Пауза' : 'Слушать'
+// })
 
 export default createTray

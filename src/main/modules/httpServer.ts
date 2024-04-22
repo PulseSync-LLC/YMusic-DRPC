@@ -103,7 +103,7 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
     res.end(JSON.stringify({ error: 'Not found' }))
 })
 
-const PORT: number = 19582
+const PORT: number = 19581
 server.listen(PORT, () => {
     console.log(`Server running at http://127.0.0.1:${PORT}/`)
 })

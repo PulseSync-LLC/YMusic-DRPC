@@ -1,10 +1,14 @@
 import { app, BrowserWindow, ipcMain, Menu, Tray, shell } from 'electron'
 import process from 'process'
 import { getNativeImg } from './main/utils'
-//import './main/modules/index'
+import './main/modules/index'
 import path from 'path'
 import fs from 'fs'
 import { getTrackInfo } from './main/modules/httpServer'
+import { store } from './main/modules/storage'
+import Patcher from './main/modules/patcher/patch'
+import UnPatcher from './main/modules/patcher/unpatch'
+import createTray from './main/modules/tray'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -77,20 +81,12 @@ const createWindow = (): void => {
         shell.openExternal(electronData.url)
         return { action: 'deny' }
     })
-    tray = new Tray(icon)
-    const contextMenu = Menu.buildFromTemplate([
-        { label: 'Show App', click: () => mainWindow.show() },
-        { label: 'Quit', click: () => app.quit() },
-    ])
-    tray.setToolTip('YMusic DRPC')
-    tray.setContextMenu(contextMenu)
-
-    tray.on('click', () => {
-        mainWindow.show()
-    })
 }
 
-app.on('ready', createWindow)
+app.on('ready', () => {
+    createWindow()
+    createTray()
+})
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
@@ -105,22 +101,35 @@ app.on('activate', () => {
     }
 })
 
-ipcMain.on('minimizeWin', () => {
+ipcMain.on('electron-window-minimize', () => {
     mainWindow.minimize()
 })
 
-ipcMain.on('closeWin', () => {
+ipcMain.on('electron-window-maximize', () => {
+    if (mainWindow.isMaximized()) mainWindow.unmaximize()
+    else mainWindow.maximize()
+})
+
+ipcMain.on('electron-window-close', () => {
     mainWindow.hide()
 })
 
-ipcMain.on('patcherWin', event => {
-    import('./main/modules/patcher/patch')
-    return
+ipcMain.on('electron-patch', () => {
+    console.log('patch')
+    Patcher.patchRum()
 })
 
-ipcMain.on('unpatcherWin', async event => {
-    import('./main/modules/patcher/unpatch')
-    return
+ipcMain.on('electron-repatch', async () => {
+    console.log('repatch')
+    await UnPatcher.unpatch().then(() => {
+        Patcher.patchRum()
+    })
+})
+ipcMain.on('electron-depatch', async () => {
+    console.log('depatch')
+    await UnPatcher.unpatch().then(() => {
+        console.log('Все хорошо')
+    })
 })
 
 ipcMain.on('pathAppOpen', async () => {
@@ -250,6 +259,9 @@ setInterval(() => {
     metadata = getTrackInfo()
 }, 1000)
 
+ipcMain.on('autoStartMusic', async (event, value) => {
+    store.set('autoStartMusic', value)
+})
 // const updateDiscordRPC = (RPC, data) => {
 //     const { playerBarTitle, artist, timecodes, requestImgTrack, linkTitle } =
 //         data

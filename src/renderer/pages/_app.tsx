@@ -16,7 +16,7 @@ function app() {
         {
             path: '/',
             element: <IndexPage />,
-        },        
+        },
         {
             path: '/trackinfo',
             element: <TrackInfoPage />,
@@ -36,7 +36,7 @@ function app() {
         {
             path: '/other',
             element: <OtherPage />,
-        }
+        },
     ])
 
     return (

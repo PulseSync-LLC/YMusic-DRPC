@@ -5,7 +5,13 @@ import styles from '../../../../static/styles/page/index.module.scss'
 import CheckboxNav from '../../components/checkbox'
 import ButtonPather from '../../components/button_pather'
 
-import { MdAdd, MdAirplay, MdBlock, MdDirectionsRun, MdReplay } from 'react-icons/md'
+import {
+    MdAdd,
+    MdAirplay,
+    MdBlock,
+    MdDirectionsRun,
+    MdReplay,
+} from 'react-icons/md'
 // import main from './main.module.scss'
 
 export default function IndexPage() {
@@ -14,20 +20,38 @@ export default function IndexPage() {
             <div className={styles.page}>
                 <Container titleName={'Основные настройки'}>
                     <div className={styles.container}>
-                        <CheckboxNav>
+                        <CheckboxNav checkType="autoStartMusic">
                             <MdDirectionsRun size={22} />
                             Авто-запуск Яндекс Музыки
                         </CheckboxNav>
-                        <CheckboxNav>
+                        <CheckboxNav checkType="startDiscordRpc">
                             <MdAirplay size={22} />
                             Включить статус дискорд
                         </CheckboxNav>
                         <div className={styles.container_witch_text}>
                             Патчер Яндекс Музыки
                             <div className={styles.container_patcher}>
-                                <ButtonPather icon={<MdAdd size={34} />} text={'Патч'} />
-                                <ButtonPather icon={<MdReplay size={34} />} text={'Репатч'} />
-                                <ButtonPather icon={<MdBlock size={34} />} text={'Депатч'} />
+                                <ButtonPather
+                                    icon={<MdAdd size={34} />}
+                                    onClick={() =>
+                                        window.electron.patcher.patch()
+                                    }
+                                    text={'Патч'}
+                                />
+                                <ButtonPather
+                                    icon={<MdReplay size={34} />}
+                                    onClick={() =>
+                                        window.electron.patcher.repatch()
+                                    }
+                                    text={'Репатч'}
+                                />
+                                <ButtonPather
+                                    icon={<MdBlock size={34} />}
+                                    onClick={() =>
+                                        window.electron.patcher.depatch()
+                                    }
+                                    text={'Депатч'}
+                                />
                             </div>
                         </div>
                     </div>

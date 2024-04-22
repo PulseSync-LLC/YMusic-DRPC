@@ -10,14 +10,8 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button: React.FC<Props> = ({ onClick, icon, text, disabled }) => {
     return (
-        <button
-            className={styles.button}
-            onClick={onClick}
-            disabled={disabled}
-        >
-            <div className={styles.icon_box}>
-                {icon}
-            </div>
+        <button className={styles.button} onClick={onClick} disabled={disabled}>
+            <div className={styles.icon_box}>{icon}</div>
             {text}
         </button>
     )

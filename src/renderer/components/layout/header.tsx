@@ -28,13 +28,25 @@ const Header: React.FC<p> = ({ goBack }) => {
                             <MdDownload size={26} />
                         </button>
                         <div className={styles.button_container}>
-                            <button id="hide" className={styles.button_title}>
+                            <button
+                                id="hide"
+                                className={styles.button_title}
+                                onClick={window.electron.window.minimize}
+                            >
                                 <FiMinus />
                             </button>
-                            <button id="minimize" className={styles.button_title}>
+                            <button
+                                id="minimize"
+                                className={styles.button_title}
+                                onClick={window.electron.window.maximize}
+                            >
                                 <Minimize />
                             </button>
-                            <button id="close" className={styles.button_title}>
+                            <button
+                                id="close"
+                                className={styles.button_title}
+                                onClick={window.electron.window.close}
+                            >
                                 <Close />
                             </button>
                         </div>
