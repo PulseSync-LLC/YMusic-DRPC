@@ -6,6 +6,11 @@
       <img width="250" alt="YMusic-DRPC приглашение" src="https://github.com/PulseSync-Official/YMusic-DRPC/assets/44835662/405a8b18-1383-45d0-944a-8d7e4abf6e42">
    </a>
 </p>
+<p align="center">
+   <a href="https://boosty.to/evt">
+      <img width="285" alt="Поддержать на Boosty" src="https://github.com/PulseSync-Official/YMusic-DRPC/assets/44835662/b36e3cb7-0885-4740-be68-0d86fdc8b9c3">
+   </a>
+</p>
 
 **Интеграция Discord Rich Presence для YandexMusic - Документация**
 
