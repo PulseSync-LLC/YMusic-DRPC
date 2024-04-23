@@ -56,6 +56,7 @@
 4. **Install Node.Js:**
    - Download and install Node.Js by following the [link](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (the download will start automatically).
 
+**Perform further actions in the project directory: `C:\Users \<Your Name>\AppData\Local\Programs\YMusic-DRPC`**
 
 5. **Install Yarn and Electron:**
    - Install Yarn, Electron and @electron-forge/cli using the console:
