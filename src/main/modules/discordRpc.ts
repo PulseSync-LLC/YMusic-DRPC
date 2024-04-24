@@ -34,3 +34,10 @@ ipcMain.on('discordrpc-clearstate', () => {
 })
 client.on('debug', console.debug)
 client.on('connected', () => (rpcConnected = true))
+
+function rpc_connect() {
+    client.login().catch(console.error)
+    rpcConnected = true
+}
+
+export default rpc_connect

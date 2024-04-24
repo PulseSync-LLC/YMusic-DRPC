@@ -9,6 +9,8 @@ import { store } from './main/modules/storage'
 import Patcher from './main/modules/patcher/patch'
 import UnPatcher from './main/modules/patcher/unpatch'
 import createTray from './main/modules/tray'
+import {exec} from "child_process";
+import rpc_connect from "./main/modules/discordRpc";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -86,7 +88,29 @@ const createWindow = (): void => {
 app.on('ready', () => {
     createWindow()
     createTray()
+    prestartCheck()
 })
+
+function prestartCheck() {
+    if(store.has("autoStartMusic") && store.get("autoStartMusic")) {
+
+        let appPath = path.join(process.env.LOCALAPPDATA, 'Programs', 'YandexMusic', 'Яндекс Музыка.exe');
+        appPath = `"${appPath}"`;
+
+        const command = `${appPath} --remote-allow-origins=*`;
+
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Ошибка при выполнении команды: ${error}`);
+                return;
+            }
+        });
+
+    }
+    if(store.has("discordRpc") && store.get("discordRpc")) {
+        rpc_connect()
+    }
+}
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
