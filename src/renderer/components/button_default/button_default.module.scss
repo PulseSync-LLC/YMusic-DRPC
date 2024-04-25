@@ -12,7 +12,7 @@
     height: 48px;
 
     background: #343941;
-    border: 1px solid #3C434F00;
+    border: 1px solid #3C434F;
     border-radius: 12px;
 
     font-family: 'Open Runde';
@@ -30,8 +30,8 @@
         border: 1px solid #3C434F;
         &:disabled {
             opacity: 0.2;
-            background: #2a2e3400;
-            border: 1px solid #3c434f00;
+            background: #343941;
+            border: 1px solid #3C434F;
         }
     }
 
