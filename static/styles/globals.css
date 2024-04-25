@@ -61,3 +61,7 @@ body {
 ::-webkit-scrollbar {
     width: 0px;
 }
+
+:disabled {
+    cursor: not-allowed;
+}
