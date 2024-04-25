@@ -1,0 +1,40 @@
+.button {
+    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 14px 23px;
+    gap: 10px;
+
+    width: 349px;
+    height: 48px;
+
+    background: #343941;
+    border: 1px solid #3C434F00;
+    border-radius: 12px;
+
+    font-family: 'Open Runde';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+
+    text-align: center;
+    color: #cadbf4;
+
+    &:hover {
+        background: #424852;
+        border: 1px solid #3C434F;
+        &:disabled {
+            opacity: 0.2;
+            background: #2a2e3400;
+            border: 1px solid #3c434f00;
+        }
+    }
+
+    &:disabled {
+        opacity: 0.2;
+    }
+}
