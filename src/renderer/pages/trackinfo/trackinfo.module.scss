@@ -1,0 +1,77 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 12px 15px;
+    gap: 10px;
+    width: 100%;
+
+    background: #151618;
+    border-radius: 12px;
+
+    .flex_container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0px;
+        gap: 20px;
+
+        .img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .gap {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 8px;
+
+            .yndex {
+                font-family: 'Open Runde';
+                font-style: normal;
+                font-weight: 700;
+                font-size: 19px;
+                line-height: 23px;
+
+                color: #D5D8DC;
+            }
+
+            .name, .time {
+                font-family: 'Open Runde';
+                font-style: normal;
+                font-weight: 400;
+                font-size: 18px;
+                line-height: 22px;
+
+                color: #D5D8DC;
+            }
+        }
+    }
+
+    .button {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 14px 23px;
+        gap: 10px;
+
+        background: #343941;
+        border-radius: 10px;
+
+        width: -webkit-fill-available;
+
+        font-family: 'Open Runde';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 18px;
+        line-height: 22px;
+
+        color: #D5D8DC;
+    }
+}
