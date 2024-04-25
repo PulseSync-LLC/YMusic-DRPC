@@ -40,13 +40,13 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 Основные настройки
                             </ButtonNav>
                         </NavLink>
-                        {/* <NavLink to="/trackinfo" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}> */}
-                        <ButtonNav disabled>
+                        <NavLink to="/trackinfo" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}>
+                        <ButtonNav>
                             <MdHeadset size={24} />
                             Информация о треке
                         </ButtonNav>
-                        {/* </NavLink> */}
+                        </NavLink>
                         {/* <NavLink to="/theme" className={({ isActive, isPending }) =>
                             isPending ? "pending" : isActive ? "active" : ""}> */}
                         <ButtonNav disabled>
