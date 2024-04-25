@@ -7,14 +7,22 @@ import ButtonDefault from '../../components/button_default'
 import styles from '../../../../static/styles/page/index.module.scss'
 import theme from './trackinfo.module.scss'
 
-import { MdDownload, MdVideoLibrary } from 'react-icons/md'
+import {
+    MdAirplay,
+    MdDownload,
+    MdVideoLibrary
+} from 'react-icons/md'
 
 export default function TrackInfoPage() {
     return (
-        <Layout title="Информация о треке">
+        <Layout title="Discord RPC">
             <div className={styles.page}>
-                <Container titleName={'Информация о треке'}>
+                <Container titleName={'Discord RPC'}>
                     <div className={styles.container}>
+                        <CheckboxNav checkType="startDiscordRpc">
+                            <MdAirplay size={22} />
+                            Включить статус дискорд
+                        </CheckboxNav>
                         <div className={theme.container}>
                             <div className={theme.flex_container}>
                                 <img className={theme.img} src="../../../../static/assets/logo/logoapp.png" alt="" />

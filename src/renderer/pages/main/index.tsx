@@ -7,7 +7,6 @@ import ButtonPather from '../../components/button_pather'
 
 import {
     MdAdd,
-    MdAirplay,
     MdBlock,
     MdDirectionsRun,
     MdReplay,
@@ -23,10 +22,6 @@ export default function IndexPage() {
                         <CheckboxNav checkType="autoStartMusic">
                             <MdDirectionsRun size={22} />
                             Авто-запуск Яндекс Музыки
-                        </CheckboxNav>
-                        <CheckboxNav checkType="startDiscordRpc">
-                            <MdAirplay size={22} />
-                            Включить статус дискорд
                         </CheckboxNav>
                         <div className={styles.container_witch_text}>
                             Патчер Яндекс Музыки
