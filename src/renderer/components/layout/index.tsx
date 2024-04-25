@@ -4,9 +4,9 @@ import { Helmet } from 'react-helmet'
 import Header from './header'
 import ButtonNav from '../button_nav'
 import {
+    MdArchitecture,
     MdConnectWithoutContact,
     MdDescription,
-    MdHandyman,
     MdHeadset,
     MdHome,
     MdStyle,
@@ -42,10 +42,10 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                         </NavLink>
                         <NavLink to="/trackinfo" className={({ isActive, isPending }) =>
                             isPending ? "pending" : isActive ? "active" : ""}>
-                        <ButtonNav>
-                            <MdHeadset size={24} />
-                            Информация о треке
-                        </ButtonNav>
+                            <ButtonNav>
+                                <MdHeadset size={24} />
+                                Discord RPC
+                            </ButtonNav>
                         </NavLink>
                         {/* <NavLink to="/theme" className={({ isActive, isPending }) =>
                             isPending ? "pending" : isActive ? "active" : ""}> */}
@@ -72,7 +72,7 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                         {/* <NavLink to="/other" className={({ isActive, isPending }) =>
                             isPending ? "pending" : isActive ? "active" : ""}> */}
                         <ButtonNav disabled>
-                            <MdHandyman size={24} />
+                            <MdArchitecture size={24} />
                             Остальное
                         </ButtonNav>
                         {/* </NavLink> */}
