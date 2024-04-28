@@ -9,13 +9,13 @@
     padding: 14px 23px;
     gap: 16px;
 
-    background: #34394100;
-    border: 1px solid #3c434f00;
+    background: transparent;
+    border: 1px solid transparent;
 
     width: 100%;
     height: 127px;
 
-    border-radius: 12px;
+    border-radius: var(--borderRadius);
 
     .icon_box {
         transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
@@ -25,25 +25,25 @@
         align-items: center;
         padding: 10px;
 
-        background: #343941;
-        border-radius: 12px;
+        background: var(--mColorH);
+        border-radius: var(--borderRadius);
     }
 
     &:hover {
-        background: #343941;
-        border: 1px solid #3c434f;
+        background: var(--mColorH);
+        border: 1px solid var(--mBorderH);
 
         .icon_box {
-            background: #3b4350;
+            background: var(--mBorderH);
         }
 
         &:disabled {
             opacity: 0.2;
-            background: #2a2e3400;
-            border: 1px solid #3c434f00;
+            background: transparent;
+            border: 1px solid transparent;
 
             .icon_box {
-                background: #343941;
+                opacity: 0.5;
             }
         }
     }

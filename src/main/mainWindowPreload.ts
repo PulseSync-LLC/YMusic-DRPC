@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, IpcRendererEvent } from 'electron'
 import { SetActivity } from '@xhayper/discord-rpc/dist/structures/ClientUser'
 
 contextBridge.exposeInMainWorld('electron', {
@@ -48,6 +48,7 @@ contextBridge.exposeInMainWorld('electron', {
     getThemesList: () => ipcRenderer.send('getThemesList'),
     checkFileExists: () => ipcRenderer.send('checkFileExists'),
 })
+
 contextBridge.exposeInMainWorld('discordRpc', {
     async setActivity(presence: SetActivity) {
         ipcRenderer.send('discordrpc-setstate', presence)
@@ -57,5 +58,8 @@ contextBridge.exposeInMainWorld('discordRpc', {
     },
     async enableRpc(val: boolean) {
         ipcRenderer.send('discordrpc-enablerpc', val)
+    },
+    async enableListenButton(val: boolean) {
+        ipcRenderer.send('discordrpc-enablelistenbutton', val)
     },
 })

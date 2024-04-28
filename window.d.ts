@@ -1,7 +1,6 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Presence } from 'discord-rpc'
 import { Track } from 'yandex-music-client'
-
 declare global {
     interface Window {
         electron: {
@@ -26,6 +25,7 @@ declare global {
                 repatch: () => void
                 depatch: () => void
             }
+
             request: (url: string, config: AxiosRequestConfig) => AxiosResponse
             corsAnywherePort: () => number
             musicDevice: () => string
@@ -43,10 +43,10 @@ declare global {
             removeListener: (channel: string) => void
             autoStartMusic: (val: boolean) => void
         }
-
         discordRpc: {
             enableRpc: (val: boolean) => void
             setActivity: (props: Presence) => void
+            enableListenButton: (val: boolean) => void
             clearActivity: () => void
         }
     }

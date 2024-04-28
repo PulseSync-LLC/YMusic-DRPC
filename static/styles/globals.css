@@ -24,15 +24,47 @@
 
 :root {
     --bg: #181b1e;
-    --color1: #cadbf4;
-    --color2: #2e343b;
-    --color3: #363a40;
+    --color1: #BCD7FF;
+    --color2: #21262D;
+    --color2H: #2D3643;
+    --color3: #2A323E;
+    --border: #384150;
+    --borderH: #3F5370;
+    --borderRadius: 5px;
+
+    --downloadColor: #75FF9C;
+    --downloadColorH: #60FF8C;
+    --download: #2A3E39;
+    --downloadH: #2A4B43    ;
+
+    /* Style In MainContainer => --m */
+    --mInColor: var(--color1);
+    --mColor: #2A323E;
+    --mColorH: #344154;
+    --mBorder: #394454;
+    --mBorderH: #455C80;
+
+    --mInColorActive: #BCFFEF;
+    --mColorActive: #2A3E39;
+    --mColorActiveH: #2F4D46;
+    --mBorderActive: #39544D;
+    --mBorderActiveH: #406F63;
+
+    --mTrackColor: #D5D8DC;
+    --mTrackButton: #4E5058;
+    --mTrackBackground: #111214;
+    --mTrackBorder: #394454;
 }
 
 * {
     user-select: none;
     font-family: 'Open Runde', serif;
     color: var(--color1);
+    stroke: var(--color1);
+}
+
+.discord_svg__noStroke{
+    stroke: none;
 }
 
 a {
@@ -40,8 +72,8 @@ a {
 }
 
 a.active > button {
-    background: #2a2e34;
-    border: 1px solid #3c434f;
+    background: var(--color2);
+    border: 1px solid var(--border);
 }
 
 body {

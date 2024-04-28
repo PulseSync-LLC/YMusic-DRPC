@@ -6,9 +6,9 @@
     flex-direction: row;
     align-items: center;
     padding: 14px 23px;
-    border-radius: 10px;
-    background: #343941;
-    border: 1px solid #3c434f;
+    border-radius: var(--borderRadius);
+    background: var(--mColor);
+    border: 1px solid var(--mBorder);
     font-family: 'Open Runde';
     font-style: normal;
     font-weight: 400;
@@ -19,13 +19,13 @@
     justify-content: space-between;
 
     &:hover {
-        background: #373d46;
-        border: 1px solid #3c434f;
+        background: var(--mColorH);
+        border: 1px solid var(--mBorderH);
 
         &:disabled {
             opacity: 0.2;
-            background: #2a2e3400;
-            border: 1px solid #3c434f00;
+            background: transparent;
+            border: 1px solid transparent;
         }
     }
 
@@ -40,7 +40,7 @@
     .children_content {
         display: flex;
         gap: 10px;
-        color: #cadbf4;
+        color: var(--mInColor);
     }
 
     .custom_checkbox {
@@ -57,8 +57,8 @@
         width: 81px;
         height: 22px;
 
-        background: #cadbf4;
-        border-radius: 40px;
+        background: var(--mInColor);
+        border-radius: var(--borderRadius);
 
         .checkbox_slider {
             transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
@@ -74,34 +74,34 @@
             gap: 10px;
 
             background: rgba(0, 0, 0, 0.83);
-            border-radius: 47px;
+            border-radius: calc(var(--borderRadius) - 1px);
         }
     }
 }
 
 .active {
-    background: #364037;
-    border: 1px solid #3b503d;
+    background: var(--mColorActive);
+    border: 1px solid var(--mBorderActive);
 
     &:hover {
-        background: #3c473d;
-        border: 1px solid #3b503d;
+        background: var(--mColorActiveH);
+        border: 1px solid var(--mBorderActiveH);
 
         &:disabled {
             opacity: 0.2;
-            background: #2a2e3400;
-            border: 1px solid #3c434f00;
+            background: transparent;
+            border: 1px solid transparent;
         }
     }
 
     .children_content {
         display: flex;
         gap: 10px;
-        color: #caf4ce;
+        color: var(--mInColorActive);
     }
 
     .custom_checkbox {
-        background: #caf4ce;
+        background: var(--mInColorActive);
 
         .checkbox_slider {
             padding: 9px 26px;
@@ -110,6 +110,6 @@
     }
 
     & svg {
-        fill: #caf4ce;
+        fill: var(--mInColorActive);
     }
 }

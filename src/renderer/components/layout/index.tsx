@@ -3,13 +3,11 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import Header from './header'
 import ButtonNav from '../button_nav'
+import Discord from './../../../../static/assets/icons/discord.svg'
 import {
-    MdArchitecture,
+    MdArchitecture, MdColorLens,
     MdConnectWithoutContact,
-    MdDescription,
-    MdHeadset,
     MdHome,
-    MdStyle,
 } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
 
@@ -40,25 +38,22 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 Основные настройки
                             </ButtonNav>
                         </NavLink>
-                        <NavLink to="/trackinfo" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}>
+                        <NavLink
+                            to="/trackinfo"
+                            className={({ isActive, isPending }) =>
+                                isPending ? 'pending' : isActive ? 'active' : ''
+                            }
+                        >
                             <ButtonNav>
-                                <MdHeadset size={24} />
+                                <Discord height={24} width={24} />
                                 Discord RPC
                             </ButtonNav>
                         </NavLink>
                         {/* <NavLink to="/theme" className={({ isActive, isPending }) =>
                             isPending ? "pending" : isActive ? "active" : ""}> */}
                         <ButtonNav disabled>
-                            <MdStyle size={24} />
+                            <MdColorLens size={24} />
                             Стилизация
-                        </ButtonNav>
-                        {/* </NavLink> */}
-                        {/* <NavLink to="/script" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}> */}
-                        <ButtonNav disabled>
-                            <MdDescription size={24} />
-                            Скриптинг
                         </ButtonNav>
                         {/* </NavLink> */}
                         {/* <NavLink to="/joint" className={({ isActive, isPending }) =>

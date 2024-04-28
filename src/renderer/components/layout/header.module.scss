@@ -1,12 +1,11 @@
 .nav_bar {
     display: flex;
     justify-content: center;
-    color: #fff;
+    color: var(--color1);
     height: fit-content;
     -webkit-app-region: drag;
     background: var(--color2);
     padding: 0 25px;
-    border-radius: 0;
     width: -webkit-fill-available;
 
     .fix_size {
@@ -21,7 +20,6 @@
 
             .logoapp {
                 --size: 30px;
-                height: 50px;
                 width: var(--size);
                 height: var(--size);
             }
@@ -29,6 +27,7 @@
             span {
                 font-size: 18px;
                 font-weight: 500;
+                color: #7bb0ff;
             }
         }
 
@@ -42,32 +41,72 @@
             width: fit-content;
             height: fit-content;
 
-            .update_download {
-                transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
-                cursor: pointer;
+            .menu {
                 display: flex;
-                flex-direction: row;
                 align-items: center;
-                padding: 6px;
-                margin: 5px;
-                border-radius: 12px;
-                -webkit-app-region: no-drag;
+                gap: 7px;
 
-                background-color: #75ff9c17;
-                border: none;
+                .update_download {
+                    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 4px 12px;
 
-                &:hover {
-                    background-color: #353c45;
+                    border-radius: var(--borderRadius);
+                    -webkit-app-region: no-drag;
+
+                    background: var(--download);
+                    border: none;
+
+                    &:hover {
+                        background: var(--downloadH);
+
+                        >svg {
+                            fill: var(--downloadColorH);
+                        }
+                    }
+
+                    >svg {
+                        fill: var(--downloadColor);
+                    }
                 }
 
-                > svg {
-                    fill: #75ff9c;
+                .badges_container {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+
+                    background: var(--color3);
+                    border-radius: var(--borderRadius);
+                    padding: 4px 8px;
+
+                    * path {
+                        stroke: none;
+                    }
+                }
+
+                .user_container {
+                    >img {
+                        --size: 34px;
+                        width: var(--size);
+                        height: var(--size);
+                    }
+
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 0px 12px 0px 0px;
+                    gap: 12px;
+
+                    background: var(--color3);
+                    border-radius: var(--borderRadius);
                 }
             }
 
             .button_container {
                 display: flex;
-                gap: 2px;
 
                 .button_title {
                     transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
@@ -76,15 +115,29 @@
                     width: fit-content;
                     height: fit-content;
                     border: 0;
-                    padding: 16px;
-                    background: #353c4500;
+                    padding: 14px;
+                    background: transparent;
                     -webkit-app-region: no-drag;
 
                     &:hover {
-                        background: #353c45;
+                        background: var(--color2H);
                     }
                 }
             }
+        }
+    }
+
+    @media only screen and (min-width: 1070px) {
+        .fix_size {
+            transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+            width: 1070px;
+        }
+    }
+
+    @media only screen and (min-width: 1900px) {
+        .fix_size {
+            transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+            width: 100%;
         }
     }
 }

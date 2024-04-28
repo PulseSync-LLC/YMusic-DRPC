@@ -1,4 +1,5 @@
 .container {
+    cursor: not-allowed;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -8,7 +9,8 @@
     gap: 10px;
     width: -webkit-fill-available;
 
-    background: #151618;
+    background: var(--mTrackBackground);
+    border: 1px solid var(--mTrackBorder);
     border-radius: 12px;
 
     .flex_container {
@@ -19,8 +21,10 @@
         gap: 20px;
 
         .img {
-            width: 100px;
-            height: 100px;
+            --size: 75px;
+            width: var(--size);
+            height: var(--size);
+            border-radius: var(--borderRadius);
         }
 
         .gap {
@@ -29,26 +33,24 @@
             justify-content: center;
             align-items: flex-start;
             padding: 0px;
-            gap: 8px;
+            gap: 6px;
 
             .yndex {
                 font-family: 'Open Runde';
                 font-style: normal;
                 font-weight: 700;
-                font-size: 19px;
-                line-height: 23px;
+                font-size: 16px;
 
-                color: #D5D8DC;
+                color: var(--mTrackColor);
             }
 
             .name, .time {
                 font-family: 'Open Runde';
                 font-style: normal;
                 font-weight: 400;
-                font-size: 18px;
-                line-height: 22px;
+                font-size: 14px;
 
-                color: #D5D8DC;
+                color: var(--mTrackColor);
             }
         }
     }
@@ -58,10 +60,9 @@
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        padding: 14px 23px;
-        gap: 10px;
+        padding: 11px 23px;
 
-        background: #343941;
+        background: var(--mTrackButton);
         border-radius: 10px;
 
         width: -webkit-fill-available;
@@ -69,9 +70,8 @@
         font-family: 'Open Runde';
         font-style: normal;
         font-weight: 400;
-        font-size: 18px;
-        line-height: 22px;
+        font-size: 14px;
 
-        color: #D5D8DC;
+        color: var(--mTrackColor);
     }
 }

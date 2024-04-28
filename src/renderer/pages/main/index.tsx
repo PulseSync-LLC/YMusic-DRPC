@@ -5,12 +5,7 @@ import styles from '../../../../static/styles/page/index.module.scss'
 import CheckboxNav from '../../components/checkbox'
 import ButtonPather from '../../components/button_pather'
 
-import {
-    MdAdd,
-    MdBlock,
-    MdDirectionsRun,
-    MdReplay,
-} from 'react-icons/md'
+import { MdAdd, MdBlock, MdDirectionsRun, MdReplay } from 'react-icons/md'
 // import main from './main.module.scss'
 
 export default function IndexPage() {

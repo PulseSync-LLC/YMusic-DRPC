@@ -11,9 +11,9 @@
     width: 349px;
     height: 48px;
 
-    background: #2a2e3400;
-    border: 1px solid #3c434f00;
-    border-radius: 12px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--borderRadius);
 
     font-family: 'Open Runde';
     font-style: normal;
@@ -22,15 +22,15 @@
     line-height: 22px;
 
     text-align: center;
-    color: #cadbf4;
+    color: var(--color1);
 
     &:hover {
-        background: #343941;
-        border: 1px solid #3c434f;
+        background: var(--color2H);
+        border: 1px solid var(--borderH);
         &:disabled {
             opacity: 0.2;
-            background: #2a2e3400;
-            border: 1px solid #3c434f00;
+            background: transparent;
+            border: 1px solid transparent;
         }
     }
 

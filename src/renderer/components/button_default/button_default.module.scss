@@ -8,9 +8,9 @@
     padding: 14px 23px;
     gap: 10px;
 
-    background: #343941;
-    border: 1px solid #3C434F;
-    border-radius: 12px;
+    background: var(--mColor);
+    border: 1px solid var(--mBorder);
+    border-radius: var(--borderRadius);
 
     font-family: 'Open Runde';
     font-style: normal;
@@ -19,16 +19,16 @@
     line-height: 22px;
 
     text-align: center;
-    color: #cadbf4;
+    color: var(--mInColor);
     width: 100%;
 
     &:hover {
-        background: #424852;
-        border: 1px solid #3C434F;
+        background: var(--mColorH);
+        border: 1px solid var(--mBorderH);
         &:disabled {
             opacity: 0.2;
-            background: #343941;
-            border: 1px solid #3C434F;
+            background: var(--mColor);
+            border: 1px solid var(--mBorder);
         }
     }
 

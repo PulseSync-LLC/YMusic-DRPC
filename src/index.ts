@@ -1,22 +1,56 @@
-import { app, BrowserWindow, ipcMain, Menu, Tray, shell } from 'electron'
+import {
+    app,
+    BrowserWindow,
+    ipcMain,
+    Menu,
+    Tray,
+    shell,
+    protocol,
+} from 'electron'
 import process from 'process'
 import { getNativeImg } from './main/utils'
 import './main/modules/index'
 import path from 'path'
 import fs from 'fs'
-import { getTrackInfo } from './main/modules/httpServer'
+import server, { getTrackInfo } from './main/modules/httpServer'
 import { store } from './main/modules/storage'
 import Patcher from './main/modules/patcher/patch'
 import UnPatcher from './main/modules/patcher/unpatch'
 import createTray from './main/modules/tray'
-import {exec} from "child_process";
-import rpc_connect from "./main/modules/discordRpc";
+import { exec } from 'child_process'
+import rpc_connect from './main/modules/discordRpc'
+import { configure } from 'log4js'
+import SocketService from './main/modules/socket-io'
+import corsAnywhereServer from 'cors-anywhere'
+import getPort from 'get-port'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 const isMac = process.platform === 'darwin'
-export let mainWindow: BrowserWindow
+export let corsAnywherePort: string | number
 
+export let mainWindow: BrowserWindow
+configure({
+    appenders: {
+        logFile: {
+            type: 'file',
+            filename: 'electron.log',
+        },
+        console: {
+            type: 'console',
+            layout: {
+                type: 'pattern',
+                pattern: '%d [%p] [%c] %m',
+            },
+        },
+    },
+    categories: {
+        default: {
+            appenders: ['logFile', 'console'],
+            level: 'all',
+        },
+    },
+})
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
     app.quit()
@@ -83,31 +117,78 @@ const createWindow = (): void => {
         shell.openExternal(electronData.url)
         return { action: 'deny' }
     })
+    mainWindow.webContents.openDevTools()
+    const websocket = new SocketService()
 }
+const corsAnywhere = async () => {
+    corsAnywherePort = await getPort()
+
+    corsAnywhereServer.createServer().listen(corsAnywherePort, 'localhost')
+}
+protocol.registerSchemesAsPrivileged([
+    {
+        scheme: 'http',
+        privileges: {
+            standard: true,
+            bypassCSP: true,
+            allowServiceWorkers: true,
+            supportFetchAPI: true,
+            corsEnabled: true,
+            stream: true,
+        },
+    },
+    {
+        scheme: 'ws',
+        privileges: {
+            standard: true,
+            bypassCSP: true,
+            allowServiceWorkers: true,
+            supportFetchAPI: true,
+            corsEnabled: true,
+            stream: true,
+        },
+    },
+    {
+        scheme: 'https',
+        privileges: {
+            standard: true,
+            bypassCSP: true,
+            allowServiceWorkers: true,
+            supportFetchAPI: true,
+            corsEnabled: true,
+            stream: true,
+        },
+    },
+    { scheme: 'mailto', privileges: { standard: true } },
+])
 
 app.on('ready', () => {
+    prestartCheck()
+    corsAnywhere()
     createWindow()
     createTray()
-    prestartCheck()
 })
 
 function prestartCheck() {
-    if(store.has("autoStartMusic") && store.get("autoStartMusic")) {
+    if (store.has('autoStartMusic') && store.get('autoStartMusic')) {
+        let appPath = path.join(
+            process.env.LOCALAPPDATA,
+            'Programs',
+            'YandexMusic',
+            'Яндекс Музыка.exe',
+        )
+        appPath = `"${appPath}"`
 
-        let appPath = path.join(process.env.LOCALAPPDATA, 'Programs', 'YandexMusic', 'Яндекс Музыка.exe');
-        appPath = `"${appPath}"`;
-
-        const command = `${appPath} --remote-allow-origins=*`;
+        const command = `${appPath} --remote-allow-origins=*`
 
         exec(command, (error, stdout, stderr) => {
             if (error) {
-                console.error(`Ошибка при выполнении команды: ${error}`);
-                return;
+                console.error(`Ошибка при выполнении команды: ${error}`)
+                return
             }
-        });
-
+        })
     }
-    if(store.has("discordRpc") && store.get("discordRpc")) {
+    if (store.has('discordRpc') && store.get('discordRpc')) {
         rpc_connect()
     }
 }
@@ -154,6 +235,10 @@ ipcMain.on('electron-depatch', async () => {
     await UnPatcher.unpatch().then(() => {
         console.log('Все хорошо')
     })
+})
+
+ipcMain.on('electron-corsanywhereport', event => {
+    event.returnValue = corsAnywherePort
 })
 
 ipcMain.on('pathAppOpen', async () => {
@@ -278,10 +363,6 @@ ipcMain.on('selectStyle', async (event, name, author) => {
         return false
     }
 })
-
-setInterval(() => {
-    metadata = getTrackInfo()
-}, 1000)
 
 ipcMain.on('autoStartMusic', async (event, value) => {
     store.set('autoStartMusic', value)
