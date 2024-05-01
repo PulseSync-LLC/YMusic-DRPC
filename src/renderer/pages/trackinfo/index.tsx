@@ -15,70 +15,11 @@ import userInitials from '../../api/interfaces/user.initials'
 import TrackInterface from '../../api/interfaces/track.interface'
 import trackInitials from '../../api/interfaces/track.initials'
 import Skeleton from 'react-loading-skeleton'
+import playerContext from '../../api/context/player.context'
 export default function TrackInfoPage() {
     const { user, setUser, socket, loading } = useContext(userContext)
-    const [track, setTrack] = useState<TrackInterface>(trackInitials)
+    const { currentTrack } = useContext(playerContext)
 
-    useEffect(() => {
-        ;(async () => {
-            if (user.socket_connected) {
-                if (typeof window !== 'undefined') {
-                    if (user.enableRpc) {
-                        socket?.emit('ping')
-                        socket?.on('trackinfo', data => {
-                            setTrack(data)
-                        })
-                    } else {
-                        socket?.off('trackinfo')
-                        setTrack(trackInitials)
-                    }
-                }
-            }
-        })()
-    }, [user])
-    useEffect(() => {
-        ;(async () => {
-            if (user.socket_connected) {
-                if (typeof window !== 'undefined') {
-                    const timeRange =
-                        track.timecodes.length === 2
-                            ? `${track.timecodes[0]} - ${track.timecodes[1]}`
-                            : ''
-                    const details = track.artist
-                        ? `${track.playerBarTitle} - ${track.artist}`
-                        : track.playerBarTitle
-                    const largeImage = track.requestImgTrack[1] || 'ym'
-                    const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset'
-                    const buttons = 68413424
-                        ? [
-                              {
-                                  label: '✌️ Open in YandexMusic',
-                                  url: `yandexmusic://album/${encodeURIComponent(68413424)}`,
-                              },
-                          ]
-                        : null
-                    if (user.enableButtonListen) {
-                        window.discordRpc.setActivity({
-                            state: timeRange,
-                            details: details,
-                            largeImageKey: largeImage,
-                            smallImageKey: smallImage,
-                            smallImageText: 'Yandex Music',
-                            buttons,
-                        })
-                    } else {
-                        window.discordRpc.setActivity({
-                            state: timeRange,
-                            details: details,
-                            largeImageKey: largeImage,
-                            smallImageKey: smallImage,
-                            smallImageText: 'Yandex Music',
-                        })
-                    }
-                }
-            }
-        })()
-    }, [track])
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
@@ -94,8 +35,9 @@ export default function TrackInfoPage() {
                                     <img
                                         className={theme.img}
                                         src={
-                                            track.requestImgTrack[1]
-                                                ? track.requestImgTrack[1]
+                                            currentTrack.requestImgTrack[1]
+                                                ? currentTrack
+                                                      .requestImgTrack[1]
                                                 : '../../../../static/assets/logo/logoapp.png'
                                         }
                                         alt=""
@@ -105,12 +47,12 @@ export default function TrackInfoPage() {
                                             Yandex Music
                                         </div>
                                         <div className={theme.name}>
-                                            {track.playerBarTitle} -{' '}
-                                            {track.artist}
+                                            {currentTrack.playerBarTitle} -{' '}
+                                            {currentTrack.artist}
                                         </div>
                                         <div className={theme.time}>
-                                            {track.timecodes[0]} -{' '}
-                                            {track.timecodes[1]}
+                                            {currentTrack.timecodes[0]} -{' '}
+                                            {currentTrack.timecodes[1]}
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +69,7 @@ export default function TrackInfoPage() {
 
                             <div className={theme.button}>Слушать</div>
                         </div>
-                        <CheckboxNav checkType="enableButtonListen">
+                        <CheckboxNav checkType="enableRpcButtonListen">
                             <MdVideoLibrary size={22} />
                             Включить кнопку (Слушать)
                         </CheckboxNav>

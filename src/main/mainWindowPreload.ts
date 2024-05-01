@@ -60,6 +60,6 @@ contextBridge.exposeInMainWorld('discordRpc', {
         ipcRenderer.send('discordrpc-enablerpc', val)
     },
     async enableListenButton(val: boolean) {
-        ipcRenderer.send('discordrpc-enablelistenbutton', val)
+        ipcRenderer.send('discordrpc-enablerpcbuttonlisten', val)
     },
 })

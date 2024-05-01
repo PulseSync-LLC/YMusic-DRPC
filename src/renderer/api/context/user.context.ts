@@ -2,6 +2,8 @@ import { createContext } from 'react'
 import UserInterface from '../interfaces/user.interface'
 import userInitials from '../interfaces/user.initials'
 import { Socket } from 'socket.io-client'
+import TrackInterface from '../interfaces/track.interface'
+import trackInitials from '../interfaces/track.initials'
 
 interface p {
     user: UserInterface

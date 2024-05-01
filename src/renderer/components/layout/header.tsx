@@ -30,17 +30,18 @@ const Header: React.FC<p> = ({ goBack }) => {
                     <div className={styles.event_container}>
                         <div className={styles.menu}>
                             <button className={styles.update_download}>
-                                <MdDownload size={26}/>
+                                <MdDownload size={26} />
                             </button>
                             <div className={styles.badges_container}>
-                                <Dev/>
-                                <Early/>
-                                <Supporter/>
+                                <Dev />
+                                <Early />
+                                <Supporter />
                             </div>
                             <div className={styles.user_container}>
                                 <img
                                     src="https://media.discordapp.net/attachments/482180995752394752/1234142800224714793/photo_2024-04-25_22-46-45.jpg"
-                                    alt=""/>
+                                    alt=""
+                                />
                                 Maks1mio
                             </div>
                         </div>
@@ -50,21 +51,21 @@ const Header: React.FC<p> = ({ goBack }) => {
                                 className={styles.button_title}
                                 onClick={window.electron.window.minimize}
                             >
-                                <Minus/>
+                                <Minus />
                             </button>
                             <button
                                 id="minimize"
                                 className={styles.button_title}
                                 onClick={window.electron.window.maximize}
                             >
-                                <Minimize/>
+                                <Minimize />
                             </button>
                             <button
                                 id="close"
                                 className={styles.button_title}
                                 onClick={window.electron.window.close}
                             >
-                                <Close/>
+                                <Close />
                             </button>
                         </div>
                     </div>

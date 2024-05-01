@@ -24,34 +24,34 @@
 
 :root {
     --bg: #181b1e;
-    --color1: #BCD7FF;
-    --color2: #21262D;
-    --color2H: #2D3643;
-    --color3: #2A323E;
+    --color1: #bcd7ff;
+    --color2: #21262d;
+    --color2H: #2d3643;
+    --color3: #2a323e;
     --border: #384150;
-    --borderH: #3F5370;
+    --borderH: #3f5370;
     --borderRadius: 5px;
 
-    --downloadColor: #75FF9C;
-    --downloadColorH: #60FF8C;
-    --download: #2A3E39;
-    --downloadH: #2A4B43    ;
+    --downloadColor: #75ff9c;
+    --downloadColorH: #60ff8c;
+    --download: #2a3e39;
+    --downloadH: #2a4b43;
 
     /* Style In MainContainer => --m */
     --mInColor: var(--color1);
-    --mColor: #2A323E;
+    --mColor: #2a323e;
     --mColorH: #344154;
     --mBorder: #394454;
-    --mBorderH: #455C80;
+    --mBorderH: #455c80;
 
-    --mInColorActive: #BCFFEF;
-    --mColorActive: #2A3E39;
-    --mColorActiveH: #2F4D46;
-    --mBorderActive: #39544D;
-    --mBorderActiveH: #406F63;
+    --mInColorActive: #bcffef;
+    --mColorActive: #2a3e39;
+    --mColorActiveH: #2f4d46;
+    --mBorderActive: #39544d;
+    --mBorderActiveH: #406f63;
 
-    --mTrackColor: #D5D8DC;
-    --mTrackButton: #4E5058;
+    --mTrackColor: #d5d8dc;
+    --mTrackButton: #4e5058;
     --mTrackBackground: #111214;
     --mTrackBorder: #394454;
 }
@@ -63,7 +63,7 @@
     stroke: var(--color1);
 }
 
-.discord_svg__noStroke{
+.discord_svg__noStroke {
     stroke: none;
 }
 

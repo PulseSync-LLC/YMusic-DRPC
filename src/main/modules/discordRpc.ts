@@ -22,16 +22,15 @@ ipcMain.on('discordrpc-enablerpc', (event, val) => {
     store.set('discordRpc', val)
     if (val && !rpcConnected) {
         client.login().catch(console.error)
-        rpcConnected = true
     } else {
         client.destroy().catch(console.error)
         rpcConnected = false
     }
 })
 
-ipcMain.on('discordrpc-enablelistenbutton', (event, val) => {
-    console.log('enablelistenbutton: ' + val)
-    store.set('enableListenButton', val)
+ipcMain.on('discordrpc-enablerpcbuttonlisten', (event, val) => {
+    console.log('enableRpcButtonListen: ' + val)
+    store.set('enableRpcButtonListen', val)
 })
 
 ipcMain.on('discordrpc-clearstate', () => {

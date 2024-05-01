@@ -1,17 +1,18 @@
 import { createContext, ReactElement } from 'react'
 import { Track } from 'yandex-music-client'
+import TrackInterface from '../interfaces/track.interface'
 
 interface p {
-    currentTrack?: Track
-    state: boolean
-    highQuality: boolean
-    muted: boolean
-    shuffle: boolean
-    mode: 'DEFAULT' | 'REPEAT' | 'REPEAT_ONE' | 'SHUFFLE'
-    currentMs: number
-    volume: number
-    loading: boolean
-    queue: Track[]
+    currentTrack?: TrackInterface
+    state?: boolean
+    highQuality?: boolean
+    muted?: boolean
+    shuffle?: boolean
+    mode?: 'DEFAULT' | 'REPEAT' | 'REPEAT_ONE' | 'SHUFFLE'
+    currentMs?: number
+    volume?: number
+    loading?: boolean
+    queue?: Track[]
     pauseResume?: () => void
     playTrack?: (data: any) => void
     addTracks?: (data: any[]) => void

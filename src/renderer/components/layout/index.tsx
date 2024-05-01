@@ -1,15 +1,18 @@
 import styles from './layout.module.scss'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import Header from './header'
 import ButtonNav from '../button_nav'
 import Discord from './../../../../static/assets/icons/discord.svg'
 import {
-    MdArchitecture, MdColorLens,
+    MdArchitecture,
+    MdColorLens,
     MdConnectWithoutContact,
     MdHome,
 } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
+import userContext from '../../api/context/user.context'
+import trackInitials from '../../api/interfaces/track.initials'
 
 interface p {
     title: string

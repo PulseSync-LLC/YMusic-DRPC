@@ -63,12 +63,12 @@
                     &:hover {
                         background: var(--downloadH);
 
-                        >svg {
+                        > svg {
                             fill: var(--downloadColorH);
                         }
                     }
 
-                    >svg {
+                    > svg {
                         fill: var(--downloadColor);
                     }
                 }
@@ -88,7 +88,7 @@
                 }
 
                 .user_container {
-                    >img {
+                    > img {
                         --size: 34px;
                         width: var(--size);
                         height: var(--size);

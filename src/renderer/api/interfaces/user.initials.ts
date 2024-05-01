@@ -6,7 +6,7 @@ const UserInitials: UserInterface = {
     login: '',
     hasAvatar: false,
     enableRpc: false,
-    enableButtonListen: false,
+    enableRpcButtonListen: false,
     autoStartMusic: false,
     socket_connected: false,
 }

@@ -120,7 +120,7 @@ class Patcher {
 
                                                       
             function logPlayerBarInfo() {
-                const playerBarTitleElement = document.querySelector('[class*="Meta_albumLink"]');
+                const playerBarTitleElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_title"]');
                 const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artists"]');
                 const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
                 const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');

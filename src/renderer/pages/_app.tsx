@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 
 import IndexPage from './main'
@@ -17,6 +17,9 @@ import UserContext from '../api/context/user.context'
 import toast from '../api/toast'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import trackInitials from '../api/interfaces/track.initials'
+import TrackInterface from '../api/interfaces/track.interface'
+import PlayerContext from '../api/context/player.context'
 
 function app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
@@ -105,12 +108,20 @@ function app() {
     useEffect(() => {
         if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
             if (
-                window.electron.store.has('discordRpc') &&
                 window.electron.store.get('discordRpc')
             ) {
                 setUser(prevUser => ({
                     ...prevUser,
                     enableRpc: true,
+                }))
+                setLoading(false)
+            }
+            if (
+                window.electron.store.get('enableRpcButtonListen')
+            ) {
+                setUser(prevUser => ({
+                    ...prevUser,
+                    enableRpcButtonListen: true,
                 }))
                 setLoading(false)
             }
@@ -125,14 +136,88 @@ function app() {
             <UserContext.Provider
                 value={{ user, setUser, loading, socket: socketIo }}
             >
-                <SkeletonTheme baseColor="#1c1c22" highlightColor="#333">
-                    <CssVarsProvider>
-                        <RouterProvider router={router} />
-                    </CssVarsProvider>
-                </SkeletonTheme>
+                <Player>
+                    <SkeletonTheme baseColor="#1c1c22" highlightColor="#333">
+                        <CssVarsProvider>
+                            <RouterProvider router={router} />
+                        </CssVarsProvider>
+                    </SkeletonTheme>
+                </Player>
             </UserContext.Provider>
         </div>
     )
 }
-
+const Player: React.FC<any> = ({ children }) => {
+    const { user, socket } = useContext(UserContext)
+    const [track, setTrack] = useState<TrackInterface>(trackInitials)
+    useEffect(() => {
+        console.log(user)
+        ;(async () => {
+            if (user.socket_connected) {
+                if (typeof window !== 'undefined') {
+                    if (user.enableRpc) {
+                        socket?.emit('ping')
+                        socket?.on('trackinfo', data => {
+                            setTrack(data)
+                        })
+                    } else {
+                        socket?.off('trackinfo')
+                        setTrack(trackInitials)
+                    }
+                }
+            }
+        })()
+    }, [user])
+    useEffect(() => {
+        console.log(track)
+    }, [track])
+    const timeRange =
+        track.timecodes.length === 2
+            ? `${track.timecodes[0]} - ${track.timecodes[1]}`
+            : ''
+    const details = track.artist
+        ? `${track.playerBarTitle} - ${track.artist}`
+        : track.playerBarTitle
+    const largeImage = track.requestImgTrack[1] || 'ym'
+    const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset'
+    const buttons = track.linkTitle
+        ? [
+            {
+                label: '✌️ Open in YandexMusic',
+                url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
+            },
+        ]
+        : []
+    useEffect(() => {
+        if (user.enableRpc) {
+            if (user.enableRpcButtonListen) {
+                window.discordRpc.setActivity({
+                    state: timeRange,
+                    details: details,
+                    largeImageKey: largeImage,
+                    smallImageKey: smallImage,
+                    smallImageText: 'Yandex Music',
+                    buttons
+                })
+            } else {
+                window.discordRpc.setActivity({
+                    state: timeRange,
+                    details: details,
+                    largeImageKey: largeImage,
+                    smallImageKey: smallImage,
+                    smallImageText: 'Yandex Music',
+                })
+            }
+        }
+    }, [user, track])
+    return (
+        <PlayerContext.Provider
+            value={{
+                currentTrack: track,
+            }}
+        >
+            {children}
+        </PlayerContext.Provider>
+    )
+}
 export default app

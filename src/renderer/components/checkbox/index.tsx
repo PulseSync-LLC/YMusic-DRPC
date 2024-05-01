@@ -18,17 +18,16 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
     const [isActive, setIsActive] = useState(false)
     const { user, setUser } = useContext(userContext)
-
+    console.log(checkType)
     useEffect(() => {
         switch (checkType) {
             case 'autoStartMusic':
                 setIsActive(window.electron.store.get('autoStartMusic'))
-
                 break
             case 'startDiscordRpc':
                 setIsActive(window.electron.store.get('discordRpc'))
                 break
-            case 'enableButtonListen':
+            case 'enableRpcButtonListen':
                 setIsActive(window.electron.store.get('enableRpcButtonListen'))
                 break
         }
@@ -54,7 +53,7 @@ const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
                 window.discordRpc.enableListenButton(event.target.checked)
                 setUser((prevUser: any) => ({
                     ...prevUser,
-                    enableRpc: event.target.checked,
+                    enableRpcButtonListen: event.target.checked,
                 }))
                 break
         }

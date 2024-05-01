@@ -5,7 +5,7 @@ export default interface UserInterface {
     login: string
     hasAvatar: boolean
     enableRpc: boolean
-    enableButtonListen: boolean
+    enableRpcButtonListen: boolean
     autoStartMusic: boolean
     socket_connected: boolean
 }
