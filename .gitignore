@@ -92,3 +92,4 @@ typings/
 out/
 .idea
 yarn.lock
+config.json
