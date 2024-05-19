@@ -188,7 +188,7 @@ async function prestartCheck() {
     if (store.has('discordRpc') && store.get('discordRpc')) {
         rpc_connect()
     }
-    if (store.get('patched')) {
+    if (store.has('patched') && store.get('patched')) {
         const asarCopy = path.join(
             process.env.LOCALAPPDATA,
             'Programs',
