@@ -8,4 +8,5 @@ export default interface UserInterface {
     enableRpcButtonListen: boolean
     autoStartMusic: boolean
     socket_connected: boolean
+    patched: boolean
 }

@@ -26,7 +26,7 @@ function app() {
     const [socketError, setSocketError] = useState(0)
     const [user, setUser] = useState<UserInterface>(userInitials)
     const [loading, setLoading] = useState(false)
-    const socket = io('localhost:1488', {
+    const socket = io('http://localhost:1488', {
         autoConnect: false,
     })
     const router = createHashRouter([
@@ -107,21 +107,24 @@ function app() {
 
     useEffect(() => {
         if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
-            if (
-                window.electron.store.get('discordRpc')
-            ) {
+            if (window.electron.store.get('discordRpc')) {
                 setUser(prevUser => ({
                     ...prevUser,
                     enableRpc: true,
                 }))
                 setLoading(false)
             }
-            if (
-                window.electron.store.get('enableRpcButtonListen')
-            ) {
+            if (window.electron.store.get('enableRpcButtonListen')) {
                 setUser(prevUser => ({
                     ...prevUser,
                     enableRpcButtonListen: true,
+                }))
+                setLoading(false)
+            }
+            if (window.electron.store.get('patched')) {
+                setUser(prevUser => ({
+                    ...prevUser,
+                    patched: true,
                 }))
                 setLoading(false)
             }
@@ -150,13 +153,21 @@ function app() {
 const Player: React.FC<any> = ({ children }) => {
     const { user, socket } = useContext(UserContext)
     const [track, setTrack] = useState<TrackInterface>(trackInitials)
+    socket?.emit('ping')
+    socket?.on('update-available', data => {
+        toast.success('Update available: ' + data, {
+            duration: 30000,
+        })
+        setTimeout(() => {
+            socket?.emit('update-install')
+        }, 5000)
+    })
     useEffect(() => {
         console.log(user)
         ;(async () => {
             if (user.socket_connected) {
                 if (typeof window !== 'undefined') {
                     if (user.enableRpc) {
-                        socket?.emit('ping')
                         socket?.on('trackinfo', data => {
                             setTrack(data)
                         })
@@ -169,27 +180,25 @@ const Player: React.FC<any> = ({ children }) => {
         })()
     }, [user])
     useEffect(() => {
-        console.log(track)
-    }, [track])
-    const timeRange =
-        track.timecodes.length === 2
-            ? `${track.timecodes[0]} - ${track.timecodes[1]}`
-            : ''
-    const details = track.artist
-        ? `${track.playerBarTitle} - ${track.artist}`
-        : track.playerBarTitle
-    const largeImage = track.requestImgTrack[1] || 'ym'
-    const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset'
-    const buttons = track.linkTitle
-        ? [
-            {
-                label: '✌️ Open in YandexMusic',
-                url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
-            },
-        ]
-        : []
-    useEffect(() => {
         if (user.enableRpc) {
+            //console.log(track)
+            const timeRange =
+                track.timecodes.length === 2
+                    ? `${track.timecodes[0]} - ${track.timecodes[1]}`
+                    : ''
+            const details = track.artist
+                ? `${track.playerBarTitle} - ${track.artist}`
+                : track.playerBarTitle
+            const largeImage = track.requestImgTrack[1] || 'ym'
+            const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset'
+            const buttons = track.linkTitle
+                ? [
+                      {
+                          label: '✌️ Open in YandexMusic',
+                          url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
+                      },
+                  ]
+                : []
             if (user.enableRpcButtonListen) {
                 window.discordRpc.setActivity({
                     state: timeRange,
@@ -197,7 +206,7 @@ const Player: React.FC<any> = ({ children }) => {
                     largeImageKey: largeImage,
                     smallImageKey: smallImage,
                     smallImageText: 'Yandex Music',
-                    buttons
+                    buttons,
                 })
             } else {
                 window.discordRpc.setActivity({

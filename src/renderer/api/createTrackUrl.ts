@@ -47,7 +47,7 @@ async function getDownloadInfo(
         : trackInfo[0]
 
     const downloadInfo = await http.request<DownloadInfo>({
-        url: `http://localhost:${window.electron.corsAnywherePort()}/${
+        url: `http://127.0.0.1:${window.electron.corsAnywherePort()}/${
             info!.downloadInfoUrl
         }&format=json`,
         headers,

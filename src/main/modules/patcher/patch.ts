@@ -54,7 +54,7 @@ class Patcher {
         })
     }
 
-    static patchRum() {
+    static async patchRum() {
         const appAsarPath =
             process.env.LOCALAPPDATA +
             '\\Programs\\YandexMusic\\resources\\app.asar'
@@ -66,19 +66,6 @@ class Patcher {
         const command = `asar extract "${appAsarPath}" "${destinationDir}"`
 
         console.log(`Extracting app.asar to ${destinationDir}...`)
-
-        const appPath =
-            process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources'
-
-        const filePath = path.join(appPath, 'patched.txt')
-
-        fs.writeFile(filePath, 'done', err => {
-            if (err) {
-                console.error('Ошибка при создании файла:', err)
-            } else {
-                console.log('Файл успешно создан по пути:', filePath)
-            }
-        })
 
         exec(command, (error: any, stdout: any, stderr: any) => {
             if (error) {
@@ -121,6 +108,7 @@ class Patcher {
                                                       
             function logPlayerBarInfo() {
                 const playerBarTitleElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_title"]');
+                const linkTitleElement = document.querySelector('[class*="Meta_albumLink"]');
                 const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artists"]');
                 const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
                 const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
@@ -139,8 +127,7 @@ class Patcher {
 
                 const artistTextElements = artistLinkElement ? artistLinkElement.querySelectorAll('[class*="Meta_artistCaption"]') : null;
                 const artistTexts = artistTextElements ? Array.from(artistTextElements).map(element => element.textContent.trim()) : [];
-
-                const linkTitle = playerBarTitleElement ? playerBarTitleElement.getAttribute('href') : '';
+                const linkTitle = linkTitleElement ? linkTitleElement.getAttribute('href') : '';
                 const albumId = linkTitle ? linkTitle.split('=')[1] : '';
 
                 const timecodesArray = Array.from(timecodeElements, (element) => element.textContent.trim());
@@ -159,7 +146,7 @@ class Patcher {
             setInterval(() => {
                 const result = logPlayerBarInfo();
 
-                fetch('http://127.0.0.1:19582/update_data', {
+                fetch('http://localhost:19582/update_data', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -178,7 +165,7 @@ class Patcher {
                     link.type = 'text/css';
                     document.head.appendChild(link);
                 }
-                link.href = 'http://127.0.0.1:19582/style.css';
+                link.href = 'http://localhost:19582/style.css';
             }
             
             // Вызываем функцию обновления стиля каждые две секунды

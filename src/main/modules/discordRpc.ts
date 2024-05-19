@@ -14,7 +14,7 @@ const client = new Client({
 let rpcConnected = false
 
 ipcMain.on('discordrpc-setstate', (event, activity: SetActivity) => {
-    console.log(activity)
+    //console.log(activity)
     if (rpcConnected) client.user?.setActivity(activity)
 })
 ipcMain.on('discordrpc-enablerpc', (event, val) => {
@@ -36,7 +36,7 @@ ipcMain.on('discordrpc-enablerpcbuttonlisten', (event, val) => {
 ipcMain.on('discordrpc-clearstate', () => {
     if (rpcConnected) client.user?.clearActivity()
 })
-client.on('debug', console.debug)
+//client.on('debug', console.debug)
 client.on('connected', () => (rpcConnected = true))
 
 function rpc_connect() {

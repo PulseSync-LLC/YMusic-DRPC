@@ -6,10 +6,6 @@ class UnPatcher {
         process.env.LOCALAPPDATA +
         '\\Programs\\YandexMusic\\resources\\app.asar'
 
-    static patchedTxt =
-        process.env.LOCALAPPDATA +
-        '\\Programs\\YandexMusic\\resources\\patched.txt'
-
     static async deleteFiles(filePaths: string[]) {
         const deleteCommands = filePaths.map(filePath => `del "${filePath}"`)
 
@@ -53,7 +49,7 @@ class UnPatcher {
         })
     }
     static async unpatch() {
-        this.deleteFiles([this.appAsarPath, this.patchedTxt]).then(r => {
+        this.deleteFiles([this.appAsarPath]).then(r => {
             console.log('Успешно удалено: ' + r)
             this.replaceFile(this.appAsarPath)
         })

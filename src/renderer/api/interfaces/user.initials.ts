@@ -9,6 +9,7 @@ const UserInitials: UserInterface = {
     enableRpcButtonListen: false,
     autoStartMusic: false,
     socket_connected: false,
+    patched: false,
 }
 
 export default UserInitials

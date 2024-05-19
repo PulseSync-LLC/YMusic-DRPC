@@ -38,14 +38,10 @@ function createTray() {
             click: app.quit,
         }),
     )
-    menu.append(
-        new MenuItem({
-            label: 'Открыть',
-            click: app.show,
-        }),
-    )
-
     tray.setContextMenu(menu)
+    tray.on('click', event => {
+        mainWindow.show()
+    })
 }
 
 // ipcMain.on('player-setTrack', (event, track: Track) => {

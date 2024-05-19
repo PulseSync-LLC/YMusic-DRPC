@@ -1,0 +1,4 @@
+provider: generic
+url: https://s3.bluedream.space/dev_build/
+updaterCacheDirName: pulsesyncapp-updater
+useMultipleRangeRequest: false

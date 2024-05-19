@@ -12,7 +12,6 @@ import { getNativeImg } from './main/utils'
 import './main/modules/index'
 import path from 'path'
 import fs from 'fs'
-import server, { getTrackInfo } from './main/modules/httpServer'
 import { store } from './main/modules/storage'
 import Patcher from './main/modules/patcher/patch'
 import UnPatcher from './main/modules/patcher/unpatch'
@@ -22,14 +21,16 @@ import rpc_connect from './main/modules/discordRpc'
 import { configure } from 'log4js'
 import SocketService from './main/modules/socket-io'
 import corsAnywhereServer from 'cors-anywhere'
-import getPort from 'get-port'
+import httpServer from './main/modules/httpServer'
+import config from './config.json'
+import { getUpdater } from './main/modules/updater/updater'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 const isMac = process.platform === 'darwin'
 export let corsAnywherePort: string | number
-
 export let mainWindow: BrowserWindow
+
 configure({
     appenders: {
         logFile: {
@@ -51,10 +52,6 @@ configure({
         },
     },
 })
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-    app.quit()
-}
 
 const ydrpcModification = path.join(
     process.env.LOCALAPPDATA,
@@ -84,8 +81,6 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
     height: 40,
 })
 
-let metadata
-let tray = null
 const createWindow = (): void => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
@@ -118,12 +113,13 @@ const createWindow = (): void => {
         return { action: 'deny' }
     })
     mainWindow.webContents.openDevTools()
-    const websocket = new SocketService()
 }
 const corsAnywhere = async () => {
+    const getPortModule = await import('get-port')
+    let getPort = getPortModule.default
     corsAnywherePort = await getPort()
 
-    corsAnywhereServer.createServer().listen(corsAnywherePort, 'localhost')
+    corsAnywhereServer.createServer().listen(corsAnywherePort, '127.0.0.1')
 }
 protocol.registerSchemesAsPrivileged([
     {
@@ -162,14 +158,15 @@ protocol.registerSchemesAsPrivileged([
     { scheme: 'mailto', privileges: { standard: true } },
 ])
 
-app.on('ready', () => {
-    prestartCheck()
-    corsAnywhere()
+app.on('ready', async () => {
+    await prestartCheck()
+    await corsAnywhere()
     createWindow()
     createTray()
 })
 
-function prestartCheck() {
+async function prestartCheck() {
+    const server = new SocketService()
     if (store.has('autoStartMusic') && store.get('autoStartMusic')) {
         let appPath = path.join(
             process.env.LOCALAPPDATA,
@@ -191,6 +188,21 @@ function prestartCheck() {
     if (store.has('discordRpc') && store.get('discordRpc')) {
         rpc_connect()
     }
+    if (store.get('patched')) {
+        const asarCopy = path.join(
+            process.env.LOCALAPPDATA,
+            'Programs',
+            'YandexMusic',
+            'resources',
+            'app.asar.copy',
+        )
+        if (!fs.existsSync(asarCopy)) {
+            store.set('patched', false)
+        }
+    }
+    httpServer.listen(config.PORT, () => {
+        console.log(`Server running at http://localhost:${config.PORT}/`)
+    })
 }
 
 app.on('window-all-closed', () => {
@@ -219,9 +231,12 @@ ipcMain.on('electron-window-close', () => {
     mainWindow.hide()
 })
 
-ipcMain.on('electron-patch', () => {
+ipcMain.on('electron-patch', async () => {
     console.log('patch')
-    Patcher.patchRum()
+    await Patcher.patchRum().then(() => {
+        console.log('Все гуд')
+        store.set('patched', true)
+    })
 })
 
 ipcMain.on('electron-repatch', async () => {
@@ -234,13 +249,13 @@ ipcMain.on('electron-depatch', async () => {
     console.log('depatch')
     await UnPatcher.unpatch().then(() => {
         console.log('Все хорошо')
+        store.set('patched', false)
     })
 })
 
 ipcMain.on('electron-corsanywhereport', event => {
     event.returnValue = corsAnywherePort
 })
-
 ipcMain.on('pathAppOpen', async () => {
     await shell.openPath(path.join(__dirname))
 })
@@ -285,16 +300,6 @@ ipcMain.on('getThemesList', () => {
     let confData = fs.readFileSync(confFilePath, 'utf8')
     let conf = JSON.parse(confData)
     let folders: any[] = []
-
-    // folders.push({
-    //     name: 'Default',
-    //     image: 'url',
-    //     author: 'Your Name',
-    //     description: 'Default theme.',
-    //     version: '1.0.0',
-    //     css: 'style.css',
-    //     path: 'local',
-    // })
 
     const themeFiles = fs.readdirSync(themesDir)
     themeFiles.forEach(themeFile => {
@@ -367,46 +372,3 @@ ipcMain.on('selectStyle', async (event, name, author) => {
 ipcMain.on('autoStartMusic', async (event, value) => {
     store.set('autoStartMusic', value)
 })
-// const updateDiscordRPC = (RPC, data) => {
-//     const { playerBarTitle, artist, timecodes, requestImgTrack, linkTitle } =
-//         data
-//     const timeRange =
-//         timecodes.length === 2 ? `${timecodes[0]} - ${timecodes[1]}` : ''
-//     const details = artist ? `${playerBarTitle} - ${artist}` : playerBarTitle
-//     const largeImage = requestImgTrack[1] || 'ym'
-//     const smallImage = requestImgTrack[1] ? 'ym' : 'unset'
-//     const buttons = linkTitle
-//         ? [
-//               {
-//                   label: '✌️ Open in YandexMusic',
-//                   url: `yandexmusic://album/${encodeURIComponent(linkTitle)}`,
-//               },
-//           ]
-//         : null
-//
-//     RPC.setActivity({
-//         state: timeRange,
-//         details: details,
-//         largeImageKey: largeImage,
-//         smallImageKey: smallImage,
-//         smallImageText: 'Yandex Music',
-//         buttons: buttons,
-//     })
-// }
-//
-// const noYMAppDiscordRPC = RPC => {
-//     RPC.setActivity({
-//         details: 'AFK',
-//         largeImageText: 'YM MINI',
-//         largeImageKey: 'ym',
-//     })
-// }
-
-// setInterval(() => {
-//     // console.log(metadata)
-//     if (metadata && Object.keys(metadata).length) {
-//         updateDiscordRPC(rpc, metadata)
-//     } else {
-//         noYMAppDiscordRPC(rpc)
-//     }
-// }, 1000)

@@ -11,7 +11,8 @@
         "publish": "electron-forge publish",
         "lint": "eslint --ext .ts,.tsx .",
         "format": "prettier --write .",
-        "dist": "electron-builder"
+        "build": "electron-builder --pd ./out/PulseSync-win32-x64",
+        "postbuild": "tsc ./utils/uploadToS3.ts && node ./utils/uploadToS3.js"
     },
     "type": "commonjs",
     "keywords": [],
@@ -51,7 +52,8 @@
         "style-loader": "^4.0.0",
         "ts-loader": "^9.2.2",
         "ts-node": "^10.0.0",
-        "typescript": "~5.4.5"
+        "typescript": "~5.4.5",
+        "webpack-cli": "^5.1.4"
     },
     "dependencies": {
         "@electron-forge/plugin-vite": "^7.4.0",
@@ -63,11 +65,13 @@
         "@mui/joy": "^5.0.0-beta.36",
         "@svgr/webpack": "^8.1.0",
         "@types/dotenv-webpack": "^7.0.7",
+        "@types/semver": "^7.5.8",
         "@types/socket.io": "^3.0.2",
         "@types/socket.io-client": "^3.0.0",
         "@vanilla-extract/vite-plugin": "^4.0.9",
         "@vitejs/plugin-react": "^4.2.1",
         "@xhayper/discord-rpc": "^1.1.2",
+        "aws-sdk": "^2.1623.0",
         "axios": "^1.4.0",
         "cors-anywhere": "^0.4.4",
         "crypto-browserify": "^3.12.0",
@@ -119,6 +123,7 @@
         "vite-plugin-node": "^3.1.0",
         "vite-tsconfig-paths": "^4.3.2",
         "webpack": "^5.82.1",
+        "yaml": "^2.4.2",
         "yandex-music-client": "^0.4.3"
     },
     "build": {
@@ -137,7 +142,8 @@
             "oneClick": false,
             "perMachine": true,
             "allowElevation": true,
-            "allowToChangeInstallationDirectory": true
+            "allowToChangeInstallationDirectory": true,
+            "include": "build/installer.nsh"
         }
     },
     "config": {
