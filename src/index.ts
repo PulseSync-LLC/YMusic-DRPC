@@ -86,11 +86,11 @@ const createWindow = (): void => {
     mainWindow = new BrowserWindow({
         show: false,
         frame: isMac,
-        backgroundColor: '#08070d',
-        width: 1000,
-        height: 577,
-        minWidth: 1000,
-        minHeight: 577,
+        backgroundColor: '#1B1F21',
+        width: 810,
+        height: 690,
+        minWidth: 810,
+        minHeight: 690,
         //maxWidth: 615,
         icon,
         webPreferences: {

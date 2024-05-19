@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 
-import IndexPage from './main'
 import TrackInfoPage from './trackinfo'
 import ThemePage from './theme'
 import JointPage from './joint'
@@ -32,10 +31,6 @@ function app() {
     const router = createHashRouter([
         {
             path: '/',
-            element: <IndexPage />,
-        },
-        {
-            path: '/trackinfo',
             element: <TrackInfoPage />,
         },
         {

@@ -4,7 +4,6 @@ import React from 'react'
 import Minus from './../../../../static/assets/icons/minus.svg'
 import Minimize from './../../../../static/assets/icons/minimize.svg'
 import Close from './../../../../static/assets/icons/close.svg'
-import { MdDownload } from 'react-icons/md'
 
 import Dev from './../../../../static/assets/badges/dev.svg'
 import Early from './../../../../static/assets/badges/early.svg'
@@ -19,19 +18,20 @@ const Header: React.FC<p> = ({ goBack }) => {
         <>
             <header className={styles.nav_bar}>
                 <div className={styles.fix_size}>
-                    <div className={styles.logoplace}>
-                        <img
-                            className={styles.logoapp}
-                            src="static/assets/logo/logoapp.png"
-                            alt=""
-                        />
-                        <span>PulseSync</span>
+                    <div className={styles.app_menu}>
+                        <div className={styles.logoplace}>
+                            <img
+                                className={styles.logoapp}
+                                src="static/assets/logo/logoapp.svg"
+                                alt=""
+                            />
+                            <span>PulseSync</span>
+                        </div>
+                        <button>Патчер</button>
+                        <div className={styles.version}>PUBLIC V1.0.3</div>
                     </div>
                     <div className={styles.event_container}>
                         <div className={styles.menu}>
-                            <button className={styles.update_download}>
-                                <MdDownload size={26} />
-                            </button>
                             <div className={styles.badges_container}>
                                 <Dev />
                                 <Early />

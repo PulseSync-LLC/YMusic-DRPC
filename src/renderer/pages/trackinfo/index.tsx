@@ -7,7 +7,7 @@ import ButtonDefault from '../../components/button_default'
 import styles from '../../../../static/styles/page/index.module.scss'
 import theme from './trackinfo.module.scss'
 
-import { MdAirplay, MdDownload, MdVideoLibrary } from 'react-icons/md'
+import { MdDownload, MdFolderOpen, MdSmartButton, MdVideogameAsset } from 'react-icons/md'
 import { useContext, useEffect, useState } from 'react'
 import userContext from '../../api/context/user.context'
 import UserInterface from '../../api/interfaces/user.interface'
@@ -23,10 +23,10 @@ export default function TrackInfoPage() {
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
-                <Container titleName={'Discord RPC'}>
+                <Container titleName={'Discord RPC'} imageName={'discord'}>
                     <div className={styles.container}>
                         <CheckboxNav checkType="startDiscordRpc">
-                            <MdAirplay size={22} />
+                            <MdVideogameAsset size={22} />
                             Включить статус дискорд
                         </CheckboxNav>
                         <div className={theme.container}>
@@ -37,7 +37,7 @@ export default function TrackInfoPage() {
                                         src={
                                             currentTrack.requestImgTrack[1]
                                                 ? currentTrack
-                                                      .requestImgTrack[1]
+                                                    .requestImgTrack[1]
                                                 : '../../../../static/assets/logo/logoapp.png'
                                         }
                                         alt=""
@@ -67,16 +67,20 @@ export default function TrackInfoPage() {
                                 </div>
                             )}
 
-                            <div className={theme.button}>Слушать</div>
+                            <div className={theme.button}>Слушать трек на Яндекс Музыке</div>
                         </div>
                         <CheckboxNav checkType="enableRpcButtonListen">
-                            <MdVideoLibrary size={22} />
+                            <MdSmartButton size={22} />
                             Включить кнопку (Слушать)
                         </CheckboxNav>
-                        <ButtonDefault>
-                            <MdDownload size={24} />
+                        <ButtonDefault disabled>
+                            <MdDownload size={22} />
                             Скачать {'track name'} - {'track author'} в папку
                             музыка
+                        </ButtonDefault>
+                        <ButtonDefault disabled>
+                            <MdFolderOpen size={22} />
+                            Дериктория со скаченой музыкой
                         </ButtonDefault>
                     </div>
                 </Container>

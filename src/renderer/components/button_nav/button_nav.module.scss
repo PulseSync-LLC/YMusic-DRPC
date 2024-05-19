@@ -3,34 +3,27 @@
 
     cursor: pointer;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 12px 25px;
-    gap: 10px;
-
-    width: 349px;
-    height: 48px;
-
     background: transparent;
-    border: 1px solid transparent;
+    border: none;
     border-radius: var(--borderRadius);
+    padding: 12px;
 
-    font-family: 'Open Runde';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 16px;
-    line-height: 22px;
-
-    text-align: center;
-    color: var(--color1);
+    &>svg {
+        fill: var(--color2OffCheck);
+    }
 
     &:hover {
         background: var(--color2H);
-        border: 1px solid var(--borderH);
+        &>svg {
+            fill: var(--color1);
+        }
         &:disabled {
             opacity: 0.2;
             background: transparent;
-            border: 1px solid transparent;
+            border: none;
+            &>svg {
+                fill: var(--color2OffCheck);
+            }
         }
     }
 

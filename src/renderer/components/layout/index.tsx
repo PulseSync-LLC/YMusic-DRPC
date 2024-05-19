@@ -5,10 +5,10 @@ import Header from './header'
 import ButtonNav from '../button_nav'
 import Discord from './../../../../static/assets/icons/discord.svg'
 import {
-    MdArchitecture,
     MdColorLens,
     MdConnectWithoutContact,
-    MdHome,
+    MdDownload,
+    MdSettings,
 } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
 import userContext from '../../api/context/user.context'
@@ -30,50 +30,39 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                 <Header goBack={goBack} />
                 <div className={styles.main_window}>
                     <div className={styles.navigation_bar}>
-                        <NavLink
-                            to="/"
-                            className={({ isActive, isPending }) =>
-                                isPending ? 'pending' : isActive ? 'active' : ''
-                            }
-                        >
-                            <ButtonNav>
-                                <MdHome size={24} />
-                                Основные настройки
+                        <div className={styles.navigation_buttons}>
+                            <NavLink
+                                to="/"
+                                className={({ isActive, isPending }) =>
+                                    isPending ? 'pending' : isActive ? 'active' : ''
+                                }
+                            >
+                                <ButtonNav>
+                                    <Discord height={24} width={24} />
+                                </ButtonNav>
+                            </NavLink>
+                            {/* <NavLink to="/theme" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}> */}
+                            <ButtonNav disabled>
+                                <MdColorLens size={24} />
                             </ButtonNav>
-                        </NavLink>
-                        <NavLink
-                            to="/trackinfo"
-                            className={({ isActive, isPending }) =>
-                                isPending ? 'pending' : isActive ? 'active' : ''
-                            }
-                        >
-                            <ButtonNav>
-                                <Discord height={24} width={24} />
-                                Discord RPC
+                            {/* </NavLink> */}
+                            {/* <NavLink to="/joint" className={({ isActive, isPending }) =>
+                            isPending ? "pending" : isActive ? "active" : ""}> */}
+                            <ButtonNav disabled>
+                                <MdConnectWithoutContact size={24} />
                             </ButtonNav>
-                        </NavLink>
-                        {/* <NavLink to="/theme" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}> */}
-                        <ButtonNav disabled>
-                            <MdColorLens size={24} />
-                            Стилизация
-                        </ButtonNav>
-                        {/* </NavLink> */}
-                        {/* <NavLink to="/joint" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}> */}
-                        <ButtonNav disabled>
-                            <MdConnectWithoutContact size={24} />
-                            Совместное прослушивание
-                        </ButtonNav>
-                        {/* </NavLink> */}
-                        <div className={styles.line}></div>
-                        {/* <NavLink to="/other" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}> */}
-                        <ButtonNav disabled>
-                            <MdArchitecture size={24} />
-                            Остальное
-                        </ButtonNav>
-                        {/* </NavLink> */}
+                            {/* </NavLink> */}
+                            <NavLink to="/other" className={({ isActive, isPending }) =>
+                                isPending ? "pending" : isActive ? "active" : ""}>
+                                <ButtonNav>
+                                    <MdSettings size={24} />
+                                </ButtonNav>
+                            </NavLink>
+                        </div>
+                        <button className={styles.update_download}>
+                            <MdDownload size={26} />
+                        </button>
                     </div>
                     {children}
                 </div>

@@ -5,29 +5,57 @@
     height: fit-content;
     -webkit-app-region: drag;
     background: var(--color2);
-    padding: 0 25px;
+    padding: 0 0 0 25px;
     width: -webkit-fill-available;
 
     .fix_size {
+        width: 100%;
         display: flex;
-        width: 1070px;
         justify-content: space-between;
 
-        .logoplace {
+        .app_menu {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 16px;
 
-            .logoapp {
-                --size: 30px;
-                width: var(--size);
-                height: var(--size);
+            .logoplace {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+
+                .logoapp {
+                    --size: 20px;
+                    width: var(--size);
+                    height: var(--size);
+                }
+
+                span {
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: var(--color0);
+                }
             }
 
-            span {
-                font-size: 18px;
+            button {
+                cursor: pointer;
+                -webkit-app-region: no-drag;
+                background: none;
+                border: none;
+                font-size: 15px;
                 font-weight: 500;
-                color: #7bb0ff;
+                color: var(--color0);
+                &:hover{
+                    color: white;
+                }
+            }
+
+            .version {
+                color: var(--color2);
+                font-weight: 600;
+                font-size: 12px;
+                padding: 2px 7px;
+                background: var(--color0);
+                border-radius: 4px;
             }
         }
 
@@ -46,40 +74,14 @@
                 align-items: center;
                 gap: 7px;
 
-                .update_download {
-                    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
-                    cursor: pointer;
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                    padding: 4px 12px;
-
-                    border-radius: var(--borderRadius);
-                    -webkit-app-region: no-drag;
-
-                    background: var(--download);
-                    border: none;
-
-                    &:hover {
-                        background: var(--downloadH);
-
-                        > svg {
-                            fill: var(--downloadColorH);
-                        }
-                    }
-
-                    > svg {
-                        fill: var(--downloadColor);
-                    }
-                }
-
                 .badges_container {
-                    display: flex;
+                    display: none;
+                    // display: flex; <--
                     align-items: center;
                     gap: 5px;
 
                     background: var(--color3);
-                    border-radius: var(--borderRadius);
+                    border-radius: 4px;
                     padding: 4px 8px;
 
                     * path {
@@ -88,20 +90,21 @@
                 }
 
                 .user_container {
-                    > img {
+                    >img {
                         --size: 34px;
                         width: var(--size);
                         height: var(--size);
                     }
 
-                    display: flex;
+                    display: none;
+                    // display: flex; <--
                     flex-direction: row;
                     align-items: center;
                     padding: 0px 12px 0px 0px;
                     gap: 12px;
 
                     background: var(--color3);
-                    border-radius: var(--borderRadius);
+                    border-radius: 4px;
                 }
             }
 
@@ -115,7 +118,7 @@
                     width: fit-content;
                     height: fit-content;
                     border: 0;
-                    padding: 14px;
+                    padding: 15px;
                     background: transparent;
                     -webkit-app-region: no-drag;
 
@@ -124,20 +127,6 @@
                     }
                 }
             }
-        }
-    }
-
-    @media only screen and (min-width: 1070px) {
-        .fix_size {
-            transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
-            width: 1070px;
-        }
-    }
-
-    @media only screen and (min-width: 1900px) {
-        .fix_size {
-            transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
-            width: 100%;
         }
     }
 }
