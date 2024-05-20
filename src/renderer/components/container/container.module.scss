@@ -4,20 +4,29 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 28px 40px;
-    gap: 20px;
 
     background: var(--color2);
-    border: 1px solid var(--border);
     border-radius: var(--borderRadius);
+    overflow: hidden;
 
-    .title {
-        font-family: 'Open Runde';
-        font-style: normal;
-        font-weight: 600;
-        font-size: 28px;
-        line-height: 34px;
+    .title_container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: -webkit-fill-available;
+        padding: 15px 25px;
+        gap: 10px;
 
-        color: white;
+        background: rgba(89, 100, 106, 0.28);
+
+        .title {
+            font-family: 'Open Runde';
+            font-style: normal;
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 22px;
+
+            color: var(--color1);
+        }
     }
 }

@@ -63,14 +63,14 @@
         .checkbox_slider {
             transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
             position: absolute;
-            left: 2px;
-            box-sizing: border-box;
+            left: 5px;
 
+            box-sizing: border-box;
             display: flex;
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            padding: 9px 24px;
+            padding: 7px 18px;
             gap: 10px;
 
             background: rgba(0, 0, 0, 0.83);
@@ -104,8 +104,8 @@
         background: var(--mInColorActive);
 
         .checkbox_slider {
-            padding: 9px 26px;
-            left: 27px;
+            padding: 7px 20px;
+            left: 35px;
         }
     }
 

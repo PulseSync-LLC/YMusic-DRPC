@@ -23,32 +23,34 @@
 }
 
 :root {
-    --bg: #181b1e;
-    --color1: #bcd7ff;
-    --color2: #21262d;
-    --color2H: #2d3643;
-    --color3: #2a323e;
-    --border: #384150;
-    --borderH: #3f5370;
-    --borderRadius: 5px;
+    --bg: #1B1F21;
+    --color0: #B6C7D2;
+    --color1: #DDF2FF;
+    --color2: #2D3236;
+    --color2H: #282D2F;
+    --color2OffCheck: #89969E;
+    --color3: #394045;
+    --border: #535D64;
+    --borderH: #64737C;
+    --borderRadius: 10px;
 
-    --downloadColor: #75ff9c;
+    --downloadColor: #75FF9C;
     --downloadColorH: #60ff8c;
-    --download: #2a3e39;
+    --download: #2A3E39;
     --downloadH: #2a4b43;
 
     /* Style In MainContainer => --m */
     --mInColor: var(--color1);
-    --mColor: #2a323e;
-    --mColorH: #344154;
-    --mBorder: #394454;
-    --mBorderH: #455c80;
+    --mColor: #3A4145;
+    --mColorH: #4e595f;
+    --mBorder: var(--border);
+    --mBorderH: var(--borderH);
 
-    --mInColorActive: #bcffef;
-    --mColorActive: #2a3e39;
-    --mColorActiveH: #2f4d46;
-    --mBorderActive: #39544d;
-    --mBorderActiveH: #406f63;
+    --mInColorActive: #EBFFF5;
+    --mColorActive: #3A453F;
+    --mColorActiveH: #475850;
+    --mBorderActive: #53645C;
+    --mBorderActiveH: #698276;
 
     --mTrackColor: #d5d8dc;
     --mTrackButton: #4e5058;
@@ -71,9 +73,12 @@ a {
     text-decoration: none;
 }
 
-a.active > button {
+a.active>button {
     background: var(--color2);
-    border: 1px solid var(--border);
+    border: none;
+    &>svg {
+        fill: var(--color1);
+    }
 }
 
 body {

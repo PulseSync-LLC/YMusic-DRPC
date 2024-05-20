@@ -2,9 +2,9 @@
     cursor: not-allowed;
     position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     padding: 12px 15px;
     gap: 10px;
     width: -webkit-fill-available;
@@ -19,6 +19,7 @@
         align-items: center;
         padding: 0px;
         gap: 20px;
+        width: 100%;
 
         .img {
             --size: 75px;
@@ -62,17 +63,13 @@
         justify-content: center;
         align-items: center;
         padding: 11px 23px;
-
         background: var(--mTrackButton);
         border-radius: 10px;
-
-        width: -webkit-fill-available;
-
-        font-family: 'Open Runde';
+        font-family: "Open Runde";
         font-style: normal;
         font-weight: 400;
         font-size: 14px;
-
         color: var(--mTrackColor);
+        min-width: fit-content;
     }
 }
