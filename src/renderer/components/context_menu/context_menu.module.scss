@@ -9,7 +9,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  background: #1B1F21;
+  background: var(--bg);
   border: 1px solid #525D64;
   border-radius: 3px;
 
@@ -28,13 +28,13 @@
     width: -webkit-fill-available;
 
     &:hover {
-      background: rgba(89, 100, 106, 0.28) !important;
+      background: #59646a47 !important;
       color: #DDF2FF !important;
     }
   }
 
   .hyperLink:hover {
-    background: rgba(65, 101, 123, 0.28) !important;
+    background: #41657b47 !important;
     color: #5BB0FF !important;
   }
 }
