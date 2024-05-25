@@ -65,7 +65,7 @@
     stroke: var(--color1);
 }
 
-.discord_svg__noStroke {
+.discord_svg__noStroke, .discordLogin_svg__noStroke {
     stroke: none;
 }
 
@@ -93,6 +93,12 @@ body {
     right: 0;
     top: 0;
     bottom: 0;
+}
+
+.app-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 ::-webkit-scrollbar {

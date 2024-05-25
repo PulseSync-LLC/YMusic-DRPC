@@ -1,0 +1,72 @@
+.main_window {
+    display: flex;
+    width: -webkit-fill-available;
+    bottom: 0;
+    justify-content: center;
+    position: absolute;
+    top: 50px;
+    align-items: center;
+    padding: 0 60px;
+
+    >div {
+        max-width: 1157px;
+        width: -webkit-fill-available;
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 25px;
+            gap: 25px;
+
+            .policy {
+                background: white;
+                display: flex;
+                flex-direction: column;
+                height: 400px;
+                gap: 0;
+                overflow-y: scroll;
+                padding: 0 23px;
+                border-radius: var(--borderRadius);
+
+                * {
+                    color: var(--color2);
+                }
+            }
+
+            .discordAuth {
+                transition: ease-in-out all 0.1s;
+                cursor: pointer;
+                display: flex;
+                border-radius: var(--borderRadius);
+                padding: 15px 30px;
+                width: 100%;
+                border: 0;
+                font-family: "Open Runde";
+                font-style: normal;
+                font-weight: 700;
+                font-size: 18px;
+                line-height: 22px;
+                background: #708EF6;
+                color: #FFFFFF;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+
+                &:disabled {
+                    opacity: 0.3 !important;
+
+                    &:hover {
+                        background: #708EF6;
+                        cursor: not-allowed;
+                    }
+                }
+
+                &:hover {
+                    background: #627bd6;
+                }
+            }
+        }
+    }
+}
