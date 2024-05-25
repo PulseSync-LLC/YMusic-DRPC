@@ -1,18 +1,40 @@
-.patch-button-container {
-  position: relative;
-}
-
-.patch-button {
-  background-color: #007bff;
+.patchMenu {
+  position: absolute;
+  top: 40px;
+  left: 150px;
   color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-size: 16px;
-  border-radius: 5px;
-  transition: background-color 0.3s;
+  overflow: hidden;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  background: #1B1F21;
+  border: 1px solid #525D64;
+  border-radius: 3px;
 
-  &:hover {
-    background-color: #0056b3;
+  button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 20px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+    text-transform: uppercase;
+    background: transparent;
+    color: #89969E !important;
+    width: -webkit-fill-available;
+
+    &:hover {
+      background: rgba(89, 100, 106, 0.28) !important;
+      color: #DDF2FF !important;
+    }
+  }
+
+  .hyperLink:hover {
+    background: rgba(65, 101, 123, 0.28) !important;
+    color: #5BB0FF !important;
   }
 }
