@@ -24,6 +24,7 @@ import corsAnywhereServer from 'cors-anywhere'
 import httpServer from './main/modules/httpServer'
 import config from './config.json'
 import { getUpdater } from './main/modules/updater/updater'
+import checkAndTerminateYandexMusic from './renderer/utils/processUtils'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -233,6 +234,7 @@ ipcMain.on('electron-window-close', () => {
 
 ipcMain.on('electron-patch', async () => {
     console.log('patch')
+    await checkAndTerminateYandexMusic()
     await Patcher.patchRum().then(() => {
         console.log('Все гуд')
         store.set('patched', true)
@@ -241,12 +243,14 @@ ipcMain.on('electron-patch', async () => {
 
 ipcMain.on('electron-repatch', async () => {
     console.log('repatch')
+    await checkAndTerminateYandexMusic()
     await UnPatcher.unpatch().then(() => {
         Patcher.patchRum()
     })
 })
 ipcMain.on('electron-depatch', async () => {
     console.log('depatch')
+    await checkAndTerminateYandexMusic()
     await UnPatcher.unpatch().then(() => {
         console.log('Все хорошо')
         store.set('patched', false)
