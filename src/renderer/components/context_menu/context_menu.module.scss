@@ -11,7 +11,7 @@
   align-items: flex-start;
   background: var(--bg);
   border: 1px solid #525D64;
-  border-radius: 3px;
+  border-radius: var(--borderRadius);
 
   button {
     display: flex;
