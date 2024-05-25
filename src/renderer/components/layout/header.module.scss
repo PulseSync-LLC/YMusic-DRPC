@@ -35,6 +35,42 @@
                     color: var(--color0);
                 }
             }
+            .patch-menu {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: #333;
+                color: white;
+                border-radius: 5px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+                overflow: hidden;
+                z-index: 1000;
+
+                ul {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+
+                    li {
+                        padding: 10px 20px;
+                        cursor: pointer;
+                        transition: background-color 0.3s;
+
+                        &:hover {
+                            background-color: #444;
+                        }
+
+                        a {
+                            color: white;
+                            text-decoration: none;
+
+                            &:hover {
+                                text-decoration: underline;
+                            }
+                        }
+                    }
+                }
+            }
 
             button {
                 cursor: pointer;

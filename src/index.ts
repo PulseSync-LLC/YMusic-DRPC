@@ -28,9 +28,15 @@ import checkAndTerminateYandexMusic from '../utils/processUtils'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
+
+
+declare const PRELOADER_PRELOAD_WEBPACK_ENTRY: string
+declare const PRELOADER_WEBPACK_ENTRY: string
+
 const isMac = process.platform === 'darwin'
 export let corsAnywherePort: string | number
 export let mainWindow: BrowserWindow
+let preloaderWindow: BrowserWindow
 
 configure({
     appenders: {
@@ -83,6 +89,29 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
 })
 
 const createWindow = (): void => {
+
+    preloaderWindow = new BrowserWindow({
+        width: 250,
+        height: 271,
+        backgroundColor: '#08070d',
+        show: false,
+        resizable: false,
+        fullscreenable: false,
+        movable: true,
+        frame: false,
+        alwaysOnTop: true,
+        transparent: false,
+        roundedCorners: true,
+        webPreferences: {
+            preload: PRELOADER_PRELOAD_WEBPACK_ENTRY,
+            contextIsolation: true,
+            devTools: false,
+        },
+    })
+
+    preloaderWindow.loadURL(PRELOADER_WEBPACK_ENTRY)
+    preloaderWindow.once('ready-to-show', () => preloaderWindow.show())
+
     // Create the browser window.
     mainWindow = new BrowserWindow({
         show: false,
@@ -92,6 +121,7 @@ const createWindow = (): void => {
         height: 690,
         minWidth: 810,
         minHeight: 690,
+        transparent: false,
         //maxWidth: 615,
         icon,
         webPreferences: {
@@ -106,6 +136,9 @@ const createWindow = (): void => {
     })
 
     mainWindow.once('ready-to-show', () => {
+        preloaderWindow.close()
+        preloaderWindow.destroy()
+
         mainWindow.show()
         mainWindow.moveTop()
     })

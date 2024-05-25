@@ -52,7 +52,7 @@ const forge_config: ForgeConfig = {
                 entryPoints: [
                     {
                         name: 'preloader',
-                        //html: './src/renderer/preloader.html',
+                        html: './src/renderer/preloader.html',
                         js: './src/main/preload.ts',
                         preload: {
                             js: './src/main/preload.ts',

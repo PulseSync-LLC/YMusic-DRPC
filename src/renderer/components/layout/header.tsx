@@ -1,5 +1,5 @@
 import styles from './header.module.scss'
-import React from 'react'
+import React, { useState } from 'react'
 
 import Minus from './../../../../static/assets/icons/minus.svg'
 import Minimize from './../../../../static/assets/icons/minimize.svg'
@@ -8,12 +8,18 @@ import Close from './../../../../static/assets/icons/close.svg'
 import Dev from './../../../../static/assets/badges/dev.svg'
 import Early from './../../../../static/assets/badges/early.svg'
 import Supporter from './../../../../static/assets/badges/supporter.svg'
+import PatchMenu from '../context_menu'
 
 interface p {
     goBack?: boolean
 }
 
 const Header: React.FC<p> = ({ goBack }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
     return (
         <>
             <header className={styles.nav_bar}>
@@ -27,7 +33,12 @@ const Header: React.FC<p> = ({ goBack }) => {
                             />
                             <span>PulseSync</span>
                         </div>
-                        <button>Патчер</button>
+                        <div className="patch-button-container">
+                            <button className="patch-button" onClick={toggleMenu}>
+                                Патчер
+                            </button>
+                            {isMenuOpen && <PatchMenu />}
+                        </div>
                         <div className={styles.version}>PUBLIC V1.0.3</div>
                     </div>
                     <div className={styles.event_container}>
