@@ -24,7 +24,7 @@ import corsAnywhereServer from 'cors-anywhere'
 import httpServer from './main/modules/httpServer'
 import config from './config.json'
 import { getUpdater } from './main/modules/updater/updater'
-import checkAndTerminateYandexMusic from './renderer/utils/processUtils'
+import checkAndTerminateYandexMusic from '../utils/processUtils'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string

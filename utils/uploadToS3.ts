@@ -18,7 +18,6 @@ fs.readFile(filePath, 'utf8')
     .then(data => {
         const latestYml = yaml.parse(data)
 
-        // Добавляем пользовательские значения
         latestYml.updateUrgency = 'soft'
         latestYml.commonConfig = {
             DEPRECATED_VERSIONS: '<=1.0.0',
@@ -52,14 +51,13 @@ fs.readFile(filePath, 'utf8')
         console.error('Error updating latest.yml:', err)
     })
 
-// Функция для загрузки файла в S3
 const uploadFile = (fileName: string) => {
     const filePath = path.join(directoryPath, fileName)
     const fileContent = fs.readFileSync(filePath)
 
     const params = {
-        Bucket: config.S3_BUCKET, // замените на имя вашего S3 bucket
-        Key: `dev_build/${fileName}`, // добавляем префикс dev_build
+        Bucket: config.S3_BUCKET,
+        Key: `dev_build/${fileName}`,
         Body: fileContent,
     }
 
