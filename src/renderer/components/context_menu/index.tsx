@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import styles from './context_menu.module.scss'
 import userContext from '../../api/context/user.context'
+import { shell } from 'electron'
 
 const ContextMenu: React.FC = () => {
     const { user, setUser } = useContext(userContext)
@@ -21,6 +22,9 @@ const ContextMenu: React.FC = () => {
             patched: false,
         }))
     }
+    const githubLink = () => {
+        window.open("https://github.com/PulseSync-Official/YMusic-DRPC")
+    }
 
     return (
         <div className={styles.patchMenu}>
@@ -33,7 +37,7 @@ const ContextMenu: React.FC = () => {
             <button onClick={depatch} disabled={!user.patched}>
                 ДЕПАТЧ
             </button>
-            <button className={styles.hyperLink}>
+            <button onClick={githubLink} className={styles.hyperLink}>
                 СКРИПТ ПАТЧЕРА НА GITHUB
             </button>
         </div>
