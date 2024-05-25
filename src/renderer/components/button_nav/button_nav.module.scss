@@ -8,20 +8,20 @@
     border-radius: var(--borderRadius);
     padding: 12px;
 
-    &>svg {
+    & > svg {
         fill: var(--color2OffCheck);
     }
 
     &:hover {
         background: var(--color2H);
-        &>svg {
+        & > svg {
             fill: var(--color1);
         }
         &:disabled {
             opacity: 0.2;
             background: transparent;
             border: none;
-            &>svg {
+            & > svg {
                 fill: var(--color2OffCheck);
             }
         }

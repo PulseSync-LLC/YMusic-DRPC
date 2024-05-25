@@ -186,13 +186,12 @@ const Player: React.FC<any> = ({ children }) => {
                 : track.playerBarTitle
             const largeImage = track.requestImgTrack[1] || 'ym'
             const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset'
-            const buttons =
-                [
-                      {
-                          label: '✌️ Open in YandexMusic',
-                          url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
-                      },
-                ]
+            const buttons = [
+                {
+                    label: '✌️ Open in YandexMusic',
+                    url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
+                },
+            ]
             if (user.enableRpcButtonListen && track.linkTitle) {
                 window.discordRpc.setActivity({
                     state: timeRange,

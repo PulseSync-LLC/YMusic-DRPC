@@ -15,11 +15,11 @@ interface p {
 }
 
 const Header: React.FC<p> = ({ goBack }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isMenuOpen, setIsMenuOpen] = useState(false)
 
     const toggleMenu = () => {
-        setIsMenuOpen(!isMenuOpen);
-    };
+        setIsMenuOpen(!isMenuOpen)
+    }
     return (
         <>
             <header className={styles.nav_bar}>
@@ -34,7 +34,10 @@ const Header: React.FC<p> = ({ goBack }) => {
                             <span>PulseSync</span>
                         </div>
                         <div className="patch-button-container">
-                            <button className="patch-button" onClick={toggleMenu}>
+                            <button
+                                className="patch-button"
+                                onClick={toggleMenu}
+                            >
                                 Патчер
                             </button>
                             {isMenuOpen && <PatchMenu />}

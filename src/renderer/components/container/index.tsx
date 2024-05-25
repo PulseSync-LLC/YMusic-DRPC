@@ -8,12 +8,20 @@ interface p {
     children: any
 }
 
-const Container: React.FC<p> = ({ titleName, className, imageName, children }) => {
+const Container: React.FC<p> = ({
+    titleName,
+    className,
+    imageName,
+    children,
+}) => {
     return (
         <>
             <div className={`${styles.container} ${className}`}>
                 <div className={styles.title_container}>
-                    <img src={`static/assets/container_icons/${imageName}.svg`} alt={imageName} />
+                    <img
+                        src={`static/assets/container_icons/${imageName}.svg`}
+                        alt={imageName}
+                    />
                     <div className={styles.title}>{titleName}</div>
                 </div>
                 {children}

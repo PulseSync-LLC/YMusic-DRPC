@@ -1,40 +1,40 @@
 .patchMenu {
-  position: absolute;
-  top: 40px;
-  left: 150px;
-  color: white;
-  overflow: hidden;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  background: var(--bg);
-  border: 1px solid #525D64;
-  border-radius: var(--borderRadius);
-
-  button {
+    position: absolute;
+    top: 40px;
+    left: 150px;
+    color: white;
+    overflow: hidden;
+    z-index: 1000;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 12px 20px;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 17px;
-    text-align: center;
-    text-transform: uppercase;
-    background: transparent;
-    color: #89969E !important;
-    width: -webkit-fill-available;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background: var(--bg);
+    border: 1px solid #525d64;
+    border-radius: var(--borderRadius);
 
-    &:hover {
-      background: #59646a47 !important;
-      color: #DDF2FF !important;
+    button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 12px 20px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 17px;
+        text-align: center;
+        text-transform: uppercase;
+        background: transparent;
+        color: #89969e !important;
+        width: -webkit-fill-available;
+
+        &:hover {
+            background: #59646a47 !important;
+            color: #ddf2ff !important;
+        }
     }
-  }
 
-  .hyperLink:hover {
-    background: #41657b47 !important;
-    color: #5BB0FF !important;
-  }
+    .hyperLink:hover {
+        background: #41657b47 !important;
+        color: #5bb0ff !important;
+    }
 }

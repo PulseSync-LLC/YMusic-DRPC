@@ -24,11 +24,12 @@ import corsAnywhereServer from 'cors-anywhere'
 import httpServer from './main/modules/httpServer'
 import config from './config.json'
 import { getUpdater } from './main/modules/updater/updater'
-import checkAndTerminateYandexMusic from '../utils/processUtils'
+import checkAndTerminateYandexMusic, {
+    startYandexMusic,
+} from '../utils/processUtils'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
-
 
 declare const PRELOADER_PRELOAD_WEBPACK_ENTRY: string
 declare const PRELOADER_WEBPACK_ENTRY: string
@@ -89,7 +90,6 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
 })
 
 const createWindow = (): void => {
-
     preloaderWindow = new BrowserWindow({
         width: 250,
         height: 271,
@@ -268,25 +268,28 @@ ipcMain.on('electron-window-close', () => {
 ipcMain.on('electron-patch', async () => {
     console.log('patch')
     await checkAndTerminateYandexMusic()
-    await Patcher.patchRum().then(() => {
+    await Patcher.patchRum().then(async () => {
         console.log('Все гуд')
         store.set('patched', true)
+        await startYandexMusic()
     })
 })
 
 ipcMain.on('electron-repatch', async () => {
     console.log('repatch')
     await checkAndTerminateYandexMusic()
-    await UnPatcher.unpatch().then(() => {
-        Patcher.patchRum()
+    await UnPatcher.unpatch().then(async () => {
+        await Patcher.patchRum()
+        await startYandexMusic()
     })
 })
 ipcMain.on('electron-depatch', async () => {
     console.log('depatch')
     await checkAndTerminateYandexMusic()
-    await UnPatcher.unpatch().then(() => {
+    await UnPatcher.unpatch().then(async () => {
         console.log('Все хорошо')
         store.set('patched', false)
+        await startYandexMusic()
     })
 })
 

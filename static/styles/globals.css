@@ -23,33 +23,33 @@
 }
 
 :root {
-    --bg: #1B1F21;
-    --color0: #B6C7D2;
-    --color1: #DDF2FF;
-    --color2: #2D3236;
-    --color2H: #282D2F;
-    --color2OffCheck: #89969E;
+    --bg: #1b1f21;
+    --color0: #b6c7d2;
+    --color1: #ddf2ff;
+    --color2: #2d3236;
+    --color2H: #282d2f;
+    --color2OffCheck: #89969e;
     --color3: #394045;
-    --border: #535D64;
-    --borderH: #64737C;
+    --border: #535d64;
+    --borderH: #64737c;
     --borderRadius: 10px;
 
-    --downloadColor: #75FF9C;
+    --downloadColor: #75ff9c;
     --downloadColorH: #60ff8c;
-    --download: #2A3E39;
+    --download: #2a3e39;
     --downloadH: #2a4b43;
 
     /* Style In MainContainer => --m */
     --mInColor: var(--color1);
-    --mColor: #3A4145;
+    --mColor: #3a4145;
     --mColorH: #4e595f;
     --mBorder: var(--border);
     --mBorderH: var(--borderH);
 
-    --mInColorActive: #EBFFF5;
-    --mColorActive: #3A453F;
+    --mInColorActive: #ebfff5;
+    --mColorActive: #3a453f;
     --mColorActiveH: #475850;
-    --mBorderActive: #53645C;
+    --mBorderActive: #53645c;
     --mBorderActiveH: #698276;
 
     --mTrackColor: #d5d8dc;
@@ -73,10 +73,10 @@ a {
     text-decoration: none;
 }
 
-a.active>button {
+a.active > button {
     background: var(--color2);
     border: none;
-    &>svg {
+    & > svg {
         fill: var(--color1);
     }
 }

@@ -7,7 +7,12 @@ import ButtonDefault from '../../components/button_default'
 import styles from '../../../../static/styles/page/index.module.scss'
 import theme from './trackinfo.module.scss'
 
-import { MdDownload, MdFolderOpen, MdSmartButton, MdVideogameAsset } from 'react-icons/md'
+import {
+    MdDownload,
+    MdFolderOpen,
+    MdSmartButton,
+    MdVideogameAsset,
+} from 'react-icons/md'
 import { useContext, useEffect, useState } from 'react'
 import userContext from '../../api/context/user.context'
 import UserInterface from '../../api/interfaces/user.interface'
@@ -37,7 +42,7 @@ export default function TrackInfoPage() {
                                         src={
                                             currentTrack.requestImgTrack[1]
                                                 ? currentTrack
-                                                    .requestImgTrack[1]
+                                                      .requestImgTrack[1]
                                                 : '../../../../static/assets/logo/logoapp.png'
                                         }
                                         alt=""
@@ -67,7 +72,9 @@ export default function TrackInfoPage() {
                                 </div>
                             )}
 
-                            <div className={theme.button}>Слушать трек на Яндекс Музыке</div>
+                            <div className={theme.button}>
+                                Слушать трек на Яндекс Музыке
+                            </div>
                         </div>
                         <CheckboxNav checkType="enableRpcButtonListen">
                             <MdSmartButton size={22} />

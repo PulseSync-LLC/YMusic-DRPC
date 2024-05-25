@@ -34,7 +34,11 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                             <NavLink
                                 to="/"
                                 className={({ isActive, isPending }) =>
-                                    isPending ? 'pending' : isActive ? 'active' : ''
+                                    isPending
+                                        ? 'pending'
+                                        : isActive
+                                          ? 'active'
+                                          : ''
                                 }
                             >
                                 <ButtonNav>
@@ -53,8 +57,16 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 <MdConnectWithoutContact size={24} />
                             </ButtonNav>
                             {/* </NavLink> */}
-                            <NavLink to="/other" className={({ isActive, isPending }) =>
-                                isPending ? "pending" : isActive ? "active" : ""}>
+                            <NavLink
+                                to="/other"
+                                className={({ isActive, isPending }) =>
+                                    isPending
+                                        ? 'pending'
+                                        : isActive
+                                          ? 'active'
+                                          : ''
+                                }
+                            >
                                 <ButtonNav>
                                     <MdSettings size={24} />
                                 </ButtonNav>
