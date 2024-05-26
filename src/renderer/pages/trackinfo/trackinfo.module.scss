@@ -47,12 +47,18 @@
 
             .name,
             .time {
-                font-family: 'Open Runde';
+                font-family: "Open Runde";
                 font-style: normal;
                 font-weight: 400;
                 font-size: 14px;
+                width: 240px;
 
                 color: var(--mTrackColor);
+
+                flex: none;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
             }
         }
     }
