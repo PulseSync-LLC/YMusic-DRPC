@@ -1,8 +1,10 @@
 import toast, { Renderable, ToastOptions } from 'react-hot-toast'
 
 const style = {
-    background: '#333',
-    color: '#fff',
+    background: '#394045',
+    color: '#DDF2FF',
+    border: 'solid 1px #535A5F',
+    borderRadius: '32px',
 }
 
 const iToast = {

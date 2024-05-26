@@ -42,7 +42,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                             </button>
                             {isMenuOpen && <PatchMenu />}
                         </div>
-                        <div className={styles.version}>PUBLIC V1.0.3</div>
+                        <div className={styles.version}>FUMOS V1.0.0</div>
                     </div>
                     <div className={styles.event_container}>
                         <div className={styles.menu}>

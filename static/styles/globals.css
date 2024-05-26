@@ -81,6 +81,10 @@ a.active > button {
     }
 }
 
+button:active:hover {
+    scale: 0.98;
+}
+
 body {
     display: flex;
     background: var(--bg);
