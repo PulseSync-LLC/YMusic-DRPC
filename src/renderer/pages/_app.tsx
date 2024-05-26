@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
+import UserMeQuery from '../api/queries/user/getMe.query';
 
 import TrackInfoPage from './trackinfo'
 import ThemePage from './theme'
@@ -19,11 +20,17 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import trackInitials from '../api/interfaces/track.initials'
 import TrackInterface from '../api/interfaces/track.interface'
 import PlayerContext from '../api/context/player.context'
+import apolloClient from '../api/apolloClient'
+import SettingsInterface from '../api/interfaces/settings.interface'
+import settingsInitials from '../api/interfaces/settings.initials'
+import AuthPage from './auth'
 
 function app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
     const [socketError, setSocketError] = useState(0)
+    const [socketConnected, setSocketConnected] = useState(false)
     const [user, setUser] = useState<UserInterface>(userInitials)
+    const [settings, setSettings] = useState<SettingsInterface>(settingsInitials)
     const [loading, setLoading] = useState(false)
     const socket = io('http://localhost:1488', {
         autoConnect: false,
@@ -31,6 +38,10 @@ function app() {
     const router = createHashRouter([
         {
             path: '/',
+            element: <AuthPage />,
+        },
+        {
+            path: '/trackinfo',
             element: <TrackInfoPage />,
         },
         {
@@ -46,6 +57,43 @@ function app() {
             element: <OtherPage />,
         },
     ])
+
+    const authorize = () => {
+        setLoading(true)
+        const token = window.electron.store.get("token")
+        console.log(token)
+
+        return apolloClient
+            .query({
+                query: UserMeQuery,
+            })
+            .then((res) => {
+                const { data } = res;
+                console.log(data.getMe)
+                if (data.getMe && data.getMe.id) {
+                    setUser(data.getMe);
+                    setLoading(false);
+
+                    return true;
+                } else {
+                    setLoading(false);
+                    //localStorage.removeItem("token")
+                    return false;
+                }
+            })
+            .catch(() => {
+                setLoading(false);
+                return false;
+            });
+    }
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const token = window.electron.store.get("token")
+            console.log(user.id === '-1' && token)
+            if(user.id === '-1' && token)
+                authorize();
+        }
+    }, []);
     socket.on('connect', () => {
         console.log('Socket connected')
         console.log(socket.id)
@@ -54,10 +102,7 @@ function app() {
         socket.emit('connection')
 
         setSocket(socket)
-        setUser(prevUser => ({
-            ...prevUser,
-            socket_connected: true,
-        }))
+        setSocketConnected(true)
         setLoading(false)
         if (socketError == 1) setSocketError(2)
     })
@@ -69,10 +114,7 @@ function app() {
 
         setSocketError(1)
         setSocket(null)
-        setUser(prevUser => ({
-            ...prevUser,
-            socket_connected: false,
-        }))
+        setSocketConnected(false)
     })
 
     socket.on('connect_error', err => {
@@ -81,10 +123,7 @@ function app() {
         setSocketError(1)
 
         setSocket(null)
-        setUser(prevUser => ({
-            ...prevUser,
-            socket_connected: false,
-        }))
+        setSocketConnected(false)
     })
 
     // socket.on('userUpdate', args => {
@@ -103,23 +142,30 @@ function app() {
     useEffect(() => {
         if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
             if (window.electron.store.get('discordRpc')) {
-                setUser(prevUser => ({
-                    ...prevUser,
+                setSettings(prevSettings => ({
+                    ...prevSettings,
                     enableRpc: true,
                 }))
                 setLoading(false)
             }
             if (window.electron.store.get('enableRpcButtonListen')) {
-                setUser(prevUser => ({
-                    ...prevUser,
+                setSettings(prevSettings => ({
+                    ...prevSettings,
                     enableRpcButtonListen: true,
                 }))
                 setLoading(false)
             }
             if (window.electron.store.get('patched')) {
-                setUser(prevUser => ({
-                    ...prevUser,
+                setSettings(prevSettings => ({
+                    ...prevSettings,
                     patched: true,
+                }))
+                setLoading(false)
+            }
+            if (window.electron.store.get('readPolicy')) {
+                setSettings(prevSettings => ({
+                    ...prevSettings,
+                    readPolicy: true,
                 }))
                 setLoading(false)
             }
@@ -132,7 +178,7 @@ function app() {
         <div className="app-wrapper">
             <Toaster />
             <UserContext.Provider
-                value={{ user, setUser, loading, socket: socketIo }}
+                value={{ user, setUser, authorize, loading, socket: socketIo, socketConnected, settings, setSettings }}
             >
                 <Player>
                     <SkeletonTheme baseColor="#1c1c22" highlightColor="#333">
@@ -146,7 +192,7 @@ function app() {
     )
 }
 const Player: React.FC<any> = ({ children }) => {
-    const { user, socket } = useContext(UserContext)
+    const { user, socket, socketConnected, settings } = useContext(UserContext)
     const [track, setTrack] = useState<TrackInterface>(trackInitials)
     socket?.emit('ping')
     socket?.on('update-available', data => {
@@ -158,24 +204,25 @@ const Player: React.FC<any> = ({ children }) => {
         }, 5000)
     })
     useEffect(() => {
-        console.log(user)
-        ;(async () => {
-            if (user.socket_connected) {
-                if (typeof window !== 'undefined') {
-                    if (user.enableRpc) {
-                        socket?.on('trackinfo', data => {
-                            setTrack(data)
-                        })
-                    } else {
-                        socket?.off('trackinfo')
-                        setTrack(trackInitials)
+        if (user.id != "-1") {
+            ;(async () => {
+                if (socketConnected) {
+                    if (typeof window !== 'undefined') {
+                        if (settings.enableRpc) {
+                            socket?.on('trackinfo', data => {
+                                setTrack(data)
+                            })
+                        } else {
+                            socket?.off('trackinfo')
+                            setTrack(trackInitials)
+                        }
                     }
                 }
-            }
-        })()
-    }, [user])
+            })()
+        }
+    }, [user.id, socketConnected])
     useEffect(() => {
-        if (user.enableRpc) {
+        if (settings.enableRpc) {
             //console.log(track)
             const timeRange =
                 track.timecodes.length === 2
@@ -192,7 +239,7 @@ const Player: React.FC<any> = ({ children }) => {
                     url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
                 },
             ]
-            if (user.enableRpcButtonListen && track.linkTitle) {
+            if (settings.enableRpcButtonListen && track.linkTitle) {
                 window.discordRpc.setActivity({
                     state: timeRange,
                     details: details,

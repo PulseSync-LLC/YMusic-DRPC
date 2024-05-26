@@ -18,15 +18,12 @@ import UnPatcher from './main/modules/patcher/unpatch'
 import createTray from './main/modules/tray'
 import { exec } from 'child_process'
 import rpc_connect from './main/modules/discordRpc'
-import { configure } from 'log4js'
-import SocketService from './main/modules/socket-io'
 import corsAnywhereServer from 'cors-anywhere'
-import httpServer from './main/modules/httpServer'
-import config from './config.json'
-import { getUpdater } from './main/modules/updater/updater'
 import checkAndTerminateYandexMusic, {
     startYandexMusic,
 } from '../utils/processUtils'
+import { handleDeeplink, handleDeeplinkOnApplicationStartup } from './main/modules/handleDeepLink'
+import { checkForSingleInstance } from './main/modules/singleInstance'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -38,28 +35,6 @@ const isMac = process.platform === 'darwin'
 export let corsAnywherePort: string | number
 export let mainWindow: BrowserWindow
 let preloaderWindow: BrowserWindow
-
-configure({
-    appenders: {
-        logFile: {
-            type: 'file',
-            filename: 'electron.log',
-        },
-        console: {
-            type: 'console',
-            layout: {
-                type: 'pattern',
-                pattern: '%d [%p] [%c] %m',
-            },
-        },
-    },
-    categories: {
-        default: {
-            appenders: ['logFile', 'console'],
-            level: 'all',
-        },
-    },
-})
 
 const ydrpcModification = path.join(
     process.env.LOCALAPPDATA,
@@ -130,7 +105,6 @@ const createWindow = (): void => {
             nodeIntegration: true,
         },
     })
-
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY).catch(e => {
         console.error(e)
     })
@@ -195,12 +169,14 @@ protocol.registerSchemesAsPrivileged([
 app.on('ready', async () => {
     await prestartCheck()
     await corsAnywhere()
-    createWindow()
+    createWindow() // Все что связано с mainWindow должно устанавливаться после этого метода
+    checkForSingleInstance()
+    handleDeeplinkOnApplicationStartup()
+    handleDeeplink(mainWindow)
     createTray()
 })
 
 async function prestartCheck() {
-    const server = new SocketService()
     if (store.has('autoStartMusic') && store.get('autoStartMusic')) {
         let appPath = path.join(
             process.env.LOCALAPPDATA,
@@ -234,9 +210,6 @@ async function prestartCheck() {
             store.set('patched', false)
         }
     }
-    httpServer.listen(config.PORT, () => {
-        console.log(`Server running at http://localhost:${config.PORT}/`)
-    })
 }
 
 app.on('window-all-closed', () => {

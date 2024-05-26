@@ -65,7 +65,8 @@
     stroke: var(--color1);
 }
 
-.discord_svg__noStroke, .discordLogin_svg__noStroke {
+.discord_svg__noStroke,
+.discordLogin_svg__noStroke {
     stroke: none;
 }
 

@@ -98,3 +98,4 @@ PulseSync.cer
 PulseSync.pfx
 PulseSync.pvk
 utils/uploadToS3.js
+schema.graphql

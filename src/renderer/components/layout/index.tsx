@@ -32,7 +32,7 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                     <div className={styles.navigation_bar}>
                         <div className={styles.navigation_buttons}>
                             <NavLink
-                                to="/"
+                                to="/trackinfo"
                                 className={({ isActive, isPending }) =>
                                     isPending
                                         ? 'pending'

@@ -1,5 +1,5 @@
 import styles from './header.module.scss'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 
 import Minus from './../../../../static/assets/icons/minus.svg'
 import Minimize from './../../../../static/assets/icons/minimize.svg'
@@ -9,6 +9,8 @@ import Dev from './../../../../static/assets/badges/dev.svg'
 import Early from './../../../../static/assets/badges/early.svg'
 import Supporter from './../../../../static/assets/badges/supporter.svg'
 import PatchMenu from '../context_menu'
+import UserContext from '../../api/context/user.context'
+import userContext from '../../api/context/user.context'
 
 interface p {
     goBack?: boolean
@@ -16,7 +18,7 @@ interface p {
 
 const Header: React.FC<p> = ({ goBack }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-
+    const { user, loading } = useContext(userContext)
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
     }
@@ -53,10 +55,10 @@ const Header: React.FC<p> = ({ goBack }) => {
                             </div>
                             <div className={styles.user_container}>
                                 <img
-                                    src="https://media.discordapp.net/attachments/482180995752394752/1234142800224714793/photo_2024-04-25_22-46-45.jpg"
+                                    src={user.avatar}
                                     alt=""
                                 />
-                                Maks1mio
+                                {user.username}
                             </div>
                         </div>
                         <div className={styles.button_container}>

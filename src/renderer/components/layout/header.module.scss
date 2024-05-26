@@ -75,8 +75,8 @@
                 gap: 7px;
 
                 .badges_container {
+                    //display: flex;
                     display: none;
-                    // display: flex; <--
                     align-items: center;
                     gap: 5px;
 
@@ -96,8 +96,7 @@
                         height: var(--size);
                     }
 
-                    display: none;
-                    // display: flex; <--
+                    display: flex;
                     flex-direction: row;
                     align-items: center;
                     padding: 0px 12px 0px 0px;

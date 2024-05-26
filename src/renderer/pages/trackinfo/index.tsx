@@ -22,9 +22,9 @@ import trackInitials from '../../api/interfaces/track.initials'
 import Skeleton from 'react-loading-skeleton'
 import playerContext from '../../api/context/player.context'
 export default function TrackInfoPage() {
-    const { user, setUser, socket, loading } = useContext(userContext)
+    const { user, setUser, socket, loading, socketConnected } = useContext(userContext)
     const { currentTrack } = useContext(playerContext)
-
+    console.log(socketConnected)
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
@@ -35,7 +35,7 @@ export default function TrackInfoPage() {
                             Включить статус дискорд
                         </CheckboxNav>
                         <div className={theme.container}>
-                            {user.socket_connected ? (
+                            {socketConnected ? (
                                 <div className={theme.flex_container}>
                                     <img
                                         className={theme.img}
@@ -87,7 +87,7 @@ export default function TrackInfoPage() {
                         </ButtonDefault>
                         <ButtonDefault disabled>
                             <MdFolderOpen size={22} />
-                            Дериктория со скаченой музыкой
+                            Директория со скаченной музыкой
                         </ButtonDefault>
                     </div>
                 </Container>

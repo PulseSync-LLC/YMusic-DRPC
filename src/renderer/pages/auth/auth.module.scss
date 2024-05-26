@@ -8,7 +8,7 @@
     align-items: center;
     padding: 0 60px;
 
-    >div {
+    > div {
         max-width: 1157px;
         width: -webkit-fill-available;
 
@@ -43,13 +43,13 @@
                 padding: 15px 30px;
                 width: 100%;
                 border: 0;
-                font-family: "Open Runde";
+                font-family: 'Open Runde';
                 font-style: normal;
                 font-weight: 700;
                 font-size: 18px;
                 line-height: 22px;
-                background: #708EF6;
-                color: #FFFFFF;
+                background: #708ef6;
+                color: #ffffff;
                 align-items: center;
                 justify-content: center;
                 gap: 10px;
@@ -58,7 +58,7 @@
                     opacity: 0.3 !important;
 
                     &:hover {
-                        background: #708EF6;
+                        background: #708ef6;
                         cursor: not-allowed;
                     }
                 }

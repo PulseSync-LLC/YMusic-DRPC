@@ -4,6 +4,8 @@ import userInitials from '../interfaces/user.initials'
 import { Socket } from 'socket.io-client'
 import TrackInterface from '../interfaces/track.interface'
 import trackInitials from '../interfaces/track.initials'
+import SettingsInterface from '../interfaces/settings.interface'
+import settingsInitials from '../interfaces/settings.initials'
 
 interface p {
     user: UserInterface
@@ -11,6 +13,9 @@ interface p {
     authorize?: () => void
     loading: boolean
     socket: Socket | null
+    socketConnected: boolean
+    settings: SettingsInterface
+    setSettings: (settingsData: any) => void
 }
 
 const UserContext = createContext<p>({
@@ -19,6 +24,10 @@ const UserContext = createContext<p>({
     authorize: () => void 0,
     loading: true,
     socket: null,
+    socketConnected: false,
+    settings: settingsInitials,
+    setSettings: () => void 0
+
 })
 
 export default UserContext

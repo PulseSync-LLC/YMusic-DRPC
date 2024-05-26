@@ -9,7 +9,16 @@ export const mainConfig: Configuration = {
         rules,
     },
     resolve: {
-        extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss', '.json', ".md"],
+        extensions: [
+            '.js',
+            '.ts',
+            '.jsx',
+            '.tsx',
+            '.css',
+            '.scss',
+            '.json',
+            '.md',
+        ],
     },
     externals: {
         electron: 'electron',

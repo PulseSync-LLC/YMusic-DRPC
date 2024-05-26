@@ -4,12 +4,12 @@ import userContext from '../../api/context/user.context'
 import { shell } from 'electron'
 
 const ContextMenu: React.FC = () => {
-    const { user, setUser } = useContext(userContext)
+    const { settings, setSettings } = useContext(userContext)
     const patch = () => {
         window.electron.patcher.patch()
-        setUser((prevUser: any) => ({
-            ...prevUser,
-            patched: true,
+        setSettings((prevSettings: any) => ({
+            ...prevSettings,
+            prevSettings: true,
         }))
     }
     const repatch = () => {
@@ -17,24 +17,24 @@ const ContextMenu: React.FC = () => {
     }
     const depatch = () => {
         window.electron.patcher.depatch()
-        setUser((prevUser: any) => ({
-            ...prevUser,
-            patched: false,
+        setSettings((prevSettings: any) => ({
+            ...prevSettings,
+            prevSettings: false,
         }))
     }
     const githubLink = () => {
-        window.open("https://github.com/PulseSync-Official/YMusic-DRPC")
+        window.open('https://github.com/PulseSync-Official/YMusic-DRPC')
     }
 
     return (
         <div className={styles.patchMenu}>
-            <button onClick={patch} disabled={user.patched}>
+            <button onClick={patch} disabled={settings.patched}>
                 ПАТЧ
             </button>
-            <button onClick={repatch} disabled={!user.patched}>
+            <button onClick={repatch} disabled={!settings.patched}>
                 РЕПАТЧ
             </button>
-            <button onClick={depatch} disabled={!user.patched}>
+            <button onClick={depatch} disabled={!settings.patched}>
                 ДЕПАТЧ
             </button>
             <button onClick={githubLink} className={styles.hyperLink}>

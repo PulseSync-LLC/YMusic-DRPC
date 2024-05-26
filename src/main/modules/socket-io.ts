@@ -3,7 +3,7 @@ import { getLogger } from 'log4js'
 import { getTrackInfo } from './httpServer'
 import { getUpdater } from './updater/updater'
 const updater = getUpdater()
-
+import logger from './logger'
 export default class SocketService {
     private webSocket: SocketServer
     constructor() {
@@ -16,13 +16,12 @@ export default class SocketService {
             path: '/',
         })
         this.webSocket.on('connection', socket => {
-            const _logger = getLogger('WS')
-            _logger.info('WebSocket opened: ' + socket.id)
+            logger.main.info('WebSocket opened: ' + socket.id)
             socket.on('disconnect', () => {
-                _logger.info('WebSocket disconnected: ' + socket.id)
+                logger.main.info('WebSocket disconnected: ' + socket.id)
             })
             socket.on('ping', () => {
-                console.log('ping')
+                logger.main.log('ping')
             })
             // TODO: enable autoUpdater when public release is ready
             // socket.on('update-install', () => {

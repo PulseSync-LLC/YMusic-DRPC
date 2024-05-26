@@ -17,7 +17,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
     const [isActive, setIsActive] = useState(false)
-    const { user, setUser } = useContext(userContext)
+    const { user, setUser, settings, setSettings } = useContext(userContext)
     console.log(checkType)
     useEffect(() => {
         switch (checkType) {
@@ -30,6 +30,9 @@ const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
             case 'enableRpcButtonListen':
                 setIsActive(window.electron.store.get('enableRpcButtonListen'))
                 break
+            case 'readPolicy':
+                setIsActive(window.electron.store.get('readPolicy'))
+                break
         }
     }, [])
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,24 +40,31 @@ const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
         switch (checkType) {
             case 'autoStartMusic':
                 window.electron.autoStartMusic(event.target.checked)
-                setUser((prevUser: any) => ({
-                    ...prevUser,
+                setSettings((prevSettings: any) => ({
+                    ...prevSettings,
                     autoStartMusic: event.target.checked,
                 }))
                 break
             case 'startDiscordRpc':
                 window.discordRpc.enableRpc(event.target.checked)
-                setUser((prevUser: any) => ({
-                    ...prevUser,
+                setSettings((prevSettings: any) => ({
+                    ...prevSettings,
                     enableRpc: event.target.checked,
                 }))
                 break
             case 'enableRpcButtonListen':
                 window.discordRpc.enableListenButton(event.target.checked)
-                setUser((prevUser: any) => ({
-                    ...prevUser,
+                setSettings((prevSettings: any) => ({
+                    ...prevSettings,
                     enableRpcButtonListen: event.target.checked,
                 }))
+                break
+            case 'readPolicy':
+                setSettings((prevSettings: any) => ({
+                    ...prevSettings,
+                    readPolicy: event.target.checked,
+                }))
+                window.electron.store.set('readPolicy', event.target.checked)
                 break
         }
     }
