@@ -48,11 +48,14 @@ const Header: React.FC<p> = ({ goBack }) => {
                     </div>
                     <div className={styles.event_container}>
                         <div className={styles.menu}>
-                            <div className={styles.badges_container}>
-                                <Dev />
-                                <Early />
-                                <Supporter />
-                            </div>
+                            {user.perms !== "default" &&
+                                <div className={styles.badges_container}>
+                                    <img
+                                        src={`static/assets/badges/${user.perms}.svg`}
+                                        alt=""
+                                    />
+                                </div>
+                            }
                             <div className={styles.user_container}>
                                 <img
                                     src={user.avatar}

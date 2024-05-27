@@ -5,6 +5,7 @@ const UserInitials: UserInterface = {
     id: "-1",
     avatar: '',
     username: '',
+    perms: 'default'
 }
 
 export default UserInitials
