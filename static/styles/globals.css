@@ -66,7 +66,8 @@
 }
 
 .discord_svg__noStroke,
-.discordLogin_svg__noStroke {
+.discordLogin_svg__noStroke, 
+.discordAuth_svg__noStroke {
     stroke: none;
 }
 

@@ -1,0 +1,32 @@
+.main_window {
+    display: flex;
+    width: -webkit-fill-available;
+    bottom: 0;
+    justify-content: center;
+    position: absolute;
+    top: 50px;
+    align-items: center;
+    padding: 0 60px;
+
+    >div {
+        max-width: 1157px;
+        width: -webkit-fill-available;
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            gap: 25px;
+            width: -webkit-fill-available;
+
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 24px;
+            text-transform: uppercase;
+
+            color: #D2E5F1;
+        }
+    }
+}
