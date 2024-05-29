@@ -56,6 +56,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                                     />
                                 </div>
                             }
+                            {user.id !== "-1" &&
                             <div className={styles.user_container}>
                                 <img
                                     src={user.avatar}
@@ -63,26 +64,27 @@ const Header: React.FC<p> = ({ goBack }) => {
                                 />
                                 {user.username}
                             </div>
+                            }
                         </div>
                         <div className={styles.button_container}>
                             <button
                                 id="hide"
                                 className={styles.button_title}
-                                onClick={window.electron.window.minimize}
+                                onClick={() => window.electron.window.minimize()}
                             >
                                 <Minus />
                             </button>
                             <button
                                 id="minimize"
                                 className={styles.button_title}
-                                onClick={window.electron.window.maximize}
+                                onClick={() => window.electron.window.maximize()}
                             >
                                 <Minimize />
                             </button>
                             <button
                                 id="close"
                                 className={styles.button_title}
-                                onClick={window.electron.window.close}
+                                onClick={() => window.electron.window.close()}
                             >
                                 <Close />
                             </button>
