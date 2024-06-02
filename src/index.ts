@@ -81,6 +81,7 @@ const createWindow = (): void => {
             preload: PRELOADER_PRELOAD_WEBPACK_ENTRY,
             contextIsolation: true,
             devTools: false,
+            nodeIntegration: true,
         },
     })
 
