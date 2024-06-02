@@ -14,7 +14,7 @@
     "jsx": "react-jsx",
     "resolveJsonModule": true,
     "paths": {
-      "*": ["node_modules/*"]
+      "*": ["node_modules/*"],
     }
   },
   "include": ["src/**/*", "styles.d.ts", "window.d.ts", "cors-anywhere.d.ts", "declarations.d.ts"]

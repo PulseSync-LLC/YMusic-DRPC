@@ -18,6 +18,7 @@ export const mainConfig: Configuration = {
             '.scss',
             '.json',
             '.md',
+            ".svg"
         ],
     },
     externals: {

@@ -13,5 +13,5 @@ export const plugins = [
     new CopyWebpackPlugin({
         patterns: [{ from: 'static', to: 'static' }],
     }),
-    new NodePolyfillPlugin(),
+    new NodePolyfillPlugin()
 ]

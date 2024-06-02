@@ -37,8 +37,6 @@ rules.push({
         {
             loader: 'markdown-loader',
             options: {
-                // Pass options to marked
-                // See https://marked.js.org/using_advanced#options
             },
         },
     ],
@@ -55,6 +53,7 @@ export const rendererConfig: Configuration = {
             stream: require.resolve('stream-browserify'),
             os: require.resolve('os-browserify'),
             url: require.resolve('url'),
+            fs: require.resolve("browserify-fs"),
         },
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
     },
