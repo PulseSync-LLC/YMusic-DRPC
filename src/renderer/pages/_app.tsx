@@ -24,6 +24,7 @@ import apolloClient from '../api/apolloClient'
 import SettingsInterface from '../api/interfaces/settings.interface'
 import settingsInitials from '../api/interfaces/settings.initials'
 import AuthPage from './auth'
+import CallbackPage from './auth/callback'
 
 function app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
@@ -39,6 +40,10 @@ function app() {
         {
             path: '/',
             element: <AuthPage />,
+        },
+        {
+            path: "/auth/callback",
+            element: <CallbackPage />,
         },
         {
             path: '/trackinfo',
@@ -88,10 +93,19 @@ function app() {
     }
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const token = window.electron.store.get("token")
-            console.log(user.id === '-1' && token)
-            if(user.id === '-1' && token)
-                authorize();
+            if(window.electron.store.has("token")) {
+                const token = window.electron.store.get("token")
+                if(user.id === '-1' && token)
+                {
+                    authorize();
+                }
+                else {
+                    router.navigate("/")
+                }
+            }
+            else {
+                router.navigate("/")
+            }
         }
     }, []);
     socket.on('connect', () => {
@@ -194,30 +208,27 @@ function app() {
 const Player: React.FC<any> = ({ children }) => {
     const { user, socket, socketConnected, settings } = useContext(UserContext)
     const [track, setTrack] = useState<TrackInterface>(trackInitials)
-    socket?.emit('ping')
-    socket?.on('update-available', data => {
-        toast.success('Update available: ' + data, {
-            duration: 30000,
-        })
-        setTimeout(() => {
-            socket?.emit('update-install')
-        }, 5000)
-    })
+    // window.desktopEvents?.on('update-available', data => {
+    //     toast.success('Update available: ' + data, {
+    //         duration: 30000,
+    //     })
+    //     setTimeout(() => {
+    //         socket?.emit('update-install')
+    //     }, 5000)
+    // })
     useEffect(() => {
         if (user.id != "-1") {
             ;(async () => {
-                if (socketConnected) {
                     if (typeof window !== 'undefined') {
                         if (settings.enableRpc) {
-                            socket?.on('trackinfo', data => {
+                            window.desktopEvents?.on('trackinfo', (event, data) => {
                                 setTrack(data)
                             })
                         } else {
-                            socket?.off('trackinfo')
+                            window.desktopEvents.removeListener('track-info', setTrack);
                             setTrack(trackInitials)
                         }
                     }
-                }
             })()
         }
     }, [user.id, socketConnected])

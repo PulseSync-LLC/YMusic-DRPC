@@ -24,7 +24,6 @@ import playerContext from '../../api/context/player.context'
 export default function TrackInfoPage() {
     const { user, setUser, socket, loading, socketConnected } = useContext(userContext)
     const { currentTrack } = useContext(playerContext)
-    console.log(socketConnected)
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>

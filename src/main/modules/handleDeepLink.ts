@@ -33,6 +33,7 @@ export const navigateToDeeplink = (
             const reg = url.match(/\?token=([^&]+)/)
             const token = decodeURIComponent(reg[1])
             store.set("token", token)
+            window.webContents.send("authSuccess")
             break
         case "joinRoom":
             break

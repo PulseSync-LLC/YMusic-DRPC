@@ -18,7 +18,6 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
     const [isActive, setIsActive] = useState(false)
     const { user, setUser, settings, setSettings } = useContext(userContext)
-    console.log(checkType)
     useEffect(() => {
         switch (checkType) {
             case 'autoStartMusic':

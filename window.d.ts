@@ -1,6 +1,8 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import { Presence } from 'discord-rpc'
 import { Track } from 'yandex-music-client'
+import { Electron } from 'electron' 
+
 declare global {
     interface Window {
         electron: {
@@ -48,6 +50,12 @@ declare global {
             setActivity: (props: Presence) => void
             enableListenButton: (val: boolean) => void
             clearActivity: () => void
+        }
+        desktopEvents: {
+            send: (name: any, ...args: any[]) => void
+            on: (name: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void
+            removeListener: (name: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => void;
+            invoke: (name: string, ...args: any[]) => Promise<any>
         }
     }
 }

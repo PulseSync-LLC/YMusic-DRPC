@@ -63,3 +63,17 @@ contextBridge.exposeInMainWorld('discordRpc', {
         ipcRenderer.send('discordrpc-enablerpcbuttonlisten', val)
     },
 })
+contextBridge.exposeInMainWorld('desktopEvents', {
+    send(name: any, ...args: any[]) {
+        ipcRenderer.send(name, ...args);
+    },
+    on(name: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) {
+        ipcRenderer.on(name, listener);
+    },
+    removeListener(name: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) {
+        ipcRenderer.removeListener(name, listener);
+    },
+    invoke(name: string, ...args: any[]) {
+        return ipcRenderer.invoke(name, ...args);
+    }
+});

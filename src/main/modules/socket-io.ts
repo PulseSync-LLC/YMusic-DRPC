@@ -4,6 +4,7 @@ import { getTrackInfo } from './httpServer'
 import { getUpdater } from './updater/updater'
 const updater = getUpdater()
 import logger from './logger'
+import { mainWindow } from '../../index'
 export default class SocketService {
     private webSocket: SocketServer
     constructor() {
@@ -36,7 +37,8 @@ export default class SocketService {
             setInterval(() => {
                 let metadata = getTrackInfo()
                 if (Object.keys(metadata).length >= 1)
-                    socket.emit('trackinfo', metadata)
+                    //socket.emit('trackinfo', metadata)
+                    mainWindow.webContents.send("trackinfo", metadata);
             }, 5000)
         })
     }

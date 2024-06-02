@@ -24,13 +24,15 @@ export default function AuthPage() {
             .then(text => setMdText(text))
     }, [])
     const auth = () => {
-       window.open("http://localhost:4000/auth/discord")
+        window.open("http://localhost:4000/auth/discord")
+        navigate("/auth/callback")
     }
     useEffect(() => {
         if(user.id !== "-1") {
             navigate("/trackinfo")
         }
     }, [user.id])
+
     return (
         <>
             <Header />
