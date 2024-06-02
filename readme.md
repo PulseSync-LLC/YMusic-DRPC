@@ -37,7 +37,7 @@
 3. **Скачайте файлы приложения**
    - Скачайте файлы проекта или склонируйте проект с помошью консоли:
     ```bash
-    git clone https://github.com/PulseSync-Official/YMusic-DRPC.git %localappdata%\Local\Programs\YMusic-DRPC
+    git clone https://github.com/PulseSync-Official/YMusic-DRPC.git %localappdata%\Programs\YMusic-DRPC
     ```
     
    **Проект будет склонирован в: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YMusic-DRPC`\
