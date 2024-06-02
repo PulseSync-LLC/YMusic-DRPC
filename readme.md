@@ -37,10 +37,12 @@
 3. **Скачайте файлы приложения**
    - Скачайте файлы проекта или склонируйте проект с помошью консоли:
     ```bash
-    git clone https://github.com/PulseSync-Official/YMusic-DRPC.git
+    git clone https://github.com/PulseSync-Official/YMusic-DRPC.git %appdata\..\Local\Programs\YMusic-DRPC
     ```
-   - Склонируйте в каталог Programs: `C:\Users\<ВашеИмя>\AppData\Local\Programs`.
-
+    
+   **Проект будет склонирован в: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YMusic-DRPC`\
+   Если вы скачали файлы - переместите их по этому пути вручную**
+   
     ### Структура каталогов:
     ```markdown
     | Local\Programs        | Files              |
@@ -53,7 +55,7 @@
     | |-- Яндекс Музыка.exe |                    |
     | |-- другие файлы...   |                    |
     ```
-4. **Установите Node.Js:**
+5. **Установите Node.Js:**
    - Загрузите и установите Node.Js перейдя по [ссылке](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (загрузка начнется автоматически).
 
 **Дальнейшие действия выполняйте в директории проекта: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YMusic-DRPC`**
