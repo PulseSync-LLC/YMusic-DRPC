@@ -8,7 +8,9 @@ import {
     MdColorLens,
     MdConnectWithoutContact,
     MdDownload,
+    MdEngineering,
     MdSettings,
+    MdWarning,
 } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
 import userContext from '../../api/context/user.context'
@@ -37,8 +39,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                          ? 'active'
-                                          : ''
+                                            ? 'active'
+                                            : ''
                                 }
                             >
                                 <ButtonNav>
@@ -63,8 +65,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                          ? 'active'
-                                          : ''
+                                            ? 'active'
+                                            : ''
                                 }
                             >
                                 <ButtonNav>
@@ -75,6 +77,16 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                         <button className={styles.update_download}>
                             <MdDownload size={26} />
                         </button>
+                    </div>
+                    {/* if pather is false */}
+                    <div className={styles.alert_patch}>
+                        <div>
+                            <div>
+                                <div className={styles.container_warn}><MdWarning size={38} /><div>У Яндекс Музыки отсутствует патч!</div></div>
+                                <button><MdEngineering size={22} /> Запатчить</button>
+                            </div>
+                            <img src="static\assets\images\O^O.png" alt="" />
+                        </div>
                     </div>
                     {children}
                 </div>

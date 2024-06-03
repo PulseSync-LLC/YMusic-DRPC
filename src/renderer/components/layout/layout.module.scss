@@ -2,8 +2,9 @@
     flex: 1;
     overflow: auto;
     display: flex;
-    justify-content: center;
     width: -webkit-fill-available;
+    flex-direction: column;
+    align-items: center;
 }
 
 .main_window {
@@ -44,13 +45,111 @@
             &:hover {
                 background: var(--downloadH);
 
-                > svg {
+                >svg {
                     fill: var(--downloadColorH);
                 }
             }
 
-            > svg {
+            >svg {
                 fill: var(--downloadColor);
+            }
+        }
+    }
+
+    .alert_patch {
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 15px;
+        gap: 10px;
+
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        top: 0px;
+        bottom: 0px;
+
+        background: rgba(27, 31, 33, 0.85);
+        backdrop-filter: blur(9.5px);
+
+        >div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px 0px 0px 23px;
+            gap: 35px;
+            width: -webkit-fill-available;
+            height: fit-content;
+            background: #FFFB9C;
+            border-radius: 10px;
+
+            >div {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 0px;
+                gap: 5px;
+
+                width: -webkit-fill-available;
+                height: fit-content;
+
+                >.container_warn {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 0px;
+                    gap: 17px;
+                    width: fit-content;
+
+                    * {
+                        color: #535240;
+                    }
+
+                    >div {
+                        font-family: 'Open Runde';
+                        font-style: normal;
+                        font-weight: 600;
+                        font-size: 20px;
+                    }
+                }
+
+                button {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 14px 23px;
+                    gap: 10px;
+
+                    width: 413px;
+
+                    background: #48483B;
+                    border: 0;
+                    border-radius: 10px;
+
+                    font-family: 'Open Runde';
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 18px;
+
+                    color: #FFFB9C;
+
+                    * {
+                        color: #FFFB9C;
+                    }
+
+                    &:hover {
+                        background: #2C2B26;
+                    }
+                }
+            }
+
+            img {
+                width: 166px;
+                height: 140px;
             }
         }
     }
