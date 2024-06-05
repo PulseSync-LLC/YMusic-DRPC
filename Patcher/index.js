@@ -178,10 +178,19 @@ function patcherym() {
                 }
                 link.href = 'http://127.0.0.1:19582/style.css';
             }
-            
-            // Вызываем функцию обновления стиля каждые две секунды
+
+            function updateScript() {
+                var script = document.getElementById('dynamic-script');
+                if (!script) {
+                    script = document.createElement('script');
+                    script.id = 'dynamic-script';
+                    document.head.appendChild(script);
+                }
+                script.src = 'http://127.0.0.1:19582/script.js';
+            }
+
             setInterval(updateStyle, 2000);
-            
+            setInterval(updateScript, 2000);
             `
 
             fs.writeFileSync(rumScriptPath, rumScriptContent)
@@ -198,7 +207,7 @@ function patcherym() {
             let cfgReplace = configPathContent.replace(
                 'enableDevTools: false',
                 'enableDevTools: true',
-                )
+            )
 
             fs.writeFileSync(configPath, cfgReplace)
 
@@ -206,7 +215,7 @@ function patcherym() {
             let websecReplace = configPathContentweb.replace(
                 'enableWebSecurity: true',
                 'enableWebSecurity: false',
-                )
+            )
 
             fs.writeFileSync(configPath, websecReplace)
 

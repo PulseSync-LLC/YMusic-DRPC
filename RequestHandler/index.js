@@ -63,14 +63,14 @@ const server = http.createServer((req, res) => {
             let confData = fs.readFileSync(confPath, 'utf8')
             let conf = JSON.parse(confData)
             let stylePath = themesPath + conf.select
-    
+
             const setDefaultTheme = () => {
                 stylePath = themesPath + 'Default'
                 conf.select = 'Default'
                 fs.writeFileSync(confPath, JSON.stringify(conf, null, 4))
                 return '{}'
             }
-    
+
             let cssContent
             if (!fs.existsSync(stylePath) || conf.select === 'Default') {
                 cssContent = setDefaultTheme()
@@ -85,7 +85,7 @@ const server = http.createServer((req, res) => {
                     cssContent = fs.readFileSync(styleCSS, 'utf8')
                 }
             }
-    
+
             res.writeHead(200, { 'Content-Type': 'text/css' })
             res.end(cssContent)
         } catch (error) {
@@ -94,7 +94,51 @@ const server = http.createServer((req, res) => {
             res.end(JSON.stringify({ error: 'Error reading style file' }))
         }
         return
-    }    
+    }
+
+    if (req.method === 'GET' && req.url === '/script.js') {
+        try {
+            const confPath = themesPath + 'conf.json';
+            let confData = fs.readFileSync(confPath, 'utf8');
+            let conf = JSON.parse(confData);
+            let scriptPath = themesPath + conf.select;
+    
+            const setDefaultTheme = () => {
+                scriptPath = themesPath + 'Default';
+                conf.select = 'Default';
+                fs.writeFileSync(confPath, JSON.stringify(conf, null, 4));
+                return '{}';
+            };
+    
+            let jsContent;
+            if (!fs.existsSync(scriptPath) || conf.select === 'Default') {
+                jsContent = setDefaultTheme();
+            } else {
+                const metadataPath = path.join(scriptPath, 'metadata.json');
+                if (!fs.existsSync(metadataPath)) {
+                    jsContent = setDefaultTheme();
+                } else {
+                    const scriptContent = fs.readFileSync(metadataPath, 'utf8');
+                    const script = JSON.parse(scriptContent);
+    
+                    if (script && script.script) {
+                        const scriptJS = path.join(scriptPath, script.script);
+                        jsContent = fs.readFileSync(scriptJS, 'utf8');
+                    } else {
+                        jsContent = setDefaultTheme();
+                    }
+                }
+            }
+    
+            res.writeHead(200, { 'Content-Type': 'application/javascript' });
+            res.end(jsContent);
+        } catch (error) {
+            console.error('Error reading script file:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error reading script file' }));
+        }
+        return;
+    }
 
     res.writeHead(404, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify({ error: 'Not found' }))
