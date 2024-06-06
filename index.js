@@ -288,13 +288,12 @@ function createWindow() {
 
    setInterval(() => {
         if(!rpcConnected) return;
-        // console.log(metadata)
         if (metadata && Object.keys(metadata).length) {
             updateDiscordRPC(rpc, metadata)
         } else {
             noYMAppDiscordRPC(rpc)
         }
-    }, 1000)
+    }, 5000)
 
 }
 
