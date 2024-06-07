@@ -104,4 +104,4 @@
    - Ошибки и проблемы при установке или работе приложения могут возникнуть всегда. Вы можете создать `issue` c описанием вашей проблемы или написать о проблеме на Discord-сервере [YandexMusic DRPC](https://discord.gg/qy42uGTzRy), где вам постараются помочь.
   
 9. **Внесение своего вклада в приложение:**
-   - Если вы хотите помочь нам в разработке, прочитайте [гайд](https://github.com/PulseSyn-Official/YMusic-DRPC/blob/patcher/CONTRIBUTING.md).
+   - Если вы хотите помочь нам в разработке, прочитайте [гайд](https://github.com/PulseSync-Official/YMusic-DRPC/blob/patcher/CONTRIBUTING.md).
