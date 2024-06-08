@@ -39,7 +39,9 @@
     ```bash
     git clone https://github.com/PulseSync-Official/YMusic-DRPC.git
     ```
-   - Clone into the Programs directory: `C:\Users\<YourName>\AppData\Local\Programs`.
+   3.1 **The project will be skewed to: `C:\Users \<Your Name>\AppData\Local\Programs\YMusic-DRPC`**
+
+   - If you downloaded the files, move them along this path manually. In the future, you can use this _universal_ path to quickly access the project files `%localappdata%\Programs\YMusic-DRPC`.
 
     ### Directory Structure:
     ```markdown
@@ -53,7 +55,7 @@
     | |-- Яндекс Музыка.exe |                    |
     | |-- other files...    |                    |
     ```  
-4. **Install Node.Js:**
+5. **Install Node.Js:**
    - Download and install Node.Js by following the [link](https://nodejs.org/dist/v21.7.3/node-v21.7.3-x64.msi) (the download will start automatically).
 
 **Perform further actions in the project directory: `C:\Users \<Your Name>\AppData\Local\Programs\YMusic-DRPC`**
@@ -61,8 +63,10 @@
 5. **Install Yarn and Electron:**
    - Install Yarn, Electron and @electron-forge/cli using the console:
     ```bash
-    npm install --global yarn
+    npm i -g yarn
     npm i -g electron
+    npm i -g @electron-forge/cli
+    npm i --save-dev @electron-forge/cli
      
     ```
    - Verify Yarn and Electron installations by running:
@@ -93,8 +97,11 @@
      yarn start
      ```
     - Click the `Patch` button to install the script into Yandex Music.
+
 8. **Errors and other problems:**
     - Errors and problems during installation or operation of the application can always occur. You can create an `issue` with a description of your problem or write about the problem on the discord silver [YandexMusic DRPC](https://discord.gg/qy42uGTzRy ) where they will try to help you.
 
+9. **Making your contribution to the application:**
+ - If you want to help us with the development, read the [guide](https://github.com/PulseSync-Official/YMusic-DRPC/blob/patcher/doc/en/CONTRIBUTING.md).
 
 
