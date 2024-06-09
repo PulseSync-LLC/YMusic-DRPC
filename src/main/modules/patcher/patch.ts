@@ -84,94 +84,105 @@ class Patcher {
                 let rumScriptContent = fs.readFileSync(rumScriptPath, 'utf8')
 
                 rumScriptContent += `
-            let isScriptExecuted = false;
-
-            function addHtmlToBody() {
-                const bodyElement = document.querySelector('body');
-
-                if (bodyElement && !isScriptExecuted) {
-                    const customHtmlElement = document.createElement('div');
-                    customHtmlElement.style = "position: absolute;top: -7px;right: 140px;color: rgb(255 255 255 / 29%);font-family: var(--ym-font-text);font-style: normal;font-weight: 100;letter-spacing: normal;line-height: var(--ym-font-line-height-label-s);"
-
-                    customHtmlElement.innerHTML = '<p class="YMDRPC">YMusic-DRPC 2.0.5</p>';
-
-                    bodyElement.appendChild(customHtmlElement);
-
-                    isScriptExecuted = true;
-                    
-                    clearInterval(timerId);
+                let isScriptExecuted = false;
+    
+                function addHtmlToBody() {
+                    const bodyElement = document.querySelector('body');
+    
+                    if (bodyElement && !isScriptExecuted) {
+                        const customHtmlElement = document.createElement('div');
+                        customHtmlElement.style = "position: absolute;top: -7px;right: 140px;color: rgb(255 255 255 / 29%);font-family: var(--ym-font-text);font-style: normal;font-weight: 100;letter-spacing: normal;line-height: var(--ym-font-line-height-label-s);"
+    
+                        customHtmlElement.innerHTML = '<p class="YMDRPC">YMusic-DRPC 2.0.5</p>';
+    
+                        bodyElement.appendChild(customHtmlElement);
+    
+                        isScriptExecuted = true;
+                        
+                        clearInterval(timerId);
+                    }
                 }
-            }
-
-            const timerId = setInterval(addHtmlToBody, 1000);
-
-                                                      
-            function logPlayerBarInfo() {
-                const playerBarTitleElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_title"]');
-                const linkTitleElement = document.querySelector('[class*="Meta_albumLink"]');
-                const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artists"]');
-                const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
-                const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
-                imgElements.forEach(img => {
-                    if (img.src && img.src.includes('/100x100')) {
-                        img.src = img.src.replace('/100x100', '/1000x1000');
+    
+                const timerId = setInterval(addHtmlToBody, 1000);
+    
+                                                          
+                function logPlayerBarInfo() {
+                    const playerBarTitleElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_title"]');
+                    const linkTitleElement = document.querySelector('[class*="Meta_albumLink"]');
+                    const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artists"]');
+                    const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
+                    const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
+                    imgElements.forEach(img => {
+                        if (img.src && img.src.includes('/100x100')) {
+                            img.src = img.src.replace('/100x100', '/1000x1000');
+                        }
+                        if (img.srcset && img.srcset.includes('/100x100')) {
+                            img.srcset = img.srcset.replace('/100x100', '/1000x1000');
+                        }
+                        if (img.srcset && img.srcset.includes('/200x200 2x')) {
+                            img.srcset = img.srcset.replace('/200x200 2x', '/1000x1000 2x');
+                        }
+                    });
+                    const titleText = playerBarTitleElement ? playerBarTitleElement.textContent.trim() : '';
+    
+                    const artistTextElements = artistLinkElement ? artistLinkElement.querySelectorAll('[class*="Meta_artistCaption"]') : null;
+                    const artistTexts = artistTextElements ? Array.from(artistTextElements).map(element => element.textContent.trim()) : [];
+                    const linkTitle = linkTitleElement ? linkTitleElement.getAttribute('href') : '';
+                    const albumId = linkTitle ? linkTitle.split('=')[1] : '';
+                    let timecodesArray = Array.from(timecodeElements, (element) => element.textContent.trim());
+                    if (timecodesArray.length > 2) {
+                        timecodesArray = timecodesArray.slice(0, 2);
                     }
-                    if (img.srcset && img.srcset.includes('/100x100')) {
-                        img.srcset = img.srcset.replace('/100x100', '/1000x1000');
-                    }
-                    if (img.srcset && img.srcset.includes('/200x200 2x')) {
-                        img.srcset = img.srcset.replace('/200x200 2x', '/1000x1000 2x');
-                    }
-                });
-                const titleText = playerBarTitleElement ? playerBarTitleElement.textContent.trim() : '';
-
-                const artistTextElements = artistLinkElement ? artistLinkElement.querySelectorAll('[class*="Meta_artistCaption"]') : null;
-                const artistTexts = artistTextElements ? Array.from(artistTextElements).map(element => element.textContent.trim()) : [];
-                const linkTitle = linkTitleElement ? linkTitleElement.getAttribute('href') : '';
-                const albumId = linkTitle ? linkTitle.split('=')[1] : '';
-
-                const timecodesArray = Array.from(timecodeElements, (element) => element.textContent.trim());
-                const ImgTrack = imgElements.length > 0 ? Array.from(imgElements, (element) => element.src) : [[None, 'ym']];
-
-
-                return {
-                    playerBarTitle: titleText,
-                    artist: artistTexts.join(', '),
-                    timecodes: timecodesArray,
-                    requestImgTrack: ImgTrack,
-                    linkTitle: albumId
-                };
-            }
-
-            setInterval(() => {
-                const result = logPlayerBarInfo();
-
-                fetch('http://localhost:19582/update_data', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(result),
-                });
-            }, 1000);
-
-            
-            function updateStyle() {
-                var link = document.getElementById('dynamic-style');
-                if (!link) {
-                    link = document.createElement('link');
-                    link.id = 'dynamic-style';
-                    link.rel = 'stylesheet';
-                    link.type = 'text/css';
-                    document.head.appendChild(link);
+    
+                    const ImgTrack = imgElements.length > 0 ? Array.from(imgElements, (element) => element.src) : [[None, 'ym']];
+    
+                    return {
+                        playerBarTitle: titleText,
+                        artist: artistTexts.join(', '),
+                        timecodes: timecodesArray,
+                        requestImgTrack: ImgTrack,
+                        linkTitle: albumId
+                    };
                 }
-                link.href = 'http://localhost:19582/style.css';
-            }
-            
-            // Вызываем функцию обновления стиля каждые две секунды
-            setInterval(updateStyle, 2000);
-            
-            `
+    
+                setInterval(() => {
+                    const result = logPlayerBarInfo();
+    
+                    fetch('http://127.0.0.1:19582/update_data', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(result),
+                    });
+                }, 1000);
+    
+                
+                function updateStyle() {
+                    var link = document.getElementById('dynamic-style');
+                    if (!link) {
+                        link = document.createElement('link');
+                        link.id = 'dynamic-style';
+                        link.rel = 'stylesheet';
+                        link.type = 'text/css';
+                        document.head.appendChild(link);
+                    }
+                    link.href = 'http://127.0.0.1:19582/style.css';
+                }
+    
+                function updateScript() {
+                    var script = document.getElementById('dynamic-script');
+                    if (!script) {
+                        script = document.createElement('script');
+                        script.id = 'dynamic-script';
+                        document.head.appendChild(script);
+                    }
+                    script.src = 'http://127.0.0.1:19582/script.js';
+                }
+    
+                setInterval(updateStyle, 2000);
+                setInterval(updateScript, 2000);
+                `
 
                 fs.writeFileSync(rumScriptPath, rumScriptContent)
 
