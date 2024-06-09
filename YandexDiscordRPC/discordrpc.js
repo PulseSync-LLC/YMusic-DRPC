@@ -1,16 +1,20 @@
 function logPlayerBarInfo() {
-    const playerBarTitleElement = document.querySelector('[class*="PlayerBarTitle_title"]');
-    const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_artist"]');
+    const playerBarTitleElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_title"]');
+    const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artists"]');
     const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
     const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
 
     const titleText = playerBarTitleElement ? playerBarTitleElement.textContent.trim() : '';
     const artistText = artistLinkElement ? artistLinkElement.textContent.trim() : '';
 
-    const linkTitle = playerBarTitleElement ? playerBarTitleElement.getAttribute('href') : '';
+    const linkTitle = linkTitleElement ? linkTitleElement.getAttribute('href') : '';
     const albumId = linkTitle ? linkTitle.split('=')[1] : '';
 
-    const timecodesArray = Array.from(timecodeElements, (element) => element.textContent.trim());
+    let timecodesArray = Array.from(timecodeElements, (element) => element.textContent.trim());
+                if (timecodesArray.length > 2) {
+                    timecodesArray = timecodesArray.slice(0, 2);
+                }
+    
     const ImgTrack = imgElements.length > 0 ? Array.from(imgElements, (element) => element.src) : [[None, 'ym']];
 
     return {
