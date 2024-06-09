@@ -14,7 +14,7 @@
 
 **Интеграция Discord Rich Presence для YandexMusic - Документация**
 
-*Примечание: Следующие инструкции предполагают, что Яндекс Музыка BETA 5.0.19+ установлен в стандартном каталоге ("AppData\Local\Programs\YandexMusic"). Убедитесь, что Яндекс Музыка закрыта.*
+*Примечание: Следующие инструкции предполагают, что Яндекс Музыка BETA 5.4.2+ установлен в стандартном каталоге ("AppData\Local\Programs\YandexMusic"). Убедитесь, что Яндекс Музыка закрыта.*
 
 **Скриншоты**
 
@@ -28,7 +28,7 @@
 ### Этапы установки:
 
 1. **Скачайте YandexMusic:**
-   - Скачайте YandexMusic BETA 5.0.19+ с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
+   - Скачайте YandexMusic BETA 5.4.2+ с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
    - Установите YandexMusic в стандартный каталог: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.
 
 2. **Установите git:**
