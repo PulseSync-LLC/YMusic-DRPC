@@ -118,7 +118,8 @@ function patcherym() {
 
                                                       
             function logPlayerBarInfo() {
-                const playerBarTitleElement = document.querySelector('[class*="Meta_albumLink"]');
+                const playerBarTitleElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_title"]');
+                const linkTitleElement = document.querySelector('[class*="Meta_albumLink"]');
                 const artistLinkElement = document.querySelector('[class*="PlayerBarDesktop_description"] [class*="Meta_artists"]');
                 const timecodeElements = document.querySelectorAll('[class*="ChangeTimecode_timecode"]');
                 const imgElements = document.querySelectorAll('[class*="PlayerBarDesktop_cover"]');
@@ -137,13 +138,14 @@ function patcherym() {
 
                 const artistTextElements = artistLinkElement ? artistLinkElement.querySelectorAll('[class*="Meta_artistCaption"]') : null;
                 const artistTexts = artistTextElements ? Array.from(artistTextElements).map(element => element.textContent.trim()) : [];
-
-                const linkTitle = playerBarTitleElement ? playerBarTitleElement.getAttribute('href') : '';
+                const linkTitle = linkTitleElement ? linkTitleElement.getAttribute('href') : '';
                 const albumId = linkTitle ? linkTitle.split('=')[1] : '';
+                let timecodesArray = Array.from(timecodeElements, (element) => element.textContent.trim());
+                if (timecodesArray.length > 2) {
+                    timecodesArray = timecodesArray.slice(0, 2);
+                }
 
-                const timecodesArray = Array.from(timecodeElements, (element) => element.textContent.trim());
                 const ImgTrack = imgElements.length > 0 ? Array.from(imgElements, (element) => element.src) : [[None, 'ym']];
-
 
                 return {
                     playerBarTitle: titleText,
