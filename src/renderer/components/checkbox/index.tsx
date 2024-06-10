@@ -23,6 +23,9 @@ const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
             case 'autoStartMusic':
                 setIsActive(window.electron.store.get('autoStartMusic'))
                 break
+            case 'autoStartInTray':
+                setIsActive(window.electron.store.get('autoStartInTray'))
+                break
             case 'startDiscordRpc':
                 setIsActive(window.electron.store.get('discordRpc'))
                 break
@@ -64,6 +67,13 @@ const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
                     readPolicy: event.target.checked,
                 }))
                 window.electron.store.set('readPolicy', event.target.checked)
+                break
+            case 'autoStartInTray':
+                setSettings((prevSettings: any) => ({
+                    ...prevSettings,
+                    autoStartInTray: event.target.checked,
+                }))
+                window.electron.store.set('autoStartInTray', event.target.checked)
                 break
         }
     }

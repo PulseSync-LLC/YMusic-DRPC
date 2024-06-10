@@ -15,6 +15,7 @@
     "resolveJsonModule": true,
     "paths": {
       "*": ["node_modules/*"],
+      "@/*": ["static/*"]
     }
   },
   "include": ["src/**/*", "styles.d.ts", "window.d.ts", "cors-anywhere.d.ts", "declarations.d.ts"]

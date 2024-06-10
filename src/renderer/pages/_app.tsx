@@ -25,16 +25,21 @@ import SettingsInterface from '../api/interfaces/settings.interface'
 import settingsInitials from '../api/interfaces/settings.initials'
 import AuthPage from './auth'
 import CallbackPage from './auth/callback'
+import * as Sentry from '@sentry/electron/renderer'
+import getUserToken from '../api/getUserToken'
 
 function app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
-    const [socketError, setSocketError] = useState(0)
+    const [socketError, setSocketError] = useState(-1)
     const [socketConnected, setSocketConnected] = useState(false)
     const [user, setUser] = useState<UserInterface>(userInitials)
     const [settings, setSettings] = useState<SettingsInterface>(settingsInitials)
     const [loading, setLoading] = useState(false)
-    const socket = io('http://localhost:1488', {
+    const socket = io('https://socket.pulsesync.dev', {
         autoConnect: false,
+        auth: {
+            token: getUserToken(),
+        },
     })
     const router = createHashRouter([
         {
@@ -62,38 +67,45 @@ function app() {
             element: <OtherPage />,
         },
     ])
-
-    const authorize = () => {
+    const authorize = async () => {
         setLoading(true)
-        const token = window.electron.store.get("token")
+        const token = window.electron.store.get('token')
         console.log(token)
 
-        return apolloClient
-            .query({
-                query: UserMeQuery,
-            })
-            .then((res) => {
-                const { data } = res;
-                console.log(data.getMe)
-                if (data.getMe && data.getMe.id) {
-                    setUser(data.getMe);
-                    setLoading(false);
+        try {
+            let res = await apolloClient
+                .query({
+                    query: UserMeQuery
+                })
 
-                    return true;
-                } else {
-                    setLoading(false);
-                    //localStorage.removeItem("token")
-                    return false;
-                }
-            })
-            .catch(() => {
-                setLoading(false);
-                return false;
-            });
+            const { data } = res
+            console.log(data)
+            if (data.getMe && data.getMe.id) {
+                setUser(data.getMe)
+                setLoading(false)
+
+                return true
+            } else {
+                setLoading(false)
+                window.electron.store.delete('token')
+                router.navigate("/")
+                setUser(userInitials)
+                return false
+            }
+        } catch (e) {
+            setLoading(false)
+            toast.error('Ошибка авторизации')
+
+            if (window.electron.store.has('token')) {
+                window.electron.store.delete('token')
+            }
+            await router.navigate("/")
+            setUser(userInitials)
+            return false
+        }
     }
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            if(window.electron.store.has("token")) {
                 const token = window.electron.store.get("token")
                 if(user.id === '-1' && token)
                 {
@@ -102,23 +114,16 @@ function app() {
                 else {
                     router.navigate("/")
                 }
-            }
-            else {
-                router.navigate("/")
-            }
         }
     }, []);
     socket.on('connect', () => {
         console.log('Socket connected')
-        console.log(socket.id)
-        console.log(socketError)
         toast.success('Соединение установлено')
         socket.emit('connection')
 
         setSocket(socket)
         setSocketConnected(true)
         setLoading(false)
-        if (socketError == 1) setSocketError(2)
     })
 
     socket.on('disconnect', (reason, description) => {
@@ -146,12 +151,18 @@ function app() {
 
     useEffect(() => {
         console.log(socketError)
-        if (socketError === 1) {
+        if (socketError === 1 || socketError === 0) {
             toast.error('Сервер не доступен')
-        } else if (socketError === 2) {
+        } else if (socketConnected) {
             toast.success('Соединение восстановлено')
         }
     }, [socketError])
+    useEffect(() => {
+        if (user.id !== "-1") {
+            console.log("1")
+            if (!socket.connected) socket.connect()
+        }
+    }, [user.id])
 
     useEffect(() => {
         if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
@@ -183,9 +194,6 @@ function app() {
                 }))
                 setLoading(false)
             }
-            if (!loading) {
-                if (!socket.connected) socket.connect()
-            }
         }
     }, [])
     return (
@@ -206,16 +214,9 @@ function app() {
     )
 }
 const Player: React.FC<any> = ({ children }) => {
-    const { user, socket, socketConnected, settings } = useContext(UserContext)
+    const { user, socket, settings } = useContext(UserContext)
     const [track, setTrack] = useState<TrackInterface>(trackInitials)
-    // window.desktopEvents?.on('update-available', data => {
-    //     toast.success('Update available: ' + data, {
-    //         duration: 30000,
-    //     })
-    //     setTimeout(() => {
-    //         socket?.emit('update-install')
-    //     }, 5000)
-    // })
+
     useEffect(() => {
         if (user.id != "-1") {
             ;(async () => {
@@ -231,10 +232,13 @@ const Player: React.FC<any> = ({ children }) => {
                     }
             })()
         }
-    }, [user.id, socketConnected])
+    }, [user.id, settings.enableRpc])
     useEffect(() => {
+        console.log("useEffect triggered");
+        console.log("Settings: ", settings);
+        console.log("User: ", user);
+        console.log("Track: ", track);
         if (settings.enableRpc) {
-            //console.log(track)
             const timeRange =
                 track.timecodes.length === 2
                     ? `${track.timecodes[0]} - ${track.timecodes[1]}`
@@ -248,6 +252,10 @@ const Player: React.FC<any> = ({ children }) => {
                 {
                     label: '✌️ Open in YandexMusic',
                     url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
+                },
+                {
+                    label: '🤠 Open in GitHub',
+                    url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
                 },
             ]
             if (settings.enableRpcButtonListen && track.linkTitle) {
@@ -266,10 +274,16 @@ const Player: React.FC<any> = ({ children }) => {
                     largeImageKey: largeImage,
                     smallImageKey: smallImage,
                     smallImageText: 'Yandex Music',
+                    buttons: [
+                        {
+                            label: '🤠 Open in GitHub',
+                            url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
+                        },
+                    ]
                 })
             }
         }
-    }, [user, track])
+    }, [settings, user, track])
     return (
         <PlayerContext.Provider
             value={{

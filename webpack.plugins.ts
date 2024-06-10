@@ -2,7 +2,8 @@
 import type IForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import NodePolyfillPlugin from 'node-polyfill-webpack-plugin'
-
+import { sentryWebpackPlugin } from '@sentry/webpack-plugin'
+import config from "./src/config.json"
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ForkTsCheckerWebpackPlugin: typeof IForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
@@ -11,7 +12,12 @@ export const plugins = [
         logger: 'webpack-infrastructure',
     }),
     new CopyWebpackPlugin({
-        patterns: [{ from: 'static', to: 'static' }],
+        patterns: [{ from: 'static', to: 'static' }, { from: 'static', to: 'main_window/static' }],
     }),
-    new NodePolyfillPlugin()
+    new NodePolyfillPlugin(),
+    // sentryWebpackPlugin({
+    //     org: "pulsesync",
+    //     project: "electron",
+    //     authToken: config.SENTRY_KEY,
+    // }),
 ]

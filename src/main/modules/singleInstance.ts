@@ -1,9 +1,11 @@
 import { app, BrowserWindow, dialog } from 'electron'
 import { checkIsDeeplink, navigateToDeeplink } from './handleDeepLink';
 import logger from './logger';
-import SocketService from './socket-io'
 import httpServer from './httpServer'
 import config from '../../config.json'
+import { store } from './storage'
+import path from 'path'
+import { exec } from 'child_process'
 const isFirstInstance = app.requestSingleInstanceLock();
 
 export const checkForSingleInstance = (): void => {
@@ -24,10 +26,27 @@ export const checkForSingleInstance = (): void => {
                 logger.main.log('Show window');
             }
         });
-        const server = new SocketService()
         httpServer.listen(config.PORT, () => {
             console.log(`Server running at http://localhost:${config.PORT}/`)
         })
+        if (store.has('autoStartMusic') && store.get('autoStartMusic')) {
+            let appPath = path.join(
+                process.env.LOCALAPPDATA,
+                'Programs',
+                'YandexMusic',
+                'Яндекс Музыка.exe',
+            )
+            appPath = `"${appPath}"`
+
+            const command = `${appPath}`
+
+            exec(command, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Ошибка при выполнении команды: ${error}`)
+                    return
+                }
+            })
+        }
     } else {
         app.quit();
     }

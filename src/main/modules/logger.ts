@@ -86,6 +86,7 @@ export default {
     default: log4js.getLogger('date'),
     http: log4js.getLogger('http'),
     main: log4js.getLogger('main'),
+    updater: log4js.getLogger('updater'),
     renderer: log4js.getLogger('renderer'),
     crash: log4js.getLogger('crash'),
 }

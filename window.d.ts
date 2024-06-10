@@ -44,6 +44,7 @@ declare global {
             ) => void
             removeListener: (channel: string) => void
             autoStartMusic: (val: boolean) => void
+            getVersion: (version: string) => string
         }
         discordRpc: {
             enableRpc: (val: boolean) => void

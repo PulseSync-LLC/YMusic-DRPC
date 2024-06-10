@@ -1,5 +1,5 @@
 import styles from './header.module.scss'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import Minus from './../../../../static/assets/icons/minus.svg'
 import Minimize from './../../../../static/assets/icons/minimize.svg'
@@ -18,10 +18,19 @@ interface p {
 
 const Header: React.FC<p> = ({ goBack }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const [version, setVersion] = useState(null)
     const { user, loading } = useContext(userContext)
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen)
     }
+    useEffect(() => {
+        if (typeof window !== 'undefined' && window.desktopEvents) {
+            window.desktopEvents?.invoke('getVersion').then((version: string | undefined) => {
+                console.log(version)
+                setVersion(version)
+            })
+        }
+    }, []);
     return (
         <>
             <header className={styles.nav_bar}>
@@ -44,7 +53,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                             </button>
                             {isMenuOpen && <PatchMenu />}
                         </div>
-                        <div className={styles.version}>FUMOS V1.0.0</div>
+                        <div className={styles.version}>FUMOS V{version} BETA</div>
                     </div>
                     <div className={styles.event_container}>
                         <div className={styles.menu}>

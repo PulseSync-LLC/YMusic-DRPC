@@ -2,14 +2,15 @@ import React, { useContext } from 'react'
 import styles from './context_menu.module.scss'
 import userContext from '../../api/context/user.context'
 import { shell } from 'electron'
+import SettingsInterface from '../../api/interfaces/settings.interface'
 
 const ContextMenu: React.FC = () => {
     const { settings, setSettings } = useContext(userContext)
     const patch = () => {
         window.electron.patcher.patch()
-        setSettings((prevSettings: any) => ({
+        setSettings((prevSettings: SettingsInterface) => ({
             ...prevSettings,
-            prevSettings: true,
+            patched: true,
         }))
     }
     const repatch = () => {
@@ -17,9 +18,9 @@ const ContextMenu: React.FC = () => {
     }
     const depatch = () => {
         window.electron.patcher.depatch()
-        setSettings((prevSettings: any) => ({
+        setSettings((prevSettings: SettingsInterface) => ({
             ...prevSettings,
-            prevSettings: false,
+            patched: false,
         }))
     }
     const githubLink = () => {

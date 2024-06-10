@@ -5,7 +5,8 @@ const SettingsInitials: SettingsInterface = {
     enableRpcButtonListen: false,
     autoStartMusic: false,
     patched: false,
-    readPolicy: false
+    readPolicy: false,
+    autoStartInTray: false
 }
 
 export default SettingsInitials

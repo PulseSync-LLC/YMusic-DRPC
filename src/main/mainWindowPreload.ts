@@ -47,6 +47,7 @@ contextBridge.exposeInMainWorld('electron', {
         ipcRenderer.send('selectStyle', name, author),
     getThemesList: () => ipcRenderer.send('getThemesList'),
     checkFileExists: () => ipcRenderer.send('checkFileExists'),
+    getVersion: () => ipcRenderer.send("getVersion")
 })
 
 contextBridge.exposeInMainWorld('discordRpc', {

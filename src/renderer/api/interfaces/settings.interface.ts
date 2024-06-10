@@ -6,4 +6,5 @@ export default interface SettingsInterface {
     autoStartMusic: boolean
     patched: boolean
     readPolicy: boolean
+    autoStartInTray: boolean
 }

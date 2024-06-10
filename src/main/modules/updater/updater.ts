@@ -7,157 +7,145 @@ import { UpdateUrgency } from './constants/updateUrgency'
 import { UpdateStatus } from './constants/updateStatus'
 import log from 'electron-log'
 import { UpdateInfo as ElectronUpdateInfo } from 'electron-updater'
+import logger from '../logger'
 
-interface UpdateInfo extends ElectronUpdateInfo {
-    commonConfig?: UpdateInfo | null
-    updateConfig?: {
-        DEPRECATED_VERSIONS?: string
-        UPDATE_URL?: string
-        [key: string]: any // Позволяет добавлять дополнительные поля
-    }
-}
-export class Updater {
-    latestAvailableVersion: string | null = null
-    updateStatus: UpdateStatus = UpdateStatus.IDLE
-    updaterId: NodeJS.Timeout | null = null
-    onUpdateListeners: Array<(version: string) => void> = []
-    logger: log.LogFunctions = null
-    commonConfig: UpdateInfo = {
-        version: '',
-        files: [],
-        path: '', // deprecated
-        sha512: '', // deprecated
-        releaseName: null,
-        releaseNotes: null,
-        releaseDate: '',
-        stagingPercentage: undefined,
-        updateConfig: {
-            DEPRECATED_VERSIONS: '',
-            UPDATE_URL: '',
-        },
-    }
+type UpdateInfo = {
+    version: string;
+    updateUrgency?: UpdateUrgency;
+    commonConfig?: any;
+};
+
+type DownloadResult = any;
+
+type UpdateResult = {
+    downloadPromise?: Promise<DownloadResult>;
+    updateInfo: UpdateInfo;
+};
+
+class Updater {
+    private latestAvailableVersion: string | null = null;
+    private updateStatus: UpdateStatus = UpdateStatus.IDLE;
+    private updaterId: NodeJS.Timeout | null = null;
+    private onUpdateListeners: Array<(version: string) => void> = [];
+    private logger;
+    private commonConfig: any;
+
     constructor() {
-        autoUpdater.logger = log
-        autoUpdater.autoRunAppAfterInstall = true
-        this.logger = log.scope('Updater')
-        autoUpdater.on('error', error => {
-            this.logger.error('Updater error', error)
-        })
+        this.logger = logger;
+        this.commonConfig = this.commonConfig || {};
+        autoUpdater.logger = require("electron-log");
+        autoUpdater.autoRunAppAfterInstall = true;
+
+        autoUpdater.on('error', (error) => {
+            this.logger.updater.log('Updater error', error);
+        });
+
         autoUpdater.on('checking-for-update', () => {
-            this.logger.log('Checking for update')
-        })
+            this.logger.updater.log('Checking for update');
+        });
+
         autoUpdater.on('update-downloaded', (updateInfo: UpdateInfo) => {
-            this.logger.log('Update downloaded', updateInfo.version)
-            if ('updateUrgency' in updateInfo) {
-                if (updateInfo.updateUrgency === UpdateUrgency.HARD) {
-                    this.logger.info('This update should be installed now')
-                    this.install()
-                    return
-                }
+            this.logger.updater.log('Update downloaded', updateInfo.version);
+
+            if (updateInfo.updateUrgency === UpdateUrgency.HARD) {
+                this.logger.updater.log('This update should be installed now');
+                this.install();
+                return;
             }
-            if (this.commonConfig.updateConfig.DEPRECATED_VERSIONS) {
-                const isDeprecatedVersion = semver.satisfies(
-                    app.getVersion(),
-                    this.commonConfig.updateConfig.DEPRECATED_VERSIONS,
-                )
+
+            if (this.commonConfig && this.commonConfig.DEPRECATED_VERSIONS) {
+                const isDeprecatedVersion = semver.satisfies(app.getVersion(), this.commonConfig.DEPRECATED_VERSIONS);
                 if (isDeprecatedVersion) {
-                    this.logger.info(
-                        'This version is deprecated',
-                        app.getVersion(),
-                        this.commonConfig.updateConfig.DEPRECATED_VERSIONS,
-                    )
-                    this.install()
-                    return
+                    this.logger.updater.log('This version is deprecated', app.getVersion(), this.commonConfig.DEPRECATED_VERSIONS);
+                    this.install();
+                    return;
                 }
             }
-            this.latestAvailableVersion = updateInfo.version
-            this.onUpdateListeners.forEach(listener => {
-                listener(updateInfo.version)
-            })
-        })
+
+            this.latestAvailableVersion = updateInfo.version;
+            this.onUpdateListeners.forEach((listener) => listener(updateInfo.version));
+        });
     }
 
-    updateApplier(updateResult: UpdateCheckResult) {
-        try {
-            const { downloadPromise, updateInfo } = updateResult
-            if ('updateUrgency' in updateInfo) {
-                this.logger.info('Urgency', updateInfo.updateUrgency)
-            }
-            const updateInfoTyped = updateInfo as UpdateInfo
-            if ('commonConfig' in updateInfoTyped) {
-                this.logger.info('Common config', updateInfoTyped.commonConfig)
-                this.commonConfig = updateInfoTyped.commonConfig
-                this.logger.info(this.commonConfig)
-            }
-            console.log(updateResult)
-            if (!downloadPromise) {
-                return
-            }
-            this.logger.info(
-                'New version available',
-                app.getVersion(),
-                '->',
-                updateInfo.version,
-            )
-            this.updateStatus = UpdateStatus.DOWNLOADING
-            downloadPromise
-                .then(downloadResult => {
-                    if (downloadResult) {
-                        console.log(downloadResult)
-                        this.updateStatus = UpdateStatus.DOWNLOADED
-                        this.logger.info(`Download result: ${downloadResult}`)
-                    }
-                })
-                .catch(error => {
-                    this.updateStatus = UpdateStatus.IDLE
-                    this.logger.error('Downloader error', error)
-                })
-        } catch (error) {
-            console.log('Updater error', error)
+    private updateApplier(updateResult: UpdateResult) {
+        const { downloadPromise, updateInfo } = updateResult;
+
+        if (updateInfo.updateUrgency !== undefined) {
+            this.logger.updater.info('Urgency', updateInfo.updateUrgency);
         }
+
+        if (updateInfo.commonConfig !== undefined) {
+            this.logger.updater.info('Common config', updateInfo.commonConfig);
+            for (const key in updateInfo.commonConfig) {
+                if (updateInfo.commonConfig.hasOwnProperty(key)) {
+                    if (!this.commonConfig) {
+                        this.commonConfig = {};
+                    }
+                    this.commonConfig[key] = updateInfo.commonConfig[key];
+                    this.logger.updater.info(`Updated commonConfig: ${key} = ${updateInfo.commonConfig[key]}`);
+                }
+            }
+        }
+
+        if (!downloadPromise) {
+            return;
+        }
+
+        this.logger.updater.info('New version available', app.getVersion(), '->', updateInfo.version);
+        this.updateStatus = UpdateStatus.DOWNLOADING;
+
+        downloadPromise
+            .then((downloadResult) => {
+                if (downloadResult) {
+                    this.updateStatus = UpdateStatus.DOWNLOADED;
+                    this.logger.updater.info(`Download result: ${downloadResult}`);
+                }
+            })
+            .catch((error) => {
+                this.updateStatus = UpdateStatus.IDLE;
+                this.logger.updater.error('Downloader error', error);
+            });
     }
 
     async check() {
         if (this.updateStatus !== UpdateStatus.IDLE) {
-            this.logger.log('New update is processing', this.updateStatus)
-            return
+            this.logger.updater.log('New update is processing', this.updateStatus);
+            return;
         }
+
         try {
-            const updateResult = await autoUpdater.checkForUpdates()
+            const updateResult = await autoUpdater.checkForUpdates();
             if (!updateResult) {
-                this.logger.log('No update found')
-                return
+                this.logger.updater.log('No update found');
+                return;
             }
-            this.updateApplier(updateResult)
+            this.updateApplier(updateResult);
         } catch (error) {
-            this.logger.error('Update check error', error)
+            this.logger.updater.error('Update check error', error);
         }
     }
 
     start() {
-        this.check()
+        this.check();
         this.updaterId = setInterval(() => {
-            this.check()
-        }, 12000)
+            this.check();
+        }, 900000);
     }
 
     stop() {
         if (this.updaterId) {
-            clearInterval(this.updaterId)
+            clearInterval(this.updaterId);
         }
     }
 
     onUpdate(listener: (version: string) => void) {
-        this.onUpdateListeners.push(listener)
+        this.onUpdateListeners.push(listener);
     }
 
     install() {
-        this.logger.info(
-            'Installing a new version',
-            this.latestAvailableVersion,
-        )
-        state.willQuit = true
-        autoUpdater.quitAndInstall()
+        this.logger.updater.info('Installing a new version', this.latestAvailableVersion);
+        state.willQuit = true;
+        autoUpdater.quitAndInstall();
     }
 }
 exports.Updater = Updater

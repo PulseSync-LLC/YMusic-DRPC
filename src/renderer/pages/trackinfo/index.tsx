@@ -22,7 +22,7 @@ import trackInitials from '../../api/interfaces/track.initials'
 import Skeleton from 'react-loading-skeleton'
 import playerContext from '../../api/context/player.context'
 export default function TrackInfoPage() {
-    const { user, setUser, socket, loading, socketConnected } = useContext(userContext)
+    const { user, setUser, socket, loading, settings } = useContext(userContext)
     const { currentTrack } = useContext(playerContext)
     return (
         <Layout title="Discord RPC">
@@ -34,7 +34,7 @@ export default function TrackInfoPage() {
                             Включить статус дискорд
                         </CheckboxNav>
                         <div className={theme.container}>
-                            {socketConnected ? (
+                            {settings.enableRpc && currentTrack !== trackInitials ? (
                                 <div className={theme.flex_container}>
                                     <img
                                         className={theme.img}
@@ -42,7 +42,7 @@ export default function TrackInfoPage() {
                                             currentTrack.requestImgTrack[1]
                                                 ? currentTrack
                                                       .requestImgTrack[1]
-                                                : '../../../../static/assets/logo/logoapp.png'
+                                                : './static/assets/logo/logoappsummer.png'
                                         }
                                         alt=""
                                     />
@@ -62,9 +62,9 @@ export default function TrackInfoPage() {
                                 </div>
                             ) : (
                                 <div>
-                                    <Skeleton width={500} height={30} />
+                                    <Skeleton width={300} height={30} />
                                     <Skeleton
-                                        width={400}
+                                        width={300}
                                         height={20}
                                         style={{ marginTop: '10px' }}
                                     />

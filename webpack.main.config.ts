@@ -8,7 +8,11 @@ export const mainConfig: Configuration = {
     module: {
         rules,
     },
+    devtool: 'source-map',
     resolve: {
+        alias: {
+            '@': path.resolve(__dirname, 'static'),  // Укажите путь к директории 'static'
+        },
         extensions: [
             '.js',
             '.ts',

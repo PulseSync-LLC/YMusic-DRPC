@@ -44,7 +44,7 @@ export async function startYandexMusic() {
     )
     appPath = `"${appPath}"`
 
-    const command = `${appPath} --remote-allow-origins=*`
+    const command = `${appPath}`
     try {
         await execPromise(command)
     } catch (error) {

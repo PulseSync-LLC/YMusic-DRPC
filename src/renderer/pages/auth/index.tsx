@@ -13,26 +13,26 @@ import CheckboxNav from '../../components/checkbox'
 import { MdWarning } from 'react-icons/md'
 import Discord from './../../../../static/assets/icons/discordLogin.svg'
 import userContext from '../../api/context/user.context'
+import config from '../../api/config'
 
 export default function AuthPage() {
     const navigate = useNavigate();
     const [mdText, setMdText] = useState(null)
     const { user, settings } = useContext(userContext)
     useEffect(() => {
-        fetch('../../../../static/assets/policy/terms.ru.md')
+        fetch('./static/assets/policy/terms.ru.md')
             .then(response => response.text())
             .then(text => setMdText(text))
     }, [])
     const auth = () => {
-        window.open("http://localhost:4000/auth/discord")
-        navigate("/auth/callback")
+       window.open(config.SERVER_URL + "auth/discord")
+       navigate("/auth/callback")
     }
     useEffect(() => {
         if(user.id !== "-1") {
             navigate("/trackinfo")
         }
     }, [user.id])
-
     return (
         <>
             <Header />

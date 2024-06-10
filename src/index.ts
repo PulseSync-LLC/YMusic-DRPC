@@ -5,6 +5,7 @@ import {
     Menu,
     Tray,
     shell,
+    session,
     protocol,
 } from 'electron'
 import process from 'process'
@@ -16,14 +17,14 @@ import { store } from './main/modules/storage'
 import Patcher from './main/modules/patcher/patch'
 import UnPatcher from './main/modules/patcher/unpatch'
 import createTray from './main/modules/tray'
-import { exec } from 'child_process'
 import rpc_connect from './main/modules/discordRpc'
 import corsAnywhereServer from 'cors-anywhere'
-import checkAndTerminateYandexMusic, {
-    startYandexMusic,
-} from '../utils/processUtils'
 import { handleDeeplink, handleDeeplinkOnApplicationStartup } from './main/modules/handleDeepLink'
 import { checkForSingleInstance } from './main/modules/singleInstance'
+import * as Sentry from "@sentry/electron/main";
+import { getTrackInfo } from './main/modules/httpServer'
+import { getUpdater } from './main/modules/updater/updater'
+import checkAndTerminateYandexMusic, { startYandexMusic } from '../utils/processUtils'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -63,7 +64,11 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
     width: 40,
     height: 40,
 })
+const updater = getUpdater()
 
+// Sentry.init({
+//     dsn: "https://6aaeb7f8130ebacaad9f8535d0c77aa8@o4507369806954496.ingest.de.sentry.io/4507369809182800",
+// });
 const createWindow = (): void => {
     preloaderWindow = new BrowserWindow({
         width: 250,
@@ -113,15 +118,16 @@ const createWindow = (): void => {
     mainWindow.once('ready-to-show', () => {
         preloaderWindow.close()
         preloaderWindow.destroy()
-
-        mainWindow.show()
-        mainWindow.moveTop()
+        if(!store.get('autoStartInTray')) {
+            mainWindow.show()
+            mainWindow.moveTop()
+        }
     })
     mainWindow.webContents.setWindowOpenHandler(electronData => {
         shell.openExternal(electronData.url)
         return { action: 'deny' }
     })
-    mainWindow.webContents.openDevTools()
+    //mainWindow.webContents.openDevTools()
 }
 const corsAnywhere = async () => {
     const getPortModule = await import('get-port')
@@ -154,6 +160,17 @@ protocol.registerSchemesAsPrivileged([
         },
     },
     {
+        scheme: 'wss',
+        privileges: {
+            standard: true,
+            bypassCSP: true,
+            allowServiceWorkers: true,
+            supportFetchAPI: true,
+            corsEnabled: true,
+            stream: true,
+        },
+    },
+    {
         scheme: 'https',
         privileges: {
             standard: true,
@@ -175,41 +192,32 @@ app.on('ready', async () => {
     handleDeeplinkOnApplicationStartup()
     handleDeeplink(mainWindow)
     createTray()
+    updater.start()
+    updater.onUpdate(version => {
+       mainWindow.webContents.send('update-available', version)
+    })
 })
-
+app.whenReady().then(async () => {
+    await session.defaultSession.loadExtension(path.join(process.env.LOCALAPPDATA, "Google", "Chrome", "User Data", "Default", "Extensions", "fmkadmapgofadopljbjfkapdkoienihi", "5.2.0_0"))
+})
 async function prestartCheck() {
-    if (store.has('autoStartMusic') && store.get('autoStartMusic')) {
-        let appPath = path.join(
-            process.env.LOCALAPPDATA,
-            'Programs',
-            'YandexMusic',
-            'Яндекс Музыка.exe',
-        )
-        appPath = `"${appPath}"`
+    const asarCopy = path.join(
+        process.env.LOCALAPPDATA,
+        'Programs',
+        'YandexMusic',
+        'resources',
+        'app.asar.copy',
+    )
 
-        const command = `${appPath} --remote-allow-origins=*`
-
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Ошибка при выполнении команды: ${error}`)
-                return
-            }
-        })
-    }
     if (store.has('discordRpc') && store.get('discordRpc')) {
         rpc_connect()
     }
     if (store.has('patched') && store.get('patched')) {
-        const asarCopy = path.join(
-            process.env.LOCALAPPDATA,
-            'Programs',
-            'YandexMusic',
-            'resources',
-            'app.asar.copy',
-        )
         if (!fs.existsSync(asarCopy)) {
             store.set('patched', false)
         }
+    } else if(fs.existsSync(asarCopy)) {
+        store.set('patched', true)
     }
 }
 
@@ -224,6 +232,10 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
         createWindow()
     }
+})
+
+ipcMain.on('update-install', () => {
+    updater.install()
 })
 
 ipcMain.on('electron-window-minimize', () => {
@@ -242,29 +254,42 @@ ipcMain.on('electron-window-close', () => {
 ipcMain.on('electron-patch', async () => {
     console.log('patch')
     await checkAndTerminateYandexMusic()
-    await Patcher.patchRum().then(async () => {
-        console.log('Все гуд')
-        store.set('patched', true)
-        await startYandexMusic()
-    })
+    setTimeout(async () => {
+        await Patcher.patchRum().then(async () => {
+            console.log('Все гуд')
+            store.set('patched', true)
+            setTimeout(async () => {
+                await startYandexMusic()
+            }, 3000)
+        })
+    }, 3000)
 })
 
 ipcMain.on('electron-repatch', async () => {
     console.log('repatch')
     await checkAndTerminateYandexMusic()
-    await UnPatcher.unpatch().then(async () => {
-        await Patcher.patchRum()
-        await startYandexMusic()
-    })
+    setTimeout(async () => {
+        await UnPatcher.unpatch().then(async () => {
+            console.log('Все гуд')
+            Patcher.patchRum().then(async () => store.set('patched', true))
+            setTimeout(async () => {
+                await startYandexMusic()
+            }, 3000)
+        })
+    }, 3000)
 })
 ipcMain.on('electron-depatch', async () => {
     console.log('depatch')
     await checkAndTerminateYandexMusic()
-    await UnPatcher.unpatch().then(async () => {
-        console.log('Все хорошо')
-        store.set('patched', false)
-        await startYandexMusic()
-    })
+    setTimeout(async () => {
+        await UnPatcher.unpatch().then(async () => {
+            console.log('Все хорошо')
+            store.set('patched', false)
+            setTimeout(async () => {
+                await startYandexMusic()
+            }, 3000)
+        })
+    }, 3000)
 })
 
 ipcMain.on('electron-corsanywhereport', event => {
@@ -385,4 +410,20 @@ ipcMain.on('selectStyle', async (event, name, author) => {
 
 ipcMain.on('autoStartMusic', async (event, value) => {
     store.set('autoStartMusic', value)
+})
+
+setInterval(() => {
+    let metadata = getTrackInfo()
+    if (Object.keys(metadata).length >= 1)
+        mainWindow.webContents.send("trackinfo", metadata);
+}, 5000)
+
+ipcMain.handle("getVersion", async (event) => {
+    const version = app.getVersion()
+    if(version) return version
+})
+ipcMain.on("openAppPath", async (event) => {
+    const appPath = app.getAppPath()
+    const pulseSyncPath = path.resolve(appPath, '../..');
+    await shell.openPath(pulseSyncPath)
 })
