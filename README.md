@@ -50,3 +50,7 @@
 ---
 
 Спасибо, что используете PulseSync.
+
+## Stargazers over time
+[![Stargazers over time](https://starchart.cc/MHSanaei/3x-ui.svg?variant=adaptive)](https://starchart.cc/MHSanaei/3x-ui)
+
