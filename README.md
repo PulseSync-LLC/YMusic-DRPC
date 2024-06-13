@@ -52,5 +52,4 @@
 Спасибо, что используете PulseSync.
 
 ## Stargazers over time
-[![Stargazers over time](https://starchart.cc/MHSanaei/3x-ui.svg?variant=adaptive)](https://starchart.cc/MHSanaei/3x-ui)
-
+[![Stargazers over time](https://starchart.cc/PulseSync-Official/YMusic-DRPC.svg?variant=adaptive)](https://starchart.cc/PulseSync-Official/YMusic-DRPC)
