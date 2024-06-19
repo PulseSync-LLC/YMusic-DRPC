@@ -36,8 +36,7 @@ rules.push({
         },
         {
             loader: 'markdown-loader',
-            options: {
-            },
+            options: {},
         },
     ],
 })
@@ -51,9 +50,13 @@ export const rendererConfig: Configuration = {
         fallback: {
             crypto: require.resolve('crypto-browserify'),
             stream: require.resolve('stream-browserify'),
-            os: require.resolve('os-browserify'),
+            buffer: require.resolve('buffer'),
+            assert: require.resolve('assert'),
+            util: require.resolve('util'),
+            http: require.resolve('stream-http'),
+            https: require.resolve('https-browserify'),
+            os: require.resolve('os-browserify/browser'),
             url: require.resolve('url'),
-            fs: require.resolve("browserify-fs"),
         },
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
     },

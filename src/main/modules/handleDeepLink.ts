@@ -9,7 +9,7 @@ const transformUrlToInternal = (url: string): string => {
 }
 
 export const checkIsDeeplink = (value: string): boolean => {
-    const deeplinkRegexp = /pulsesync:\/\/.*/;
+    const deeplinkRegexp = /pulsesync:\/\/.*/
     return deeplinkRegexp.test(value)
 }
 
@@ -25,19 +25,18 @@ export const navigateToDeeplink = (
     //console.info('Navigate to', url, pathname)
     const regex = /^pulsesync:\/\/([^\/]+)\/?(.*)$/
     const match = url.match(regex)
-    if(!match) return
+    if (!match) return
     const mainPath = match[1]
     const argsPath = match[2]
     switch (mainPath) {
         case 'callback':
             const reg = url.match(/\?token=([^&]+)/)
             const token = decodeURIComponent(reg[1])
-            store.set("token", token)
-            window.webContents.send("authSuccess")
+            store.set('token', token)
+            window.webContents.send('authSuccess')
             break
-        case "joinRoom":
+        case 'joinRoom':
             break
-
     }
     window.focus()
     state.deeplink = null

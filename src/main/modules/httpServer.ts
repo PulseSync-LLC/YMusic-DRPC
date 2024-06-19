@@ -1,6 +1,9 @@
 import * as path from 'path'
 import * as http from 'http'
 import * as fs from 'fs'
+import { getToken } from 'yandex-music-client/token'
+import { mainWindow } from '../../index'
+import { store } from './storage'
 
 let jsonDataGET: any = {}
 const themesPath: string = process.env.LOCALAPPDATA
@@ -14,26 +17,30 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
         res.writeHead(200, {
             'Access-Control-Allow-Origin': 'music-application://desktop',
             'Access-Control-Allow-Methods': 'POST',
-            'Access-Control-Allow-Headers': 'Content-Type'
+            'Access-Control-Allow-Headers': 'Content-Type',
         })
         res.end()
         return
     }
 
-    if (req.method === 'GET' && req.url === '/track_info') {
-        res.writeHead(200, {
-            'Content-type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
+    if (req.method === 'POST' && req.url === '/track_info') {
+        let data = ''
+        req.on('data', chunk => {
+            data += chunk
         })
-        try {
-            const data = fs.readFileSync('data.json', 'utf8')
-            res.end(data)
-        } catch (error) {
-            console.error('Error getting track information:', error)
-            res.end(
-                JSON.stringify({ error: 'Error getting track information' })
-            )
-        }
+        req.on('end', () => {
+            try {
+                mainWindow.webContents.send('track_id', data)
+                res.writeHead(200, { 'Content-Type': 'application/json' })
+                res.end(
+                    JSON.stringify({ message: 'Data received successfully' }),
+                )
+            } catch (error) {
+                console.error('Error parsing JSON:', error)
+                res.writeHead(400, { 'Content-Type': 'application/json' })
+                res.end(JSON.stringify({ error: 'Invalid JSON' }))
+            }
+        })
         return
     }
 
@@ -47,7 +54,29 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
                 jsonDataGET = JSON.parse(data)
                 res.writeHead(200, { 'Content-Type': 'application/json' })
                 res.end(
-                    JSON.stringify({ message: 'Data received successfully' })
+                    JSON.stringify({ message: 'Data received successfully' }),
+                )
+            } catch (error) {
+                console.error('Error parsing JSON:', error)
+                res.writeHead(400, { 'Content-Type': 'application/json' })
+                res.end(JSON.stringify({ error: 'Invalid JSON' }))
+            }
+        })
+        return
+    }
+    if (req.method === 'POST' && req.url === '/send_token') {
+        let data = ''
+        req.on('data', chunk => {
+            data += chunk
+        })
+        req.on('end', () => {
+            try {
+                const token = JSON.parse(data)
+                mainWindow.webContents.send('ya_token', token.value)
+                store.set('ya_token', token.value)
+                res.writeHead(200, { 'Content-Type': 'application/json' })
+                res.end(
+                    JSON.stringify({ message: 'Data received successfully' }),
                 )
             } catch (error) {
                 console.error('Error parsing JSON:', error)

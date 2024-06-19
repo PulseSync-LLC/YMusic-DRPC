@@ -9,12 +9,12 @@ import { useNavigate } from 'react-router-dom'
 import userContext from '../../api/context/user.context'
 
 export default function CallbackPage() {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     const { user, settings, loading, authorize } = useContext(userContext)
 
     useEffect(() => {
-        if(user.id !== "-1") {
-            navigate("/trackinfo")
+        if (user.id !== '-1') {
+            navigate('/trackinfo')
         }
     }, [user.id])
 
@@ -24,7 +24,7 @@ export default function CallbackPage() {
                 authorize()
             })
         }
-    }, []);
+    }, [])
     return (
         <>
             <Header />

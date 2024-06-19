@@ -5,6 +5,7 @@ import CheckboxNav from '../../components/checkbox'
 import ButtonDefault from '../../components/button_default'
 
 import styles from '../../../../static/styles/page/index.module.scss'
+import stylesBut from '../../components/button_default/button_default.module.scss'
 import theme from './trackinfo.module.scss'
 
 import {
@@ -21,9 +22,66 @@ import TrackInterface from '../../api/interfaces/track.interface'
 import trackInitials from '../../api/interfaces/track.initials'
 import Skeleton from 'react-loading-skeleton'
 import playerContext from '../../api/context/player.context'
+import getTrackUrl from '../../api/createTrackUrl'
+import hotToast from 'react-hot-toast'
+import toast from '../../api/toast'
 export default function TrackInfoPage() {
-    const { user, setUser, socket, loading, settings } = useContext(userContext)
+    const { user, setUser, socket, loading, settings, yaClient } =
+        useContext(userContext)
     const { currentTrack } = useContext(playerContext)
+    const downloadTrack = (event: any) => {
+        event.stopPropagation()
+        let toastId: string
+        console.log(yaClient)
+        getTrackUrl(yaClient, currentTrack.id, true)
+            .then(_result => {
+                toastId = hotToast.loading('Загрузка...', {
+                    style: {
+                        background: '#333',
+                        color: '#fff',
+                    },
+                })
+
+                window.desktopEvents?.on(
+                    'download-track-progress',
+                    (events, value) => {
+                        console.log(Math.floor(value))
+                        toast.loading(
+                            <>
+                                <span>Загрузка</span>
+                                <b style={{ marginLeft: '.5em' }}>
+                                    {Math.floor(value)}%
+                                </b>
+                            </>,
+                            {
+                                id: toastId,
+                            },
+                        )
+                    },
+                )
+
+                window.electron.downloadTrack({
+                    track: currentTrack,
+                    url: _result,
+                })
+
+                window.desktopEvents?.once('download-track-cancelled', () =>
+                    hotToast.dismiss(toastId),
+                )
+                window.desktopEvents?.once('download-track-failed', () =>
+                    toast.error('Ошибка загрузки трека', { id: toastId }),
+                )
+                window.desktopEvents?.once('download-track-finished', () =>
+                    toast.success('Загрузка завершена', { id: toastId }),
+                )
+            })
+            .catch(e => {
+                console.log(e)
+                toast.error('Не удалось получить ссылку для трека')
+            })
+
+        window.desktopEvents?.removeAllListeners('download-track-progress')
+    }
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
@@ -34,7 +92,8 @@ export default function TrackInfoPage() {
                             Включить статус дискорд
                         </CheckboxNav>
                         <div className={theme.container}>
-                            {settings.enableRpc && currentTrack !== trackInitials ? (
+                            {settings.discordRpc &&
+                            currentTrack !== trackInitials ? (
                                 <div className={theme.flex_container}>
                                     <img
                                         className={theme.img}
@@ -79,11 +138,19 @@ export default function TrackInfoPage() {
                             <MdSmartButton size={22} />
                             Включить кнопку (Слушать)
                         </CheckboxNav>
-                        <ButtonDefault disabled>
+                        <button
+                            className={stylesBut.button}
+                            onClick={downloadTrack}
+                            disabled={
+                                user.perms !== 'developer' ||
+                                currentTrack === trackInitials ||
+                                currentTrack.id === ''
+                            }
+                        >
                             <MdDownload size={22} />
-                            Скачать {'track name'} - {'track author'} в папку
-                            музыка
-                        </ButtonDefault>
+                            Скачать {currentTrack.playerBarTitle} -{' '}
+                            {currentTrack.artist} в папку музыка
+                        </button>
                         <ButtonDefault disabled>
                             <MdFolderOpen size={22} />
                             Директория со скаченной музыкой

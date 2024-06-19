@@ -48,10 +48,10 @@ const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
                 }))
                 break
             case 'startDiscordRpc':
-                window.discordRpc.enableRpc(event.target.checked)
+                window.discordRpc.discordRpc(event.target.checked)
                 setSettings((prevSettings: any) => ({
                     ...prevSettings,
-                    enableRpc: event.target.checked,
+                    discordRpc: event.target.checked,
                 }))
                 break
             case 'enableRpcButtonListen':
@@ -73,7 +73,10 @@ const Checkbox: React.FC<Props> = ({ children, disabled, checkType }) => {
                     ...prevSettings,
                     autoStartInTray: event.target.checked,
                 }))
-                window.electron.store.set('autoStartInTray', event.target.checked)
+                window.electron.store.set(
+                    'autoStartInTray',
+                    event.target.checked,
+                )
                 break
         }
     }

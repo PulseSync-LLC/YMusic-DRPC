@@ -45,12 +45,12 @@
             &:hover {
                 background: var(--downloadH);
 
-                >svg {
+                > svg {
                     fill: var(--downloadColorH);
                 }
             }
 
-            >svg {
+            > svg {
                 fill: var(--downloadColor);
             }
         }
@@ -74,7 +74,7 @@
         background: rgba(27, 31, 33, 0.85);
         backdrop-filter: blur(9.5px);
 
-        >div {
+        > div {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -82,10 +82,10 @@
             gap: 35px;
             width: -webkit-fill-available;
             height: fit-content;
-            background: #FFFB9C;
+            background: #fffb9c;
             border-radius: 10px;
 
-            >div {
+            > div {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
@@ -95,7 +95,7 @@
                 width: -webkit-fill-available;
                 height: fit-content;
 
-                >.container_warn {
+                > .container_warn {
                     display: flex;
                     flex-direction: row;
                     justify-content: center;
@@ -108,7 +108,7 @@
                         color: #535240;
                     }
 
-                    >div {
+                    > div {
                         font-family: 'Open Runde';
                         font-style: normal;
                         font-weight: 600;
@@ -126,7 +126,7 @@
 
                     width: 413px;
 
-                    background: #48483B;
+                    background: #48483b;
                     border: 0;
                     border-radius: 10px;
 
@@ -135,14 +135,14 @@
                     font-weight: 500;
                     font-size: 18px;
 
-                    color: #FFFB9C;
+                    color: #fffb9c;
 
                     * {
-                        color: #FFFB9C;
+                        color: #fffb9c;
                     }
 
                     &:hover {
-                        background: #2C2B26;
+                        background: #2c2b26;
                     }
                 }
             }

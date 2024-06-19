@@ -4,4 +4,5 @@ export default interface TrackInterface {
     timecodes: string[]
     requestImgTrack: (string | null)[]
     linkTitle: string
+    id?: string
 }

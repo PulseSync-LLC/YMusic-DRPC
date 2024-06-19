@@ -35,6 +35,15 @@ contextBridge.exposeInMainWorld('electron', {
         repatch: () => ipcRenderer.send('electron-repatch'),
         depatch: () => ipcRenderer.send('electron-depatch'),
     },
+    musicDevice() {
+        return ipcRenderer.sendSync('get-music-device')
+    },
+    corsAnywherePort() {
+        return ipcRenderer.sendSync('electron-corsanywhereport')
+    },
+    downloadTrack(url: any) {
+        ipcRenderer.send('download-track', url)
+    },
     autoStartMusic: (val: boolean) => ipcRenderer.send('autoStartMusic', val),
     clickMinimize: () => ipcRenderer.send('minimizeWin'),
     clickClose: () => ipcRenderer.send('closeWin'),
@@ -47,7 +56,7 @@ contextBridge.exposeInMainWorld('electron', {
         ipcRenderer.send('selectStyle', name, author),
     getThemesList: () => ipcRenderer.send('getThemesList'),
     checkFileExists: () => ipcRenderer.send('checkFileExists'),
-    getVersion: () => ipcRenderer.send("getVersion")
+    getVersion: () => ipcRenderer.send('getVersion'),
 })
 
 contextBridge.exposeInMainWorld('discordRpc', {
@@ -57,8 +66,8 @@ contextBridge.exposeInMainWorld('discordRpc', {
     async clearActivity() {
         ipcRenderer.send('discordrpc-clearstate')
     },
-    async enableRpc(val: boolean) {
-        ipcRenderer.send('discordrpc-enablerpc', val)
+    async discordRpc(val: boolean) {
+        ipcRenderer.send('discordrpc-discordRpc', val)
     },
     async enableListenButton(val: boolean) {
         ipcRenderer.send('discordrpc-enablerpcbuttonlisten', val)
@@ -66,15 +75,27 @@ contextBridge.exposeInMainWorld('discordRpc', {
 })
 contextBridge.exposeInMainWorld('desktopEvents', {
     send(name: any, ...args: any[]) {
-        ipcRenderer.send(name, ...args);
+        ipcRenderer.send(name, ...args)
     },
-    on(name: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) {
-        ipcRenderer.on(name, listener);
+    on(
+        name: string,
+        listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void,
+    ) {
+        ipcRenderer.on(name, listener)
     },
-    removeListener(name: string, listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void) {
-        ipcRenderer.removeListener(name, listener);
+    once(channel: string, func: any) {
+        ipcRenderer.once(channel, (event, args) => func(args))
+    },
+    removeListener(
+        name: string,
+        listener: (event: Electron.IpcRendererEvent, ...args: any[]) => void,
+    ) {
+        ipcRenderer.removeListener(name, listener)
+    },
+    removeAllListeners: (channel: string) => {
+        ipcRenderer.removeAllListeners(channel)
     },
     invoke(name: string, ...args: any[]) {
-        return ipcRenderer.invoke(name, ...args);
-    }
-});
+        return ipcRenderer.invoke(name, ...args)
+    },
+})

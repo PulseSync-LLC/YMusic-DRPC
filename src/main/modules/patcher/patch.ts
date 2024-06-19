@@ -1,6 +1,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { exec } from 'child_process'
+import asar from '@electron/asar'
 
 class Patcher {
     constructor() {}
@@ -38,6 +39,26 @@ class Patcher {
         }
         return null
     }
+    static findEvents(startDir: string): string {
+        const files = fs.readdirSync(startDir)
+        for (const file of files) {
+            const filePath = path.join(startDir, file)
+            const stat = fs.statSync(filePath)
+
+            if (stat.isDirectory()) {
+                if (file === 'node_modules' || file === 'constants') {
+                    continue
+                }
+                const eventsScriptPath = this.findEvents(filePath)
+                if (eventsScriptPath) {
+                    return eventsScriptPath
+                }
+            } else if (file === 'events.js') {
+                return filePath
+            }
+        }
+        return null
+    }
 
     static copyFile(filePath: string) {
         const copyCommand = `copy "${filePath}" "${filePath}.copy"`
@@ -63,21 +84,9 @@ class Patcher {
 
         this.copyFile(appAsarPath)
 
-        const command = `asar extract "${appAsarPath}" "${destinationDir}"`
-
         console.log(`Extracting app.asar to ${destinationDir}...`)
-
-        exec(command, (error: any, stdout: any, stderr: any) => {
-            if (error) {
-                console.error(`Error: ${error.message}`)
-                return
-            }
-            if (stderr) {
-                console.error(`stderr: ${stderr}`)
-                return
-            }
-            console.log(stdout)
-
+        asar.extractAll(appAsarPath, destinationDir)
+        setTimeout(async () => {
             const rumScriptPath = this.findRumScript(destinationDir)
 
             if (rumScriptPath) {
@@ -179,7 +188,16 @@ class Patcher {
                     }
                     script.src = 'http://127.0.0.1:19582/script.js';
                 }
-    
+                const token = localStorage.getItem("oauth"); 
+                fetch('http://127.0.0.1:19582/send_token', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: token,
+                    });
+
+
                 setInterval(updateStyle, 2000);
                 setInterval(updateScript, 2000);
                 `
@@ -209,54 +227,71 @@ class Patcher {
                 )
 
                 fs.writeFileSync(configPath, websecReplace)
-
-                const packCommand = `asar pack "${destinationDir}" "${appAsarPath}"`
-                console.log(`Packing app directory into app.asar...`)
-                exec(
-                    packCommand,
-                    (packError: any, packStdout: any, packStderr: any) => {
-                        if (packError) {
-                            console.error(
-                                `Error packing app directory: ${packError.message}`,
-                            )
-                            return
-                        }
-                        if (packStderr) {
-                            console.error(`stderr: ${packStderr}`)
-                            return
-                        }
-                        console.log(packStdout)
-                        console.log(`App directory packed into ${appAsarPath}`)
-
-                        console.log(`Deleting source directory...`)
-                        exec(
-                            `rmdir /s /q "${destinationDir}"`,
-                            (
-                                deleteError: any,
-                                deleteStdout: any,
-                                deleteStderr: any,
-                            ) => {
-                                if (deleteError) {
-                                    console.error(
-                                        `Error deleting source directory: ${deleteError.message}`,
-                                    )
-                                    return
-                                }
-                                if (deleteStderr) {
-                                    console.error(`stderr: ${deleteStderr}`)
-                                    return
-                                }
-                                console.log(deleteStdout)
-                                console.log(`Source directory deleted`)
-                            },
-                        )
-                    },
-                )
-            } else {
-                console.log(`Could not find config.js in ${configPath}`)
             }
-        })
+            try {
+                const eventsPath = this.findEvents(destinationDir)
+
+                if (eventsPath) {
+                    let eventsPathContent = fs.readFileSync(eventsPath, 'utf8')
+                    const patchStr = `const handleApplicationEvents = (window) => {
+    electron_1.session.defaultSession.webRequest.onCompleted({ urls: ['https://api.music.yandex.net/*'] }, (details) => {
+            const url = details.url;
+            const regex = /https:\\/\\/api\\.music\\.yandex\\.net\\/tracks\\/(\\d+)\\/download-info/;
+
+            const match = url.match(regex);
+            if (match && match[1]) {
+                const trackId = match[1];
+                console.log("Track ID found:", trackId);
+                fetch("http://127.0.0.1:19582/track_info", {
+                    method: "POST",
+                    body: trackId
+                })
+            }
+        });`
+                    let eventsReplace = eventsPathContent.replace(
+                        `const handleApplicationEvents = (window) => {`,
+                        patchStr,
+                    )
+
+                    fs.writeFileSync(eventsPath, eventsReplace)
+                    await asar
+                        .createPackage(destinationDir, appAsarPath)
+                        .then(e => {
+                            console.log(
+                                `App directory packed into ${appAsarPath}`,
+                            )
+
+                            console.log(`Deleting source directory...`)
+                        })
+                    console.log(`Packing app directory into app.asar...`)
+                    exec(
+                        `rmdir /s /q "${destinationDir}"`,
+                        (
+                            deleteError: any,
+                            deleteStdout: any,
+                            deleteStderr: any,
+                        ) => {
+                            if (deleteError) {
+                                console.error(
+                                    `Error deleting source directory: ${deleteError.message}`,
+                                )
+                                return
+                            }
+                            if (deleteStderr) {
+                                console.error(`stderr: ${deleteStderr}`)
+                                return
+                            }
+                            console.log(deleteStdout)
+                            console.log(`Source directory deleted`)
+                        },
+                    )
+                } else {
+                    console.log(`Could not find config.js in ${configPath}`)
+                }
+            } catch (e) {
+                console.error(`Error: ${e}`)
+            }
+        }, 2000)
     }
 }
-
 export default Patcher

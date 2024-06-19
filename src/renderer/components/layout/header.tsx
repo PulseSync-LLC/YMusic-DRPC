@@ -25,12 +25,14 @@ const Header: React.FC<p> = ({ goBack }) => {
     }
     useEffect(() => {
         if (typeof window !== 'undefined' && window.desktopEvents) {
-            window.desktopEvents?.invoke('getVersion').then((version: string | undefined) => {
-                console.log(version)
-                setVersion(version)
-            })
+            window.desktopEvents
+                ?.invoke('getVersion')
+                .then((version: string | undefined) => {
+                    console.log(version)
+                    setVersion(version)
+                })
         }
-    }, []);
+    }, [])
     return (
         <>
             <header className={styles.nav_bar}>
@@ -53,40 +55,45 @@ const Header: React.FC<p> = ({ goBack }) => {
                             </button>
                             {isMenuOpen && <PatchMenu />}
                         </div>
-                        <div className={styles.version}>FUMOS V{version} BETA</div>
+                        <div className={styles.version}>
+                            FUMOS V{version} BETA
+                        </div>
                     </div>
                     <div className={styles.event_container}>
                         <div className={styles.menu}>
-                            {user.perms !== "default" &&
-                                <div className={styles.badges_container}>
-                                    <img
-                                        src={`static/assets/badges/${user.perms}.svg`}
-                                        alt=""
-                                    />
+                            {user.badges.length > 0 &&
+                                user.badges.map(_badge => (
+                                    <div className={styles.badges_container}>
+                                        <img
+                                            src={`static/assets/badges/${_badge.type}.svg`}
+                                            alt=""
+                                        />
+                                    </div>
+                                ))}
+
+                            {user.id !== '-1' && (
+                                <div className={styles.user_container}>
+                                    <img src={user.avatar} alt="" />
+                                    {user.username}
                                 </div>
-                            }
-                            {user.id !== "-1" &&
-                            <div className={styles.user_container}>
-                                <img
-                                    src={user.avatar}
-                                    alt=""
-                                />
-                                {user.username}
-                            </div>
-                            }
+                            )}
                         </div>
                         <div className={styles.button_container}>
                             <button
                                 id="hide"
                                 className={styles.button_title}
-                                onClick={() => window.electron.window.minimize()}
+                                onClick={() =>
+                                    window.electron.window.minimize()
+                                }
                             >
                                 <Minus />
                             </button>
                             <button
                                 id="minimize"
                                 className={styles.button_title}
-                                onClick={() => window.electron.window.maximize()}
+                                onClick={() =>
+                                    window.electron.window.maximize()
+                                }
                             >
                                 <Minimize />
                             </button>

@@ -1,6 +1,5 @@
-import { YandexMusicClient, TrackDownloadInfo } from 'yandex-music-client'
+import { TrackDownloadInfo, YandexMusicClient } from 'yandex-music-client'
 import { createHash } from 'crypto'
-import http from './http'
 
 export interface DownloadInfo {
     s: string
@@ -29,7 +28,7 @@ async function getDownloadInfo(
     trackInfo: TrackDownloadInfo[],
     headers?: any,
     highRate?: boolean,
-): Promise<DownloadInfo> {
+): Promise<any> {
     const isAuthorized = true
     const info = isAuthorized
         ? trackInfo
@@ -46,17 +45,16 @@ async function getDownloadInfo(
               })
         : trackInfo[0]
 
-    const downloadInfo = await http.request<DownloadInfo>({
-        url: `http://127.0.0.1:${window.electron.corsAnywherePort()}/${
-            info!.downloadInfoUrl
-        }&format=json`,
+    return await fetch(`${info!.downloadInfoUrl}&format=json`, {
         headers,
+    }).then(async res => {
+        const j = await res.json()
+        return j
     })
-
-    return downloadInfo.data
 }
 
-function createTrackURL(info: DownloadInfo) {
+function createTrackURL(info: any) {
+    console.log(info)
     // тут мы можем увидеть традиционный хеш
     const trackUrl = `XGRlBW9FXlekgbPrRHuSiA${info.path.substr(1)}${info.s}`
     const hashedUrl = createHash('md5').update(trackUrl).digest('hex')

@@ -7,6 +7,12 @@ export default gql`
             username
             perms
             id
+
+            badges {
+                uuid
+                type
+                level
+            }
         }
     }
 `

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
-import UserMeQuery from '../api/queries/user/getMe.query';
+import UserMeQuery from '../api/queries/user/getMe.query'
 
 import TrackInfoPage from './trackinfo'
 import ThemePage from './theme'
@@ -27,15 +27,19 @@ import AuthPage from './auth'
 import CallbackPage from './auth/callback'
 import * as Sentry from '@sentry/electron/renderer'
 import getUserToken from '../api/getUserToken'
+import { YandexMusicClient } from 'yandex-music-client'
+import config from '../api/config'
 
 function app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
     const [socketError, setSocketError] = useState(-1)
     const [socketConnected, setSocketConnected] = useState(false)
     const [user, setUser] = useState<UserInterface>(userInitials)
-    const [settings, setSettings] = useState<SettingsInterface>(settingsInitials)
+    const [settings, setSettings] =
+        useState<SettingsInterface>(settingsInitials)
+    const [yaClient, setYaClient] = useState<YandexMusicClient | null>(null)
     const [loading, setLoading] = useState(false)
-    const socket = io('https://socket.pulsesync.dev', {
+    const socket = io(config.SOCKET_URL, {
         autoConnect: false,
         auth: {
             token: getUserToken(),
@@ -47,7 +51,7 @@ function app() {
             element: <AuthPage />,
         },
         {
-            path: "/auth/callback",
+            path: '/auth/callback',
             element: <CallbackPage />,
         },
         {
@@ -69,17 +73,12 @@ function app() {
     ])
     const authorize = async () => {
         setLoading(true)
-        const token = window.electron.store.get('token')
-        console.log(token)
-
         try {
-            let res = await apolloClient
-                .query({
-                    query: UserMeQuery
-                })
+            let res = await apolloClient.query({
+                query: UserMeQuery,
+            })
 
             const { data } = res
-            console.log(data)
             if (data.getMe && data.getMe.id) {
                 setUser(data.getMe)
                 setLoading(false)
@@ -88,7 +87,8 @@ function app() {
             } else {
                 setLoading(false)
                 window.electron.store.delete('token')
-                router.navigate("/")
+
+                await router.navigate('/')
                 setUser(userInitials)
                 return false
             }
@@ -99,23 +99,37 @@ function app() {
             if (window.electron.store.has('token')) {
                 window.electron.store.delete('token')
             }
-            await router.navigate("/")
+            await router.navigate('/')
             setUser(userInitials)
             return false
         }
     }
     useEffect(() => {
         if (typeof window !== 'undefined') {
-                const token = window.electron.store.get("token")
-                if(user.id === '-1' && token)
-                {
-                    authorize();
-                }
-                else {
-                    router.navigate("/")
-                }
+            const token = window.electron.store.get('token')
+            if (user.id === '-1' && token) {
+                authorize()
+            } else {
+                router.navigate('/')
+            }
         }
-    }, []);
+    }, [])
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const ya_token = window.electron.store.get('ya_token')
+            const client = new YandexMusicClient({
+                BASE: `https://api.music.yandex.net`,
+                HEADERS: {
+                    'Accept-Language': 'ru',
+                    Authorization: ya_token ? `OAuth ${ya_token}` : undefined,
+                    'X-Yandex-Music-Device': ya_token
+                        ? window.electron.musicDevice()
+                        : undefined,
+                },
+            })
+            setYaClient(client)
+        }
+    }, [settings.yaToken])
     socket.on('connect', () => {
         console.log('Socket connected')
         toast.success('Соединение установлено')
@@ -145,10 +159,6 @@ function app() {
         setSocketConnected(false)
     })
 
-    // socket.on('userUpdate', args => {
-    //     setUser(args)
-    // })
-
     useEffect(() => {
         console.log(socketError)
         if (socketError === 1 || socketError === 0) {
@@ -158,49 +168,56 @@ function app() {
         }
     }, [socketError])
     useEffect(() => {
-        if (user.id !== "-1") {
-            console.log("1")
+        if (user.id !== '-1') {
+            console.log('1')
             if (!socket.connected) socket.connect()
+        } else {
+            router.navigate('/')
         }
     }, [user.id])
 
     useEffect(() => {
         if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
-            if (window.electron.store.get('discordRpc')) {
+            window.desktopEvents?.on('ya_token', (event, data) => {
                 setSettings(prevSettings => ({
                     ...prevSettings,
-                    enableRpc: true,
+                    yaToken: data,
                 }))
-                setLoading(false)
-            }
-            if (window.electron.store.get('enableRpcButtonListen')) {
-                setSettings(prevSettings => ({
-                    ...prevSettings,
-                    enableRpcButtonListen: true,
-                }))
-                setLoading(false)
-            }
-            if (window.electron.store.get('patched')) {
-                setSettings(prevSettings => ({
-                    ...prevSettings,
-                    patched: true,
-                }))
-                setLoading(false)
-            }
-            if (window.electron.store.get('readPolicy')) {
-                setSettings(prevSettings => ({
-                    ...prevSettings,
-                    readPolicy: true,
-                }))
-                setLoading(false)
-            }
+            })
+            const settingsKeys = [
+                'discordRpc',
+                'enableRpcButtonListen',
+                'patched',
+                'readPolicy',
+            ]
+
+            settingsKeys.forEach(key => {
+                if (window.electron.store.get(key)) {
+                    setSettings(prevSettings => ({
+                        ...prevSettings,
+                        [key]: true,
+                    }))
+                }
+            })
+            setLoading(false)
         }
     }, [])
     return (
         <div className="app-wrapper">
             <Toaster />
             <UserContext.Provider
-                value={{ user, setUser, authorize, loading, socket: socketIo, socketConnected, settings, setSettings }}
+                value={{
+                    user,
+                    setUser,
+                    authorize,
+                    loading,
+                    socket: socketIo,
+                    socketConnected,
+                    settings,
+                    setSettings,
+                    setYaClient,
+                    yaClient,
+                }}
             >
                 <Player>
                     <SkeletonTheme baseColor="#1c1c22" highlightColor="#333">
@@ -214,31 +231,47 @@ function app() {
     )
 }
 const Player: React.FC<any> = ({ children }) => {
-    const { user, socket, settings } = useContext(UserContext)
+    const { user, settings } = useContext(UserContext)
     const [track, setTrack] = useState<TrackInterface>(trackInitials)
 
     useEffect(() => {
-        if (user.id != "-1") {
+        if (user.id != '-1') {
             ;(async () => {
-                    if (typeof window !== 'undefined') {
-                        if (settings.enableRpc) {
-                            window.desktopEvents?.on('trackinfo', (event, data) => {
-                                setTrack(data)
-                            })
-                        } else {
-                            window.desktopEvents.removeListener('track-info', setTrack);
-                            setTrack(trackInitials)
-                        }
+                if (typeof window !== 'undefined') {
+                    if (settings.discordRpc) {
+                        window.desktopEvents?.on('trackinfo', (event, data) => {
+                            setTrack(prevTrack => ({
+                                ...prevTrack,
+                                playerBarTitle: data.playerBarTitle,
+                                artist: data.artist,
+                                timecodes: data.timecodes,
+                                requestImgTrack: data.requestImgTrack,
+                                linkTitle: data.linkTitle,
+                            }))
+                        })
+                        window.desktopEvents?.on('track_id', (event, data) => {
+                            setTrack(prevTrack => ({
+                                ...prevTrack,
+                                id: data,
+                            }))
+                        })
+                    } else {
+                        window.desktopEvents.removeListener(
+                            'track-info',
+                            setTrack,
+                        )
+                        setTrack(trackInitials)
                     }
+                }
             })()
         }
-    }, [user.id, settings.enableRpc])
+    }, [user.id, settings.discordRpc])
     useEffect(() => {
-        console.log("useEffect triggered");
-        console.log("Settings: ", settings);
-        console.log("User: ", user);
-        console.log("Track: ", track);
-        if (settings.enableRpc) {
+        console.log('useEffect triggered')
+        console.log('Settings: ', settings)
+        console.log('User: ', user)
+        console.log('Track: ', track)
+        if (settings.discordRpc) {
             const timeRange =
                 track.timecodes.length === 2
                     ? `${track.timecodes[0]} - ${track.timecodes[1]}`
@@ -279,7 +312,7 @@ const Player: React.FC<any> = ({ children }) => {
                             label: '🤠 Open in GitHub',
                             url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
                         },
-                    ]
+                    ],
                 })
             }
         }

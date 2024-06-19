@@ -33,7 +33,7 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                 setUpdate(true)
             })
         }
-    }, []);
+    }, [])
     return (
         <>
             <Helmet>
@@ -50,8 +50,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                            ? 'active'
-                                            : ''
+                                          ? 'active'
+                                          : ''
                                 }
                             >
                                 <ButtonNav>
@@ -76,8 +76,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                            ? 'active'
-                                            : ''
+                                          ? 'active'
+                                          : ''
                                 }
                             >
                                 <ButtonNav>
@@ -86,32 +86,50 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                             </NavLink>
                         </div>
                         {update && (
-                            <button onClick={() => {
-                                setUpdate(false)
-                                window.desktopEvents?.send("update-install")
-                            }} className={styles.update_download}>
+                            <button
+                                onClick={() => {
+                                    setUpdate(false)
+                                    window.desktopEvents?.send('update-install')
+                                }}
+                                className={styles.update_download}
+                            >
                                 <MdDownload size={26} />
                             </button>
                         )}
-
                     </div>
 
                     {!settings.patched && (
                         <div className={styles.alert_patch}>
-                        <div>
                             <div>
-                                <div className={styles.container_warn}><MdWarning size={38} /><div>У Яндекс Музыки отсутствует патч!</div></div>
-                                <button onClick={() => {
-                                    window.electron.patcher.patch()
-                                    setSettings((prevSettings: SettingsInterface) => ({
-                                        ...prevSettings,
-                                        patched: true,
-                                    }))
-                                }}><MdEngineering size={22} /> Запатчить</button>
+                                <div>
+                                    <div className={styles.container_warn}>
+                                        <MdWarning size={38} />
+                                        <div>
+                                            У Яндекс Музыки отсутствует патч!
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            window.electron.patcher.patch()
+                                            setSettings(
+                                                (
+                                                    prevSettings: SettingsInterface,
+                                                ) => ({
+                                                    ...prevSettings,
+                                                    patched: true,
+                                                }),
+                                            )
+                                        }}
+                                    >
+                                        <MdEngineering size={22} /> Запатчить
+                                    </button>
+                                </div>
+                                <img
+                                    src="static\assets\images\O^O.png"
+                                    alt=""
+                                />
                             </div>
-                            <img src="static\assets\images\O^O.png" alt="" />
                         </div>
-                    </div>
                     )}
                     {children}
                 </div>

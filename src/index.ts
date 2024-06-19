@@ -7,11 +7,13 @@ import {
     shell,
     session,
     protocol,
+    dialog,
 } from 'electron'
 import process from 'process'
 import { getNativeImg } from './main/utils'
 import './main/modules/index'
 import path from 'path'
+import systeminformation from 'systeminformation'
 import fs from 'fs'
 import { store } from './main/modules/storage'
 import Patcher from './main/modules/patcher/patch'
@@ -19,12 +21,26 @@ import UnPatcher from './main/modules/patcher/unpatch'
 import createTray from './main/modules/tray'
 import rpc_connect from './main/modules/discordRpc'
 import corsAnywhereServer from 'cors-anywhere'
-import { handleDeeplink, handleDeeplinkOnApplicationStartup } from './main/modules/handleDeepLink'
+import getPort from 'get-port'
+
+import {
+    handleDeeplink,
+    handleDeeplinkOnApplicationStartup,
+} from './main/modules/handleDeepLink'
 import { checkForSingleInstance } from './main/modules/singleInstance'
-import * as Sentry from "@sentry/electron/main";
+import * as Sentry from '@sentry/electron/main'
 import { getTrackInfo } from './main/modules/httpServer'
 import { getUpdater } from './main/modules/updater/updater'
-import checkAndTerminateYandexMusic, { startYandexMusic } from '../utils/processUtils'
+import checkAndTerminateYandexMusic, {
+    startYandexMusic,
+} from '../utils/processUtils'
+import https from 'https'
+import { Track } from 'yandex-music-client'
+import { getPercent } from './renderer/utils/percentage'
+import os from 'os'
+import { v4 } from 'uuid'
+import TrackInterface from './renderer/api/interfaces/track.interface'
+import {isDev} from "./renderer/api/config";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -66,9 +82,11 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
 })
 const updater = getUpdater()
 
-// Sentry.init({
-//     dsn: "https://6aaeb7f8130ebacaad9f8535d0c77aa8@o4507369806954496.ingest.de.sentry.io/4507369809182800",
-// });
+Sentry.init({
+    dsn: 'https://6aaeb7f8130ebacaad9f8535d0c77aa8@o4507369806954496.ingest.de.sentry.io/4507369809182800',
+    enableRendererProfiling: true,
+    enableTracing: true,
+})
 const createWindow = (): void => {
     preloaderWindow = new BrowserWindow({
         width: 250,
@@ -118,7 +136,7 @@ const createWindow = (): void => {
     mainWindow.once('ready-to-show', () => {
         preloaderWindow.close()
         preloaderWindow.destroy()
-        if(!store.get('autoStartInTray')) {
+        if (!store.get('autoStartInTray')) {
             mainWindow.show()
             mainWindow.moveTop()
         }
@@ -130,11 +148,9 @@ const createWindow = (): void => {
     //mainWindow.webContents.openDevTools()
 }
 const corsAnywhere = async () => {
-    const getPortModule = await import('get-port')
-    let getPort = getPortModule.default
     corsAnywherePort = await getPort()
 
-    corsAnywhereServer.createServer().listen(corsAnywherePort, '127.0.0.1')
+    corsAnywhereServer.createServer().listen(corsAnywherePort, 'localhost')
 }
 protocol.registerSchemesAsPrivileged([
     {
@@ -194,13 +210,30 @@ app.on('ready', async () => {
     createTray()
     updater.start()
     updater.onUpdate(version => {
-       mainWindow.webContents.send('update-available', version)
+        mainWindow.webContents.send('update-available', version)
     })
 })
 app.whenReady().then(async () => {
-    await session.defaultSession.loadExtension(path.join(process.env.LOCALAPPDATA, "Google", "Chrome", "User Data", "Default", "Extensions", "fmkadmapgofadopljbjfkapdkoienihi", "5.2.0_0"))
+    if(isDev) {
+        await session.defaultSession.loadExtension(
+            path.join(
+                process.env.LOCALAPPDATA,
+                'Google',
+                'Chrome',
+                'User Data',
+                'Profile 1',
+                'Extensions',
+                'fmkadmapgofadopljbjfkapdkoienihi',
+                '5.2.0_0',
+            ),
+        )
+    }
 })
 async function prestartCheck() {
+    const musicDir = app.getPath('music')
+    if (!fs.existsSync(path.join(musicDir, 'PulseSyncMusic'))) {
+        fs.mkdirSync(path.join(musicDir, 'PulseSyncMusic'))
+    }
     const asarCopy = path.join(
         process.env.LOCALAPPDATA,
         'Programs',
@@ -216,7 +249,7 @@ async function prestartCheck() {
         if (!fs.existsSync(asarCopy)) {
             store.set('patched', false)
         }
-    } else if(fs.existsSync(asarCopy)) {
+    } else if (fs.existsSync(asarCopy)) {
         store.set('patched', true)
     }
 }
@@ -253,159 +286,35 @@ ipcMain.on('electron-window-close', () => {
 
 ipcMain.on('electron-patch', async () => {
     console.log('patch')
-    await checkAndTerminateYandexMusic()
     setTimeout(async () => {
         await Patcher.patchRum().then(async () => {
             console.log('Все гуд')
             store.set('patched', true)
-            setTimeout(async () => {
-                await startYandexMusic()
-            }, 3000)
         })
     }, 3000)
 })
 
 ipcMain.on('electron-repatch', async () => {
     console.log('repatch')
-    await checkAndTerminateYandexMusic()
     setTimeout(async () => {
         await UnPatcher.unpatch().then(async () => {
             console.log('Все гуд')
             Patcher.patchRum().then(async () => store.set('patched', true))
-            setTimeout(async () => {
-                await startYandexMusic()
-            }, 3000)
         })
     }, 3000)
 })
 ipcMain.on('electron-depatch', async () => {
     console.log('depatch')
-    await checkAndTerminateYandexMusic()
     setTimeout(async () => {
         await UnPatcher.unpatch().then(async () => {
             console.log('Все хорошо')
             store.set('patched', false)
-            setTimeout(async () => {
-                await startYandexMusic()
-            }, 3000)
         })
     }, 3000)
 })
 
 ipcMain.on('electron-corsanywhereport', event => {
     event.returnValue = corsAnywherePort
-})
-ipcMain.on('pathAppOpen', async () => {
-    await shell.openPath(path.join(__dirname))
-})
-
-ipcMain.on('checkFileExists', async () => {
-    const fileExists = fs.existsSync(
-        process.env.LOCALAPPDATA +
-            '\\Programs\\YandexMusic\\resources\\patched.txt',
-    )
-    console.log(fileExists)
-    return fileExists
-})
-
-ipcMain.on('pathStyleOpen', async () => {
-    const folderPath = process.env.LOCALAPPDATA + '\\YDRPC Modification\\themes'
-
-    const fileExists = fs.existsSync(folderPath)
-
-    if (fileExists) {
-        await shell.openPath(folderPath)
-        console.log('Folder opened:', folderPath)
-        return true
-    } else {
-        console.log('Folder does not exist:', folderPath)
-        return false
-    }
-})
-
-ipcMain.on('checkSelectedStyle', () => {
-    let confData = fs.readFileSync(confFilePath, 'utf8')
-    let themeDir = JSON.parse(confData).select
-
-    let fileCheck = path.join(themesDir, themeDir, 'metadata.json')
-    let jsonData = fs.readFileSync(fileCheck, 'utf8')
-    let theme = JSON.parse(jsonData)
-    theme.path = path.join(themesDir, themeDir, '\\')
-    console.log(theme)
-    return theme
-})
-
-ipcMain.on('getThemesList', () => {
-    let confData = fs.readFileSync(confFilePath, 'utf8')
-    let conf = JSON.parse(confData)
-    let folders: any[] = []
-
-    const themeFiles = fs.readdirSync(themesDir)
-    themeFiles.forEach(themeFile => {
-        const metadataPath = path.join(themesDir, themeFile)
-        if (
-            fs.statSync(metadataPath).isFile() &&
-            themeFile.endsWith('metadata.json')
-        ) {
-            const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'))
-            metadata.path = metadataPath
-            folders.push(metadata)
-        }
-    })
-
-    const themeDirs = fs.readdirSync(themesDir)
-    themeDirs.forEach(themeDir => {
-        const metadataPath = path.join(themesDir, themeDir, 'metadata.json')
-        if (fs.existsSync(metadataPath)) {
-            const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'))
-            metadata.path = path.join(themesDir, themeDir, '/')
-            folders.push(metadata)
-        }
-    })
-
-    return folders
-})
-
-ipcMain.on('selectStyle', async (event, name, author) => {
-    try {
-        const themesDir = path.join(
-            process.env.LOCALAPPDATA,
-            'YDRPC Modification',
-            'themes',
-        )
-        const themeDirs = fs.readdirSync(themesDir)
-
-        let selectedStyle = ''
-
-        for (const themeDir of themeDirs) {
-            const metadataPath = path.join(themesDir, themeDir, 'metadata.json')
-            if (fs.existsSync(metadataPath)) {
-                const metadata = JSON.parse(
-                    fs.readFileSync(metadataPath, 'utf8'),
-                )
-                if (metadata.name === name && metadata.author === author) {
-                    selectedStyle = themeDir
-                    break
-                }
-            }
-        }
-
-        if (!selectedStyle) {
-            throw new Error(
-                `Не удалось найти тему с названием "${name}" и автором "${author}".`,
-            )
-        }
-
-        let confData = fs.readFileSync(confFilePath, 'utf8')
-        let conf = JSON.parse(confData)
-        conf.select = selectedStyle
-        fs.writeFileSync(confFilePath, JSON.stringify(conf, null, 4))
-
-        return true
-    } catch (error) {
-        console.error('Ошибка при выборе стиля:', error)
-        return false
-    }
 })
 
 ipcMain.on('autoStartMusic', async (event, value) => {
@@ -415,15 +324,87 @@ ipcMain.on('autoStartMusic', async (event, value) => {
 setInterval(() => {
     let metadata = getTrackInfo()
     if (Object.keys(metadata).length >= 1)
-        mainWindow.webContents.send("trackinfo", metadata);
+        mainWindow.webContents.send('trackinfo', metadata)
 }, 5000)
 
-ipcMain.handle("getVersion", async (event) => {
+ipcMain.handle('getVersion', async event => {
     const version = app.getVersion()
-    if(version) return version
+    if (version) return version
 })
-ipcMain.on("openAppPath", async (event) => {
-    const appPath = app.getAppPath()
-    const pulseSyncPath = path.resolve(appPath, '../..');
-    await shell.openPath(pulseSyncPath)
+ipcMain.on('openPath', async (event, data) => {
+    switch (data) {
+        case 'appPath':
+            const appPath = app.getAppPath()
+            const pulseSyncPath = path.resolve(appPath, '../..')
+            await shell.openPath(pulseSyncPath)
+            break
+        case 'musicPath':
+            const musicDir = app.getPath('music')
+            const downloadDir = path.join(musicDir, 'PulseSyncMusic')
+            await shell.openPath(downloadDir)
+            break
+    }
+})
+
+ipcMain.on(
+    'download-track',
+    (event, val: { url: string; track: TrackInterface }) => {
+        const musicDir = app.getPath('music')
+        const downloadDir = path.join(musicDir, 'PulseSyncMusic')
+        dialog
+            .showSaveDialog(mainWindow, {
+                title: 'Сохранить как',
+                defaultPath: path.join(
+                    downloadDir,
+                    `${val.track.playerBarTitle} - ${val.track.artist}.mp3`,
+                ),
+                filters: [{ name: 'Трек', extensions: ['mp3'] }],
+            })
+            .then(result => {
+                if (!result.canceled)
+                    https.get(val.url, response => {
+                        const totalFileSize = parseInt(
+                            response.headers['content-length'],
+                            10,
+                        )
+                        let downloadedBytes = 0
+
+                        response.on('data', chunk => {
+                            downloadedBytes += chunk.length
+                            const percent = getPercent(
+                                downloadedBytes,
+                                totalFileSize,
+                            )
+                            mainWindow.setProgressBar(percent / 100)
+                            mainWindow.webContents.send(
+                                'download-track-progress',
+                                percent,
+                            )
+                            console.log(percent)
+                        })
+
+                        response
+                            .pipe(fs.createWriteStream(result.filePath))
+                            .on('finish', () => {
+                                mainWindow.webContents.send(
+                                    'download-track-finished',
+                                )
+
+                                shell.showItemInFolder(result.filePath)
+                                mainWindow.setProgressBar(-1)
+                            })
+                    })
+                else mainWindow.webContents.send('download-track-cancelled')
+            })
+            .catch(() => mainWindow.webContents.send('download-track-failed'))
+    },
+)
+ipcMain.on('get-music-device', event => {
+    systeminformation.system().then(data => {
+        event.returnValue = `os=${os.type()}; os_version=${os.version()}; manufacturer=${
+            data.manufacturer
+        }; model=${data.model}; clid=WindowsPhone; device_id=${
+            data.uuid
+        }; uuid=${v4({ random: Buffer.from(data.uuid) })}`
+    })
 })

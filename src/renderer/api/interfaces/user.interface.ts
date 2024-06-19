@@ -5,4 +5,5 @@ export default interface UserInterface {
     username: string
     avatar: string
     perms: string
+    badges: any[]
 }

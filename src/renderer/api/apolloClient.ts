@@ -5,8 +5,8 @@ import {
     HttpLink,
     concat,
 } from '@apollo/client'
-import config from "../../config.json"
-const graphqlUrl = config.SERVER_URL + '/graphql'
+import config from './config'
+const graphqlUrl = config.SERVER_URL + 'graphql'
 
 const httpLink = new HttpLink({ uri: graphqlUrl })
 
@@ -14,7 +14,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     operation.setContext({
         headers: {
             Authorization:
-                `Bearer: ${window.electron.store.get("token")}` || null,
+                `Bearer: ${window.electron.store.get('token')}` || null,
         },
     })
 

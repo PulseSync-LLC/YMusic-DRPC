@@ -6,6 +6,7 @@ import TrackInterface from '../interfaces/track.interface'
 import trackInitials from '../interfaces/track.initials'
 import SettingsInterface from '../interfaces/settings.interface'
 import settingsInitials from '../interfaces/settings.initials'
+import { YandexMusicClient } from 'yandex-music-client'
 
 interface p {
     user: UserInterface
@@ -16,6 +17,8 @@ interface p {
     socketConnected: boolean
     settings: SettingsInterface
     setSettings: (settingsData: any) => void
+    yaClient: YandexMusicClient
+    setYaClient: (client: YandexMusicClient) => void
 }
 
 const UserContext = createContext<p>({
@@ -26,8 +29,9 @@ const UserContext = createContext<p>({
     socket: null,
     socketConnected: false,
     settings: settingsInitials,
-    setSettings: () => void 0
-
+    setSettings: () => void 0,
+    yaClient: null,
+    setYaClient: () => void 0,
 })
 
 export default UserContext

@@ -11,7 +11,7 @@ export const mainConfig: Configuration = {
     devtool: 'source-map',
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'static'),  // Укажите путь к директории 'static'
+            '@': path.resolve(__dirname, 'static'),
         },
         extensions: [
             '.js',
@@ -22,7 +22,7 @@ export const mainConfig: Configuration = {
             '.scss',
             '.json',
             '.md',
-            ".svg"
+            '.svg',
         ],
     },
     externals: {

@@ -8,7 +8,8 @@ import styles from '../../../../static/styles/page/index.module.scss'
 import {
     MdCloseFullscreen,
     MdDirectionsRun,
-    MdFolderOpen, MdOutlineLogout
+    MdFolderOpen,
+    MdOutlineLogout,
 } from 'react-icons/md'
 import config from '../../api/config'
 import getUserToken from '../../api/getUserToken'
@@ -21,16 +22,16 @@ import userInitials from '../../api/interfaces/user.initials'
 export default function OtherPage() {
     const { user, setUser } = useContext(userContext)
     const logout = () => {
-        fetch(config.SERVER_URL + "auth/logout", {
+        fetch(config.SERVER_URL + 'auth/logout', {
             method: 'PUT',
             headers: {
                 authorization: 'Bearer: ' + getUserToken(),
-            }
+            },
         }).then(async r => {
             const res = await r.json()
-            if(res.ok) {
-                toast.success("Успешный выход")
-                window.electron.store.delete("token")
+            if (res.ok) {
+                toast.success('Успешный выход')
+                window.electron.store.delete('token')
                 setUser(userInitials)
             }
         })
@@ -43,9 +44,11 @@ export default function OtherPage() {
                     imageName={'settings'}
                 >
                     <div className={styles.container}>
-                        <ButtonDefault onClick={() => {
-                            window.desktopEvents.send("openAppPath")
-                        }}>
+                        <ButtonDefault
+                            onClick={() => {
+                                window.desktopEvents.send('openAppPath')
+                            }}
+                        >
                             <MdFolderOpen size={22} />
                             Директория приложения
                         </ButtonDefault>
@@ -59,7 +62,7 @@ export default function OtherPage() {
                         </CheckboxNav>
                         <ButtonDefault onClick={logout}>
                             <MdOutlineLogout size={22} />
-                            Выйти в окно
+                            Выйти
                         </ButtonDefault>
                     </div>
                 </Container>

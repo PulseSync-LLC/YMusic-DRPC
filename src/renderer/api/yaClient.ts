@@ -1,8 +1,12 @@
 import { YandexMusicClient } from 'yandex-music-client'
 
-const token = window.electron.store.get('token')
+let token: string | null = null
+if (typeof window !== 'undefined') {
+    token = sessionStorage.getItem('ya_token')
+}
+
 const client: YandexMusicClient = new YandexMusicClient({
-    BASE: `http://127.0.0.1:${window.electron.corsAnywherePort()}/https://api.music.yandex.net`,
+    BASE: `http://localhost:${window.electron.corsAnywherePort()}/https://api.music.yandex.net`,
     HEADERS: {
         'Accept-Language': 'ru',
         Authorization: token ? `OAuth ${token}` : undefined,
