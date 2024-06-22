@@ -65,6 +65,7 @@
 5. **Установите Yarn и Electron:**
    - Установите Yarn, Electron и @electron-forge/cli с помощью консоли:
     ```bash
+    cd %localappdata%\Programs\YMusic-DRPC
     npm i -g yarn
     npm i -g electron
     npm i -g @electron-forge/cli
