@@ -45,7 +45,7 @@
 
 ## Лицензия
 
-Проект распространяется под лицензией [MIT](https://github.com/PulseSync-Official/YMusic-DRPC/blob/patcher/LICENSE).
+Проект распространяется под [простой (неисключительной) лицензией](https://github.com/PulseSync-Official/YMusic-DRPC/blob/patcher-ts/LICENSE).
 
 ---
 
