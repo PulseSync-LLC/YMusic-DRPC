@@ -18,15 +18,18 @@
             justify-content: center;
             align-items: center;
             padding: 25px;
-            gap: 25px;
+            gap: 20px;
             width: -webkit-fill-available;
 
-            font-weight: 600;
+            font-family: 'Nunito Sans';
+            font-style: normal;
+            font-weight: 700;
             font-size: 20px;
-            line-height: 24px;
+            line-height: 140%;
+
             text-transform: uppercase;
 
-            color: #d2e5f1;
+            color: #ffffff;
         }
     }
 }

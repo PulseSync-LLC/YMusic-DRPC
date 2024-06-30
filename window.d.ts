@@ -43,7 +43,6 @@ declare global {
                 func: (event: any, ...arg: any[]) => void,
             ) => void
             removeListener: (channel: string) => void
-            autoStartMusic: (val: boolean) => void
             getVersion: (version: string) => string
         }
         discordRpc: {

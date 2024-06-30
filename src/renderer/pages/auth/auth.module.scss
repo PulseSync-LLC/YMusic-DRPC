@@ -8,64 +8,53 @@
     align-items: center;
     padding: 0 60px;
 
-    > div {
-        max-width: 1157px;
-        width: -webkit-fill-available;
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 25px;
+        gap: 15px;
 
-        .container {
+        .policy {
+            height: 430px;
+            overflow: scroll;
+            background: var(--MainBG);
+            border-radius: var(--BorderRadius);
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+
+        .discordAuth {
+            transition: ease-in-out all 0.1s;
+            cursor: pointer;
             display: flex;
-            flex-direction: column;
+            border-radius: 50px;
+            padding: 10px 19px;
+            width: 100%;
+            border: 0;
+            background: #3468f2;
+            align-items: center;
             justify-content: center;
-            align-items: flex-start;
-            padding: 25px;
-            gap: 25px;
+            gap: 10px;
 
-            .policy {
-                background: white;
-                display: flex;
-                flex-direction: column;
-                height: 330px;
-                gap: 0;
-                overflow-y: scroll;
-                padding: 0 23px;
-                border-radius: var(--borderRadius);
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 140%;
 
-                * {
-                    color: var(--color2);
+            color: #ffffff;
+
+            &:disabled {
+                opacity: 0.3 !important;
+
+                &:hover {
+                    background: #3468f2;
+                    cursor: not-allowed;
                 }
             }
 
-            .discordAuth {
-                transition: ease-in-out all 0.1s;
-                cursor: pointer;
-                display: flex;
-                border-radius: var(--borderRadius);
-                padding: 15px 30px;
-                width: 100%;
-                border: 0;
-                font-family: 'Open Runde';
-                font-style: normal;
-                font-weight: 700;
-                font-size: 18px;
-                line-height: 22px;
-                background: #708ef6;
-                color: #ffffff;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-
-                &:disabled {
-                    opacity: 0.3 !important;
-
-                    &:hover {
-                        background: #708ef6;
-                        cursor: not-allowed;
-                    }
-                }
-
-                &:hover {
-                    background: #627bd6;
-                }
+            &:hover {
+                background: #3261e2;
             }
         }
     }

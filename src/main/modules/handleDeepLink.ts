@@ -20,9 +20,7 @@ export const navigateToDeeplink = (
     if (!url) {
         return
     }
-    // const pathname = transformUrlToInternal(url)
 
-    //console.info('Navigate to', url, pathname)
     const regex = /^pulsesync:\/\/([^\/]+)\/?(.*)$/
     const match = url.match(regex)
     if (!match) return

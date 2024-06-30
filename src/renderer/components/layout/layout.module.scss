@@ -1,6 +1,5 @@
 .children {
     flex: 1;
-    overflow: auto;
     display: flex;
     width: -webkit-fill-available;
     flex-direction: column;
@@ -14,13 +13,16 @@
     width: -webkit-fill-available;
     bottom: 0;
     top: 50px;
+    background: var(--MainBG);
 
     .navigation_bar {
+        border-radius: 0px 0px 20px 0px;
+        background: var(--Main);
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        padding: 18px;
+        padding: 20px;
 
         .navigation_buttons {
             display: flex;
@@ -34,8 +36,8 @@
             cursor: pointer;
             display: flex;
             flex-direction: row;
-            padding: 10px;
-            border-radius: var(--borderRadius);
+            padding: 12px;
+            border-radius: var(--BorderRadius);
             background: var(--download);
             border: none;
             justify-content: center;
@@ -44,10 +46,6 @@
 
             &:hover {
                 background: var(--downloadH);
-
-                > svg {
-                    fill: var(--downloadColorH);
-                }
             }
 
             > svg {
@@ -71,7 +69,7 @@
         top: 0px;
         bottom: 0px;
 
-        background: rgba(27, 31, 33, 0.85);
+        background: rgba(22, 24, 30, 0.85);
         backdrop-filter: blur(9.5px);
 
         > div {
@@ -79,8 +77,8 @@
             flex-direction: row;
             align-items: center;
             padding: 0px 0px 0px 23px;
+            width: 700px;
             gap: 35px;
-            width: -webkit-fill-available;
             height: fit-content;
             background: #fffb9c;
             border-radius: 10px;
@@ -101,7 +99,7 @@
                     justify-content: center;
                     align-items: center;
                     padding: 0px;
-                    gap: 17px;
+                    gap: 14px;
                     width: fit-content;
 
                     * {
@@ -109,14 +107,16 @@
                     }
 
                     > div {
-                        font-family: 'Open Runde';
-                        font-style: normal;
-                        font-weight: 600;
+                        font-weight: 800;
                         font-size: 20px;
+                        line-height: 27px;
+
+                        color: #535240;
                     }
                 }
 
                 button {
+                    cursor: pointer;
                     display: flex;
                     flex-direction: row;
                     justify-content: center;
@@ -130,10 +130,9 @@
                     border: 0;
                     border-radius: 10px;
 
-                    font-family: 'Open Runde';
-                    font-style: normal;
-                    font-weight: 500;
+                    font-weight: 600;
                     font-size: 18px;
+                    line-height: 25px;
 
                     color: #fffb9c;
 

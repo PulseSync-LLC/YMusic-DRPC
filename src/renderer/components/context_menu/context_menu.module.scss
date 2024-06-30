@@ -1,51 +1,133 @@
 .patchMenu {
+    --widthMenu: 260px;
     position: absolute;
-    top: 40px;
-    left: 150px;
+    top: 52px;
     color: white;
-    overflow: hidden;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    background: var(--bg);
-    border: 1px solid #525d64;
-    border-radius: var(--borderRadius);
+    box-shadow: 0px 0px 8px 5px rgba(0, 0, 0, 0.25);
+    background: var(--Main);
+    outline: 1px solid var(--BorderColor);
+    border-radius: var(--BorderRadius);
+}
 
-    button {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 12px 20px;
-        font-weight: 500;
-        font-size: 14px;
-        line-height: 17px;
-        text-align: center;
-        text-transform: uppercase;
-        background: transparent !important;
-        color: #89969e !important;
-        width: -webkit-fill-available;
+.innerFunction {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 20px;
+    color: white !important;
 
-        &:disabled {
-            color: #89969e !important;
-            opacity: 0.3 !important;
+    font-style: normal;
+    width: -webkit-fill-available;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 140%;
+    color: #ffffff;
 
-            &:hover {
-                background: transparent !important;
-                color: #89969e !important;
-                cursor: not-allowed;
-            }
-        }
+    svg {
+        transform: rotate(0deg);
+        transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 1.8s;
+    }
+
+    > .showButtons {
+        display: none;
+    }
+
+    &:disabled {
+        opacity: 0.5 !important;
 
         &:hover {
-            background: #59646a47 !important;
-            color: #ddf2ff !important;
+            background: transparent !important;
+            cursor: not-allowed;
+
+            .showButtons {
+                display: none;
+            }
         }
     }
 
-    .hyperLink:hover {
-        background: #41657b47 !important;
-        color: #5bb0ff !important;
+    &:hover {
+        background: #3468f2 !important;
+        position: relative;
+        --spacing: 3%;
+
+        svg {
+            transform: rotate(180deg);
+            transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 1.8s;
+        }
+
+        > .showButtons {
+            transform: translateX(calc(var(--spacing) * 30.5));
+            width: var(--widthMenu);
+            margin-left: var(--spacing);
+            position: absolute;
+            top: 0;
+            color: white;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            background: var(--Main);
+            outline: 1px solid var(--BorderColor);
+            border-radius: var(--BorderRadius);
+
+            &::after {
+                content: '';
+                position: absolute;
+                left: calc(0% - var(--spacing));
+                width: var(--spacing);
+                height: -webkit-fill-available;
+                background: transparent;
+            }
+        }
+    }
+}
+
+.contextButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 20px;
+    color: white !important;
+
+    font-style: normal;
+    width: var(--widthMenu) !important;
+    min-width: fit-content;
+    max-width: -webkit-fill-available;
+    min-width: fit-content;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    line-height: 140%;
+    color: #ffffff;
+
+    &:first-child {
+        border-radius: var(--BorderRadius) var(--BorderRadius) 0 0;
+    }
+
+    &:last-child {
+        border-radius: 0 0 var(--BorderRadius) var(--BorderRadius);
+    }
+
+    &:last-child:first-child {
+        border-radius: var(--BorderRadius);
+    }
+
+    &:disabled {
+        opacity: 0.5 !important;
+
+        &:hover {
+            background: transparent !important;
+            cursor: not-allowed;
+        }
+    }
+
+    &:hover {
+        background: #3468f2 !important;
     }
 }

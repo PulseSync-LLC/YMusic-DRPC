@@ -1,4 +1,4 @@
-import { app, ipcMain, Menu, MenuItem, Tray } from 'electron'
+import { app, ipcMain, Menu, MenuItem, shell, Tray } from 'electron'
 import { getNativeImg } from '../utils'
 import { Track } from 'yandex-music-client'
 import { truncate } from '../../renderer/utils/track'
@@ -24,13 +24,14 @@ function createTray() {
     menu = new Menu()
 
     // menu.append(new MenuItem(playPauseItem))
-
     menu.append(
         new MenuItem({
-            type: 'separator',
+            label: 'Перейти в дискорд PulseSync',
+            click: async () => {
+                await shell.openExternal('https://discord.gg/qy42uGTzRy')
+            },
         }),
     )
-
     menu.append(
         new MenuItem({
             label: 'Закрыть',

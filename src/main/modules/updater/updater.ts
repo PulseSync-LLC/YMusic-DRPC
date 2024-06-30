@@ -1,12 +1,9 @@
-'use strict'
 import * as semver from 'semver'
 import { app } from 'electron'
-import { autoUpdater, UpdateCheckResult } from 'electron-updater'
+import { autoUpdater } from 'electron-updater'
 import { state } from '../state'
 import { UpdateUrgency } from './constants/updateUrgency'
 import { UpdateStatus } from './constants/updateStatus'
-import log from 'electron-log'
-import { UpdateInfo as ElectronUpdateInfo } from 'electron-updater'
 import logger from '../logger'
 
 type UpdateInfo = {
@@ -169,7 +166,7 @@ class Updater {
             this.latestAvailableVersion,
         )
         state.willQuit = true
-        autoUpdater.quitAndInstall()
+        autoUpdater.quitAndInstall(true, true)
     }
 }
 exports.Updater = Updater

@@ -5,7 +5,6 @@ import UserMeQuery from '../api/queries/user/getMe.query'
 import TrackInfoPage from './trackinfo'
 import ThemePage from './theme'
 import JointPage from './joint'
-import OtherPage from './other'
 
 import { Toaster } from 'react-hot-toast'
 import { CssVarsProvider } from '@mui/joy'
@@ -66,10 +65,6 @@ function app() {
             path: '/joint',
             element: <JointPage />,
         },
-        {
-            path: '/other',
-            element: <OtherPage />,
-        },
     ])
     const authorize = async () => {
         setLoading(true)
@@ -129,7 +124,7 @@ function app() {
             })
             setYaClient(client)
         }
-    }, [settings.yaToken])
+    }, [settings.ya_token])
     socket.on('connect', () => {
         console.log('Socket connected')
         toast.success('Соединение установлено')
@@ -181,14 +176,17 @@ function app() {
             window.desktopEvents?.on('ya_token', (event, data) => {
                 setSettings(prevSettings => ({
                     ...prevSettings,
-                    yaToken: data,
+                    ya_token: data,
                 }))
             })
             const settingsKeys = [
                 'discordRpc',
+                'autoStartInTray',
+                'autoStartApp',
                 'enableRpcButtonListen',
                 'patched',
                 'readPolicy',
+                'ya_token',
             ]
 
             settingsKeys.forEach(key => {
@@ -199,6 +197,13 @@ function app() {
                     }))
                 }
             })
+            const token = window.electron.store.get('ya_token')
+            if (token) {
+                setSettings(prevSettings => ({
+                    ...prevSettings,
+                    ya_token: token,
+                }))
+            }
             setLoading(false)
         }
     }, [])

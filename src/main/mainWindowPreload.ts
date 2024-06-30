@@ -44,7 +44,6 @@ contextBridge.exposeInMainWorld('electron', {
     downloadTrack(url: any) {
         ipcRenderer.send('download-track', url)
     },
-    autoStartMusic: (val: boolean) => ipcRenderer.send('autoStartMusic', val),
     clickMinimize: () => ipcRenderer.send('minimizeWin'),
     clickClose: () => ipcRenderer.send('closeWin'),
     clickPatcher: () => ipcRenderer.send('patcherWin'),

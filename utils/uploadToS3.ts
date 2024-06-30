@@ -75,14 +75,20 @@ const uploadFile = (fileName: string) => {
             Body: fileContent,
         }
 
-        s3.upload(params,(err: AWS.AWSError, data: AWS.S3.ManagedUpload.SendData) => {
-            if (err) {
-                console.log(`Error uploading file ${fileName}:`, err)
-                reject(err)
-            } else {
-                console.log(`File ${fileName} uploaded to S3:`, data.Location)
-                resolve(data)
-            }
-        })
+        s3.upload(
+            params,
+            (err: AWS.AWSError, data: AWS.S3.ManagedUpload.SendData) => {
+                if (err) {
+                    console.log(`Error uploading file ${fileName}:`, err)
+                    reject(err)
+                } else {
+                    console.log(
+                        `File ${fileName} uploaded to S3:`,
+                        data.Location,
+                    )
+                    resolve(data)
+                }
+            },
+        )
     })
 }

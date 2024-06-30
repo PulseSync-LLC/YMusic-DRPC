@@ -1,81 +1,260 @@
 .container {
-    cursor: not-allowed;
-    position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    padding: 12px 15px;
-    gap: 10px;
+    align-items: flex-start;
+    padding: 15px 25px;
+    gap: 25px;
+
     width: -webkit-fill-available;
 
-    background: var(--mTrackBackground);
-    border: 1px solid var(--mTrackBorder);
-    border-radius: 12px;
+    background: var(--panelsColor);
+    outline: 1px solid var(--BorderColor);
+    border-radius: var(--BorderRadius);
 
-    .flex_container {
+    .discordRpcSettings {
         display: flex;
-        flex-direction: row;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
         padding: 0px;
-        gap: 20px;
-        width: 100%;
+        gap: 15px;
 
-        .img {
-            --size: 75px;
-            width: var(--size);
-            height: var(--size);
-            border-radius: var(--borderRadius);
+        width: -webkit-fill-available;
+    }
+
+    .discordRpc {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 0px;
+        isolation: isolate;
+
+        --width: 311px;
+        width: var(--width);
+        min-width: var(--width);
+        height: fit-content;
+
+        background: var(--Main);
+        border-radius: var(--BorderRadius);
+        overflow: hidden;
+
+        .userBanner {
+            width: -webkit-fill-available;
+            height: 64px;
+
+            flex: none;
+            order: 0;
+            align-self: stretch;
+            flex-grow: 0;
+            z-index: 0;
         }
 
-        .gap {
+        > div {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: flex-start;
-            padding: 0px;
-            gap: 6px;
+            padding: 56px 16px 16px;
+            gap: 12px;
+            isolation: isolate;
+            position: relative;
 
-            .yndex {
-                font-family: 'Open Runde';
-                font-style: normal;
-                font-weight: 700;
-                font-size: 16px;
+            width: -webkit-fill-available;
 
-                color: var(--mTrackColor);
+            flex: none;
+            order: 2;
+            align-self: stretch;
+            flex-grow: 0;
+            z-index: 2;
+
+            .userAvatar {
+                position: absolute;
+                width: 90px;
+                height: 90px;
+                left: 16px;
+                top: -44px;
+
+                border: 5px solid var(--MainBG);
+                border-radius: 50px;
             }
 
-            .name,
-            .time {
-                font-family: 'Open Runde';
-                font-style: normal;
-                font-weight: 400;
-                font-size: 14px;
-                width: 240px;
+            .userName {
+                font-weight: 800;
+                font-size: 22px;
+                line-height: 30px;
 
-                color: var(--mTrackColor);
+                color: #f2f3f5;
+            }
 
-                flex: none;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
+            .userRPC {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 8px;
+                gap: 4px;
+
+                width: -webkit-fill-available;
+
+                background: var(--MainBG);
+                border-radius: var(--BorderRadius);
+
+                .status {
+                    font-weight: 800;
+                    font-size: 12px;
+                    line-height: 16px;
+
+                    color: #d5d8dc;
+                }
+
+                .statusRPC {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                    padding: 0px;
+                    gap: 17px;
+
+                    width: -webkit-fill-available;
+
+                    border-radius: 10px;
+
+                    .flex_container {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: flex-start;
+                        padding: 0px;
+                        gap: 10px;
+
+                        width: -webkit-fill-available;
+
+                        .img {
+                            --imgSize: 58px;
+                            width: var(--imgSize);
+                            height: var(--imgSize);
+                            background: #4e5058;
+                            border-radius: var(--BorderRadius);
+                        }
+
+                        .gap {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: flex-start;
+                            padding: 0px;
+                            gap: 1px;
+
+                            width: -webkit-fill-available;
+
+                            .appName {
+                                font-weight: 800;
+                                font-size: 14px;
+                                line-height: 19px;
+
+                                color: #d5d8dc;
+                            }
+
+                            .time,
+                            .name {
+                                font-weight: 400;
+                                font-size: 12px;
+                                line-height: 16px;
+                                text-overflow: ellipsis;
+                                flex: none;
+                                overflow: hidden;
+                                white-space: nowrap;
+                                color: #d5d8dc;
+                                width: 190px;
+                            }
+                        }
+                    }
+                }
+
+                .button {
+                    box-sizing: border-box;
+
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 9px 0px;
+                    gap: 10px;
+
+                    width: -webkit-fill-available;
+
+                    background: var(--NavigationOnColor);
+                    border-radius: var(--BorderRadius);
+
+                    font-weight: 700;
+                    font-size: 12px;
+                    line-height: 16px;
+
+                    color: #fafafa;
+                }
             }
         }
     }
+}
 
-    .button {
+.optionalContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 12px;
+
+    width: -webkit-fill-available;
+
+    .optionalTitle {
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 140%;
+
+        color: white;
+    }
+}
+
+.line {
+    width: -webkit-fill-available;
+    height: 1px;
+    background: #3e424c;
+}
+
+.textInputContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 2px;
+    width: -webkit-fill-available;
+
+    > div {
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 140%;
+        text-transform: uppercase;
+        color: #abafbf;
+    }
+
+    .styledInput {
         display: flex;
         flex-direction: row;
-        justify-content: center;
         align-items: center;
-        padding: 11px 23px;
-        background: var(--mTrackButton);
-        border-radius: 10px;
-        font-family: 'Open Runde';
-        font-style: normal;
+        padding: 14px 23px;
+        gap: 10px;
+
+        width: -webkit-fill-available;
+
+        background: #0d0f14;
+        border: 1px solid #3e424c;
+        border-radius: 4px;
+
         font-weight: 400;
         font-size: 14px;
-        color: var(--mTrackColor);
-        min-width: fit-content;
+        line-height: 140%;
+
+        color: #abafbf;
+
+        &:focus {
+            color: white;
+            background: #1a1d24;
+            border-color: #5a5e6b;
+        }
     }
 }

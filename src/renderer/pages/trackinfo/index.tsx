@@ -2,18 +2,11 @@ import Layout from '../../components/layout'
 import Container from '../../components/container'
 
 import CheckboxNav from '../../components/checkbox'
-import ButtonDefault from '../../components/button_default'
 
 import styles from '../../../../static/styles/page/index.module.scss'
 import stylesBut from '../../components/button_default/button_default.module.scss'
 import theme from './trackinfo.module.scss'
 
-import {
-    MdDownload,
-    MdFolderOpen,
-    MdSmartButton,
-    MdVideogameAsset,
-} from 'react-icons/md'
 import { useContext, useEffect, useState } from 'react'
 import userContext from '../../api/context/user.context'
 import UserInterface from '../../api/interfaces/user.interface'
@@ -85,78 +78,192 @@ export default function TrackInfoPage() {
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
-                <Container titleName={'Discord RPC'} imageName={'discord'}>
-                    <div className={styles.container}>
-                        <CheckboxNav checkType="startDiscordRpc">
-                            <MdVideogameAsset size={22} />
-                            Включить статус дискорд
-                        </CheckboxNav>
-                        <div className={theme.container}>
-                            {settings.discordRpc &&
-                            currentTrack !== trackInitials ? (
-                                <div className={theme.flex_container}>
+                <div className={styles.container}>
+                    <div className={styles.main_container}>
+                        <Container
+                            titleName={'Discord RPC'}
+                            imageName={'discord'}
+                        >
+                            <div className={theme.container}>
+                                <div className={theme.discordRpcSettings}>
+                                    <div className={theme.optionalContainer}>
+                                        <div className={theme.optionalTitle}>
+                                            Обзор
+                                        </div>
+                                        <CheckboxNav
+                                            checkType="startDiscordRpc"
+                                            description="Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord."
+                                        >
+                                            Включить статус дискорд
+                                        </CheckboxNav>
+                                    </div>
+                                    <div className={theme.line}></div>
+                                    <div className={theme.optionalContainer}>
+                                        <div className={theme.optionalTitle}>
+                                            Настроить статус
+                                        </div>
+                                        <div
+                                            className={theme.textInputContainer}
+                                        >
+                                            <div>Details</div>
+                                            <input
+                                                type="text"
+                                                className={theme.styledInput}
+                                            />
+                                        </div>
+                                        <div
+                                            className={theme.textInputContainer}
+                                        >
+                                            <div>State</div>
+                                            <input
+                                                type="text"
+                                                className={theme.styledInput}
+                                            />
+                                        </div>
+                                        <div
+                                            className={theme.textInputContainer}
+                                        >
+                                            <div>Button</div>
+                                            <input
+                                                type="text"
+                                                className={theme.styledInput}
+                                            />
+                                        </div>
+                                        <CheckboxNav
+                                            checkType="enableRpcButtonListen"
+                                            description="Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord."
+                                        >
+                                            Включить кнопку (Слушать)
+                                        </CheckboxNav>
+                                    </div>
+                                </div>
+                                <div className={theme.discordRpc}>
                                     <img
-                                        className={theme.img}
-                                        src={
-                                            currentTrack.requestImgTrack[1]
-                                                ? currentTrack
-                                                      .requestImgTrack[1]
-                                                : './static/assets/logo/logoappsummer.png'
-                                        }
+                                        className={theme.userBanner}
+                                        src="https://media.discordapp.net/attachments/482180995752394752/1256554862364065863/image.png?ex=66813168&is=667fdfe8&hm=b1c13419a7d5b98bcda110db1d3d7f646431f432dbac6839733c85c7f9a62437&=&format=webp"
                                         alt=""
                                     />
-                                    <div className={theme.gap}>
-                                        <div className={theme.yndex}>
-                                            Yandex Music
+                                    <div>
+                                        <img
+                                            className={theme.userAvatar}
+                                            src="https://cdn.discordapp.com/avatars/302522186504077312/908f5ce4aeac02fbd29e2e1eeecd66ef"
+                                            alt=""
+                                        />
+                                        <div className={theme.userName}>
+                                            Maks1mio
                                         </div>
-                                        <div className={theme.name}>
-                                            {currentTrack.playerBarTitle} -{' '}
-                                            {currentTrack.artist}
-                                        </div>
-                                        <div className={theme.time}>
-                                            {currentTrack.timecodes[0]} -{' '}
-                                            {currentTrack.timecodes[1]}
+                                        <div className={theme.userRPC}>
+                                            <div className={theme.status}>
+                                                Играет в игру
+                                            </div>
+                                            <div className={theme.statusRPC}>
+                                                <div>
+                                                    {settings.discordRpc &&
+                                                    currentTrack !==
+                                                        trackInitials ? (
+                                                        <div
+                                                            className={
+                                                                theme.flex_container
+                                                            }
+                                                        >
+                                                            <img
+                                                                className={
+                                                                    theme.img
+                                                                }
+                                                                src={
+                                                                    currentTrack
+                                                                        .requestImgTrack[1]
+                                                                        ? currentTrack
+                                                                              .requestImgTrack[1]
+                                                                        : './static/assets/logo/logoappsummer.png'
+                                                                }
+                                                                alt=""
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    theme.gap
+                                                                }
+                                                            >
+                                                                <div
+                                                                    className={
+                                                                        theme.appName
+                                                                    }
+                                                                >
+                                                                    PulseSync
+                                                                </div>
+                                                                <div
+                                                                    className={
+                                                                        theme.name
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        currentTrack.playerBarTitle
+                                                                    }{' '}
+                                                                    -{' '}
+                                                                    {
+                                                                        currentTrack.artist
+                                                                    }
+                                                                </div>
+                                                                <div
+                                                                    className={
+                                                                        theme.time
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        currentTrack
+                                                                            .timecodes[0]
+                                                                    }{' '}
+                                                                    -{' '}
+                                                                    {
+                                                                        currentTrack
+                                                                            .timecodes[1]
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div
+                                                            className={
+                                                                theme.flex_container
+                                                            }
+                                                        >
+                                                            <Skeleton
+                                                                width={58}
+                                                                height={58}
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    theme.gap
+                                                                }
+                                                            >
+                                                                <Skeleton
+                                                                    width={70}
+                                                                    height={19}
+                                                                />
+                                                                <Skeleton
+                                                                    width={190}
+                                                                    height={16}
+                                                                />
+                                                                <Skeleton
+                                                                    width={80}
+                                                                    height={16}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className={theme.button}>
+                                                    Слушать трек на Яндекс
+                                                    Музыке
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            ) : (
-                                <div>
-                                    <Skeleton width={300} height={30} />
-                                    <Skeleton
-                                        width={300}
-                                        height={20}
-                                        style={{ marginTop: '10px' }}
-                                    />
-                                </div>
-                            )}
-
-                            <div className={theme.button}>
-                                Слушать трек на Яндекс Музыке
                             </div>
-                        </div>
-                        <CheckboxNav checkType="enableRpcButtonListen">
-                            <MdSmartButton size={22} />
-                            Включить кнопку (Слушать)
-                        </CheckboxNav>
-                        <button
-                            className={stylesBut.button}
-                            onClick={downloadTrack}
-                            disabled={
-                                user.perms !== 'developer' ||
-                                currentTrack === trackInitials ||
-                                currentTrack.id === ''
-                            }
-                        >
-                            <MdDownload size={22} />
-                            Скачать {currentTrack.playerBarTitle} -{' '}
-                            {currentTrack.artist} в папку музыка
-                        </button>
-                        <ButtonDefault disabled>
-                            <MdFolderOpen size={22} />
-                            Директория со скаченной музыкой
-                        </ButtonDefault>
+                        </Container>
                     </div>
-                </Container>
+                </div>
             </div>
         </Layout>
     )

@@ -1,68 +1,33 @@
-@font-face {
-    font-family: 'Open Runde';
-    font-weight: 400;
-    src: url(../../static/assets/fonts/OpenRunde-Regular.otf);
-}
-
-@font-face {
-    font-family: 'Open Runde';
-    font-weight: 500;
-    src: url(../../static/assets/fonts/OpenRunde-Medium.otf);
-}
-
-@font-face {
-    font-family: 'Open Runde';
-    font-weight: 600;
-    src: url(../../static/assets/fonts/OpenRunde-Semibold.otf);
-}
-
-@font-face {
-    font-family: 'Open Runde';
-    font-weight: 700;
-    src: url(../../static/assets/fonts/OpenRunde-Bold.otf);
-}
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
 :root {
-    --bg: #1b1f21;
-    --color0: #b6c7d2;
-    --color1: #ddf2ff;
-    --color2: #2d3236;
-    --color2H: #282d2f;
-    --color2OffCheck: #89969e;
-    --color3: #394045;
-    --border: #535d64;
-    --borderH: #64737c;
-    --borderRadius: 10px;
+    --Main: #16181e;
+    --MainBG: #1e2027;
+
+    --BorderColor: #363944;
+    --BorderRadius: 8px;
+
+    /* Only Header*/
+    --HeaderBarTextColor: #e4e5ea;
+
+    /* Only Nav*/
+    --NavigationOnColor: #3e424c;
+    --NavigationIconDefaultSvgColor: #8f94a8;
 
     --downloadColor: #75ff9c;
-    --downloadColorH: #60ff8c;
-    --download: #2a3e39;
-    --downloadH: #2a4b43;
+    --download: #2a3e3900;
+    --downloadH: #1b2e2a;
 
-    /* Style In MainContainer => --m */
-    --mInColor: var(--color1);
-    --mColor: #3a4145;
-    --mColorH: #4e595f;
-    --mBorder: var(--border);
-    --mBorderH: var(--borderH);
-
-    --mInColorActive: #ebfff5;
-    --mColorActive: #3a453f;
-    --mColorActiveH: #475850;
-    --mBorderActive: #53645c;
-    --mBorderActiveH: #698276;
-
-    --mTrackColor: #d5d8dc;
-    --mTrackButton: #4e5058;
-    --mTrackBackground: #111214;
-    --mTrackBorder: #394454;
+    /* In panels */
+    --panelsColor: #292c36;
 }
 
 * {
     user-select: none;
-    font-family: 'Open Runde', serif;
-    color: var(--color1);
-    stroke: var(--color1);
+    font-family: 'Nunito Sans';
+    font-style: normal;
+    color: var(--HeaderBarTextColor);
+    stroke: var(--HeaderBarTextColor);
 }
 
 .discord_svg__noStroke,
@@ -76,20 +41,17 @@ a {
 }
 
 a.active > button {
-    background: var(--color2);
+    background: var(--NavigationOnColor);
     border: none;
-    & > svg {
-        fill: var(--color1);
-    }
-}
 
-button:active:hover {
-    scale: 0.98;
+    & > svg {
+        fill: white;
+    }
 }
 
 body {
     display: flex;
-    background: var(--bg);
+    background: var(--Main);
     color: var(--color1);
     padding: 0;
     margin: 0;
@@ -105,6 +67,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+:focus-visible {
+    outline: 1px double #ffffff;
 }
 
 ::-webkit-scrollbar {

@@ -5,11 +5,11 @@ import Header from './header'
 import ButtonNav from '../button_nav'
 import Discord from './../../../../static/assets/icons/discord.svg'
 import {
-    MdColorLens,
     MdConnectWithoutContact,
     MdDownload,
     MdEngineering,
-    MdSettings,
+    MdExtension,
+    MdStoreMallDirectory,
     MdWarning,
 } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
@@ -58,32 +58,15 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     <Discord height={24} width={24} />
                                 </ButtonNav>
                             </NavLink>
-                            {/* <NavLink to="/theme" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}> */}
                             <ButtonNav disabled>
-                                <MdColorLens size={24} />
+                                <MdExtension size={24} />
                             </ButtonNav>
-                            {/* </NavLink> */}
-                            {/* <NavLink to="/joint" className={({ isActive, isPending }) =>
-                            isPending ? "pending" : isActive ? "active" : ""}> */}
+                            <ButtonNav disabled>
+                                <MdStoreMallDirectory size={24} />
+                            </ButtonNav>
                             <ButtonNav disabled>
                                 <MdConnectWithoutContact size={24} />
                             </ButtonNav>
-                            {/* </NavLink> */}
-                            <NavLink
-                                to="/other"
-                                className={({ isActive, isPending }) =>
-                                    isPending
-                                        ? 'pending'
-                                        : isActive
-                                          ? 'active'
-                                          : ''
-                                }
-                            >
-                                <ButtonNav>
-                                    <MdSettings size={24} />
-                                </ButtonNav>
-                            </NavLink>
                         </div>
                         {update && (
                             <button
@@ -93,7 +76,7 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 }}
                                 className={styles.update_download}
                             >
-                                <MdDownload size={26} />
+                                <MdDownload size={24} />
                             </button>
                         )}
                     </div>

@@ -4,13 +4,10 @@ import React, { useContext, useEffect, useState } from 'react'
 import Minus from './../../../../static/assets/icons/minus.svg'
 import Minimize from './../../../../static/assets/icons/minimize.svg'
 import Close from './../../../../static/assets/icons/close.svg'
+import ArrowDown from './../../../../static/assets/icons/arrowDown.svg'
 
-import Dev from './../../../../static/assets/badges/dev.svg'
-import Early from './../../../../static/assets/badges/early.svg'
-import Supporter from './../../../../static/assets/badges/supporter.svg'
-import PatchMenu from '../context_menu'
-import UserContext from '../../api/context/user.context'
 import userContext from '../../api/context/user.context'
+import ContextMenu from '../context_menu'
 
 interface p {
     goBack?: boolean
@@ -38,38 +35,45 @@ const Header: React.FC<p> = ({ goBack }) => {
             <header className={styles.nav_bar}>
                 <div className={styles.fix_size}>
                     <div className={styles.app_menu}>
-                        <div className={styles.logoplace}>
+                        <button
+                            className={styles.logoplace}
+                            onClick={toggleMenu}
+                        >
                             <img
                                 className={styles.logoapp}
                                 src="static/assets/logo/logoapp.svg"
                                 alt=""
                             />
                             <span>PulseSync</span>
-                        </div>
-                        <div className="patch-button-container">
-                            <button
-                                className="patch-button"
-                                onClick={toggleMenu}
+                            <div
+                                className={
+                                    isMenuOpen ? styles.true : styles.false
+                                }
                             >
-                                Патчер
-                            </button>
-                            {isMenuOpen && <PatchMenu />}
-                        </div>
-                        <div className={styles.version}>
-                            FUMOS V{version} BETA
-                        </div>
+                                <ArrowDown />
+                            </div>
+                            {isMenuOpen && <ContextMenu />}
+                        </button>
                     </div>
                     <div className={styles.event_container}>
                         <div className={styles.menu}>
-                            {user.badges.length > 0 &&
-                                user.badges.map(_badge => (
-                                    <div className={styles.badges_container}>
-                                        <img
-                                            src={`static/assets/badges/${_badge.type}.svg`}
-                                            alt=""
-                                        />
-                                    </div>
-                                ))}
+                            <div className={styles.badges_container}>
+                                {user.badges.length > 0 &&
+                                    user.badges.map(_badge => (
+                                        <div
+                                            className={styles.badge}
+                                            key={_badge.type}
+                                        >
+                                            <img
+                                                src={`static/assets/badges/${_badge.type}.svg`}
+                                                alt={_badge.type}
+                                            />
+                                            <span className={styles.tooltip}>
+                                                {_badge.type}
+                                            </span>
+                                        </div>
+                                    ))}
+                            </div>
 
                             {user.id !== '-1' && (
                                 <div className={styles.user_container}>

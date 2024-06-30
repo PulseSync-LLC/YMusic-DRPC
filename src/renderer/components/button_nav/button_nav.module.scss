@@ -5,29 +5,31 @@
     display: flex;
     background: transparent;
     border: none;
-    border-radius: var(--borderRadius);
+    border-radius: var(--BorderRadius);
     padding: 12px;
 
     & > svg {
-        fill: var(--color2OffCheck);
+        fill: var(--NavigationIconDefaultSvgColor);
     }
 
     &:hover {
-        background: var(--color2H);
-        & > svg {
-            fill: var(--color1);
+        background: var(--NavigationOnColor);
+        &:hover {
+            & > svg {
+                fill: white;
+            }
         }
         &:disabled {
-            opacity: 0.2;
+            opacity: 0.5;
             background: transparent;
             border: none;
             & > svg {
-                fill: var(--color2OffCheck);
+                fill: var(--NavigationIconDefaultSvgColor);
             }
         }
     }
 
     &:disabled {
-        opacity: 0.2;
+        opacity: 0.5;
     }
 }

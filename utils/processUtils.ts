@@ -35,21 +35,5 @@ async function checkAndTerminateYandexMusic() {
         console.log(`${processName} not found.`)
     }
 }
-export async function startYandexMusic() {
-    let appPath = path.join(
-        process.env.LOCALAPPDATA,
-        'Programs',
-        'YandexMusic',
-        'Яндекс Музыка.exe',
-    )
-    appPath = `"${appPath}"`
-
-    const command = `${appPath}`
-    try {
-        await execPromise(command)
-    } catch (error) {
-        console.error(`Error while starting YandexMusic: ${error}`)
-    }
-}
 
 export default checkAndTerminateYandexMusic

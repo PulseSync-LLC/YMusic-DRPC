@@ -9,11 +9,16 @@ import MakerDMG from '@electron-forge/maker-dmg'
 import config from './src/config.json'
 import { mainConfig } from './webpack.main.config'
 import { rendererConfig } from './webpack.renderer.config'
+
 const forge_config: ForgeConfig = {
     packagerConfig: {
-        icon: './static/assets/icon',
+        icon: './icons/win/icon.ico',
         name: 'PulseSync',
+        appCopyright: 'Copyright (C) 2024 PulseSync-Official',
         asar: true,
+        win32metadata: {
+            CompanyName: 'PulseSync-Official',
+        },
         extraResource: ['./app-update.yml'],
     },
     rebuildConfig: {},
@@ -27,22 +32,6 @@ const forge_config: ForgeConfig = {
         new MakerDMG({}),
         new MakerRpm({}),
         new MakerDeb({}),
-    ],
-    publishers: [
-        {
-            name: '@electron-forge/publisher-s3',
-            config: {
-                keyResolver: (fileName: any, platform: any, arch: any) => {
-                    return `dev_build/${platform}/${arch}/${fileName}`
-                },
-                endpoint: config.S3_ENDPOINT,
-                bucket: config.S3_BUCKET,
-                region: config.S3_REGION,
-                accessKeyId: config.S3_ACCESS_KEY_ID,
-                secretAccessKey: config.S3_SECRET_KEY,
-                public: true,
-            },
-        },
     ],
     plugins: [
         new WebpackPlugin({

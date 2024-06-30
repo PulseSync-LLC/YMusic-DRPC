@@ -31,16 +31,14 @@ import { checkForSingleInstance } from './main/modules/singleInstance'
 import * as Sentry from '@sentry/electron/main'
 import { getTrackInfo } from './main/modules/httpServer'
 import { getUpdater } from './main/modules/updater/updater'
-import checkAndTerminateYandexMusic, {
-    startYandexMusic,
-} from '../utils/processUtils'
+import checkAndTerminateYandexMusic from '../utils/processUtils'
 import https from 'https'
-import { Track } from 'yandex-music-client'
 import { getPercent } from './renderer/utils/percentage'
 import os from 'os'
 import { v4 } from 'uuid'
 import TrackInterface from './renderer/api/interfaces/track.interface'
-import {isDev} from "./renderer/api/config";
+import { isDev } from './renderer/api/config'
+import logger from './main/modules/logger'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -53,29 +51,6 @@ export let corsAnywherePort: string | number
 export let mainWindow: BrowserWindow
 let preloaderWindow: BrowserWindow
 
-const ydrpcModification = path.join(
-    process.env.LOCALAPPDATA,
-    'YDRPC Modification',
-)
-
-if (!fs.existsSync(ydrpcModification)) {
-    fs.mkdirSync(ydrpcModification)
-}
-
-const themesDir = path.join(ydrpcModification, 'themes')
-
-if (!fs.existsSync(themesDir)) {
-    fs.mkdirSync(themesDir)
-}
-
-const confFilePath = path.join(themesDir, 'conf.json')
-
-if (!fs.existsSync(confFilePath)) {
-    fs.writeFileSync(
-        confFilePath,
-        JSON.stringify({ select: 'default' }, null, 4),
-    )
-}
 const icon = getNativeImg('appicon', '.png', 'icon').resize({
     width: 40,
     height: 40,
@@ -87,6 +62,7 @@ Sentry.init({
     enableRendererProfiling: true,
     enableTracing: true,
 })
+
 const createWindow = (): void => {
     preloaderWindow = new BrowserWindow({
         width: 250,
@@ -105,6 +81,7 @@ const createWindow = (): void => {
             contextIsolation: true,
             devTools: false,
             nodeIntegration: true,
+            webSecurity: false,
         },
     })
 
@@ -115,18 +92,18 @@ const createWindow = (): void => {
     mainWindow = new BrowserWindow({
         show: false,
         frame: isMac,
-        backgroundColor: '#1B1F21',
-        width: 810,
-        height: 690,
-        minWidth: 810,
-        minHeight: 690,
+        backgroundColor: '#16181E',
+        width: 940,
+        height: 720,
+        minWidth: 940,
+        minHeight: 720,
         transparent: false,
-        //maxWidth: 615,
         icon,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
             devTools: true,
             nodeIntegration: true,
+            webSecurity: false,
         },
     })
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY).catch(e => {
@@ -145,7 +122,9 @@ const createWindow = (): void => {
         shell.openExternal(electronData.url)
         return { action: 'deny' }
     })
-    //mainWindow.webContents.openDevTools()
+    if (isDev) {
+        mainWindow.webContents.openDevTools()
+    }
 }
 const corsAnywhere = async () => {
     corsAnywherePort = await getPort()
@@ -214,15 +193,13 @@ app.on('ready', async () => {
     })
 })
 app.whenReady().then(async () => {
-    if(isDev) {
+    if (isDev) {
         await session.defaultSession.loadExtension(
             path.join(
-                process.env.LOCALAPPDATA,
-                'Google',
-                'Chrome',
-                'User Data',
-                'Profile 1',
-                'Extensions',
+                __dirname,
+                '../',
+                '../',
+                'ReactDevTools',
                 'fmkadmapgofadopljbjfkapdkoienihi',
                 '5.2.0_0',
             ),
@@ -285,7 +262,7 @@ ipcMain.on('electron-window-close', () => {
 })
 
 ipcMain.on('electron-patch', async () => {
-    console.log('patch')
+    await checkAndTerminateYandexMusic()
     setTimeout(async () => {
         await Patcher.patchRum().then(async () => {
             console.log('Все гуд')
@@ -295,19 +272,17 @@ ipcMain.on('electron-patch', async () => {
 })
 
 ipcMain.on('electron-repatch', async () => {
-    console.log('repatch')
+    await checkAndTerminateYandexMusic()
     setTimeout(async () => {
         await UnPatcher.unpatch().then(async () => {
-            console.log('Все гуд')
             Patcher.patchRum().then(async () => store.set('patched', true))
         })
     }, 3000)
 })
 ipcMain.on('electron-depatch', async () => {
-    console.log('depatch')
+    await checkAndTerminateYandexMusic()
     setTimeout(async () => {
         await UnPatcher.unpatch().then(async () => {
-            console.log('Все хорошо')
             store.set('patched', false)
         })
     }, 3000)
@@ -315,10 +290,6 @@ ipcMain.on('electron-depatch', async () => {
 
 ipcMain.on('electron-corsanywhereport', event => {
     event.returnValue = corsAnywherePort
-})
-
-ipcMain.on('autoStartMusic', async (event, value) => {
-    store.set('autoStartMusic', value)
 })
 
 setInterval(() => {
@@ -356,7 +327,7 @@ ipcMain.on(
                 title: 'Сохранить как',
                 defaultPath: path.join(
                     downloadDir,
-                    `${val.track.playerBarTitle} - ${val.track.artist}.mp3`,
+                    `${val.track.playerBarTitle.replace(new RegExp('[?"/\\\\*:\\|<>]', 'g'), '')} - ${val.track.artist.replace(new RegExp('[?"/\\\\*:\\|<>]', 'g'), '')}.mp3`,
                 ),
                 filters: [{ name: 'Трек', extensions: ['mp3'] }],
             })
@@ -380,7 +351,6 @@ ipcMain.on(
                                 'download-track-progress',
                                 percent,
                             )
-                            console.log(percent)
                         })
 
                         response
@@ -407,4 +377,14 @@ ipcMain.on('get-music-device', event => {
             data.uuid
         }; uuid=${v4({ random: Buffer.from(data.uuid) })}`
     })
+})
+ipcMain.on('autoStartApp', async (event, data) => {
+    app.setLoginItemSettings({
+        openAtLogin: data,
+        path: app.getPath('exe'),
+    })
+})
+ipcMain.on('checkUpdate', async (event, data) => {
+    logger.main.info('Updater: check update')
+    await updater.check()
 })

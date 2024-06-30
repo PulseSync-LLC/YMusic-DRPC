@@ -9,7 +9,7 @@ import styles from './auth.module.scss'
 
 import CheckboxNav from '../../components/checkbox'
 
-import { MdWarning } from 'react-icons/md'
+import { MdAdminPanelSettings, MdWarning } from 'react-icons/md'
 import Discord from './../../../../static/assets/icons/discordLogin.svg'
 import userContext from '../../api/context/user.context'
 import config from '../../api/config'
@@ -36,27 +36,24 @@ export default function AuthPage() {
         <>
             <Header />
             <div className={styles.main_window}>
-                <Container imageName="login" titleName="Авторизация">
-                    <div className={styles.container}>
-                        <div className={styles.policy}>
-                            <MarkDown remarkPlugins={[remarkGfm]}>
-                                {mdText}
-                            </MarkDown>
-                        </div>
+                <div className={styles.container}>
+                    <div className={styles.policy}>
+                        <MarkDown remarkPlugins={[remarkGfm]}>
+                            {mdText}
+                        </MarkDown>
                         <CheckboxNav checkType="readPolicy">
-                            <MdWarning size={22} />Я соглашаюсь со всеми выше
-                            перечисленными условиями.
+                            Я соглашаюсь со всеми выше перечисленными условиями.
                         </CheckboxNav>
-                        <button
-                            className={styles.discordAuth}
-                            disabled={!settings.readPolicy}
-                            onClick={() => auth()}
-                        >
-                            <Discord />
-                            Авторизация через дискорд
-                        </button>
                     </div>
-                </Container>
+                    <button
+                        className={styles.discordAuth}
+                        disabled={!settings.readPolicy}
+                        onClick={() => auth()}
+                    >
+                        <MdAdminPanelSettings size={20} />
+                        Авторизация через дискорд
+                    </button>
+                </div>
             </div>
         </>
     )

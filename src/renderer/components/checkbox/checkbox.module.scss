@@ -1,27 +1,18 @@
 .checkbox {
     cursor: pointer;
-    transition: ease-in-out all 0.1s;
-    box-sizing: border-box;
+    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 1.8s;
+
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 14px 23px;
-    border-radius: var(--borderRadius);
-    background: var(--mColor);
-    border: 1px solid var(--mBorder);
-    font-family: 'Open Runde';
-    font-style: normal;
-    font-weight: 400;
-    width: 100%;
-    font-size: 16px;
-    line-height: 22px;
-    text-align: center;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 7px;
+
+    width: -webkit-fill-available;
+
+    border-radius: 10px;
 
     &:hover {
-        background: var(--mColorH);
-        border: 1px solid var(--mBorderH);
-
         &:disabled {
             opacity: 0.2;
             background: transparent;
@@ -33,60 +24,79 @@
         opacity: 0.2;
     }
 
-    .input_checkbox {
-        display: none;
-    }
-
-    .children_content {
-        display: flex;
-        gap: 10px;
-        color: var(--mInColor);
-    }
-
-    .custom_checkbox {
-        transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
-        position: relative;
-        box-sizing: border-box;
-
+    .checkboxInner {
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
         align-items: center;
-        padding: 2px;
-        gap: 25px;
+        padding: 0px;
+        gap: 10px;
 
-        width: 81px;
-        height: 22px;
+        width: -webkit-fill-available;
 
-        background: var(--mInColor);
-        border-radius: var(--borderRadius);
+        .input_checkbox {
+            display: none;
+        }
 
-        .checkbox_slider {
-            transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
-            position: absolute;
-            left: 5px;
+        .children_content {
+            display: flex;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 140%;
 
+            color: #ffffff;
+        }
+
+        .custom_checkbox {
+            transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.1s;
+            position: relative;
             box-sizing: border-box;
+
             display: flex;
             flex-direction: row;
-            justify-content: center;
             align-items: center;
-            padding: 7px 18px;
-            gap: 10px;
+            padding: 2px;
+            gap: 25px;
 
-            background: rgba(0, 0, 0, 0.83);
-            border-radius: calc(var(--borderRadius) - 1px);
+            width: 50px;
+            height: 22px;
+
+            background: #798990;
+            outline: 1.5px solid #586770;
+            border-radius: 50px;
+
+            .checkbox_slider {
+                transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.1s;
+
+                position: absolute;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+                padding: 6px 10px;
+                left: 5px;
+
+                background: white;
+                border-radius: 50px;
+            }
         }
+    }
+
+    .description {
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 140%;
+
+        color: #c7c9d2;
     }
 }
 
 .active {
-    background: var(--mColorActive);
-    border: 1px solid var(--mBorderActive);
-
     &:hover {
-        background: var(--mColorActiveH);
-        border: 1px solid var(--mBorderActiveH);
-
         &:disabled {
             opacity: 0.2;
             background: transparent;
@@ -94,22 +104,15 @@
         }
     }
 
-    .children_content {
-        display: flex;
-        gap: 10px;
-        color: var(--mInColorActive);
-    }
+    .checkboxInner {
+        .custom_checkbox {
+            background: #2d57c7;
+            outline: 1.5px solid #2e64f5;
 
-    .custom_checkbox {
-        background: var(--mInColorActive);
-
-        .checkbox_slider {
-            padding: 7px 20px;
-            left: 35px;
+            .checkbox_slider {
+                padding: 6px 10px;
+                left: 25px;
+            }
         }
-    }
-
-    & svg {
-        fill: var(--mInColorActive);
     }
 }

@@ -19,13 +19,13 @@ export const plugins = [
         ],
     }),
     new webpack.ProvidePlugin({
-        Buffer: ['buffer', 'Buffer'], // Глобальное предоставление Buffer
-        process: 'process/browser', // Глобальное предоставление process
+        Buffer: ['buffer', 'Buffer'],
+        process: 'process/browser',
     }),
     new NodePolyfillPlugin(),
-    sentryWebpackPlugin({
-        org: "pulsesync",
-        project: "electron",
-        authToken: config.SENTRY_KEY,
-    }),
+    // sentryWebpackPlugin({
+    //     org: "pulsesync",
+    //     project: "electron",
+    //     authToken: config.SENTRY_KEY,
+    // }),
 ]

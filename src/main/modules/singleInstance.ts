@@ -35,24 +35,6 @@ export const checkForSingleInstance = (): void => {
         httpServer.listen(config.PORT, () => {
             console.log(`Server running at http://localhost:${config.PORT}/`)
         })
-        if (store.has('autoStartMusic') && store.get('autoStartMusic')) {
-            let appPath = path.join(
-                process.env.LOCALAPPDATA,
-                'Programs',
-                'YandexMusic',
-                'Яндекс Музыка.exe',
-            )
-            appPath = `"${appPath}"`
-
-            const command = `${appPath}`
-
-            exec(command, (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`Ошибка при выполнении команды: ${error}`)
-                    return
-                }
-            })
-        }
     } else {
         app.quit()
     }
