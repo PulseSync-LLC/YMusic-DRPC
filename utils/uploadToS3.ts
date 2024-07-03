@@ -22,7 +22,7 @@ fs.readFile(filePath, 'utf8')
         latestYml.updateUrgency = 'soft'
         latestYml.commonConfig = {
             DEPRECATED_VERSIONS: '<=1.0.0',
-            UPDATE_URL: `${config.UPDATE_URL}/dev_build/`,
+            UPDATE_URL: `${config.UPDATE_URL}/beta_build/`,
         }
 
         const newYaml = yaml.stringify(latestYml)
@@ -71,7 +71,7 @@ const uploadFile = (fileName: string) => {
 
         const params = {
             Bucket: config.S3_BUCKET,
-            Key: `dev_build/${fileName}`,
+            Key: `beta_build/${fileName}`,
             Body: fileContent,
         }
 

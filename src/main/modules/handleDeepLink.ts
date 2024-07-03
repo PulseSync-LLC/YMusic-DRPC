@@ -33,6 +33,9 @@ export const navigateToDeeplink = (
             store.set('token', token)
             window.webContents.send('authSuccess')
             break
+        case 'ban':
+            window.webContents.send('authBanned')
+            break
         case 'joinRoom':
             break
     }

@@ -252,6 +252,11 @@ ipcMain.on('electron-window-minimize', () => {
     mainWindow.minimize()
 })
 
+ipcMain.on('electron-exit', () => {
+    logger.main.info("Exit app")
+    app.quit()
+})
+
 ipcMain.on('electron-window-maximize', () => {
     if (mainWindow.isMaximized()) mainWindow.unmaximize()
     else mainWindow.maximize()
