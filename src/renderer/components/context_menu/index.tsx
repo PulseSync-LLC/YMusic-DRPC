@@ -10,9 +10,12 @@ import getTrackUrl from '../../api/createTrackUrl'
 import hotToast from 'react-hot-toast'
 import toast from '../../api/toast'
 import trackInitials from '../../api/interfaces/track.initials'
+import config from "../../api/config";
+import getUserToken from "../../api/getUserToken";
+import userInitials from "../../api/interfaces/user.initials";
 
 const ContextMenu: React.FC = () => {
-    const { settings, yaClient, setSettings } = useContext(userContext)
+    const { settings, yaClient, setSettings, setUser } = useContext(userContext)
     const [version, setVersion] = useState(null)
     const { currentTrack } = useContext(playerContext)
 
@@ -32,6 +35,21 @@ const ContextMenu: React.FC = () => {
             ...prevSettings,
             patched: false,
         }))
+    }
+    const logout = () => {
+        fetch(config.SERVER_URL + 'auth/logout', {
+            method: 'PUT',
+            headers: {
+                authorization: 'Bearer: ' + getUserToken(),
+            },
+        }).then(async r => {
+            const res = await r.json()
+            if (res.ok) {
+                toast.success('Успешный выход')
+                window.electron.store.delete('token')
+                setUser(userInitials)
+            }
+        })
     }
     const githubLink = () => {
         window.open('https://github.com/PulseSync-Official/YMusic-DRPC')
@@ -165,12 +183,14 @@ const ContextMenu: React.FC = () => {
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
+                        disabled={settings.autoStartInTray}
                         onClick={() => enableFunc('autoTray', true)}
                     >
                         Включить
                     </button>
                     <button
                         className={styles.contextButton}
+                        disabled={!settings.autoStartInTray}
                         onClick={() => enableFunc('autoTray', false)}
                     >
                         Выключить
@@ -235,7 +255,7 @@ const ContextMenu: React.FC = () => {
                     </button>
                 </div>
             </div>
-            <button className={styles.contextButton}>Выйти</button>
+            <button className={styles.contextButton} onClick={logout}>Выйти</button>
         </div>
     )
 }

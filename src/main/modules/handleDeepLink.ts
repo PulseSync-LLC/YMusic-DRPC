@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron'
 import { state } from './state'
 import { store } from './storage'
+import config from "../../renderer/api/config";
 
 let deeplinkUrl: string | null = null
 
@@ -28,8 +29,17 @@ export const navigateToDeeplink = (
     const argsPath = match[2]
     switch (mainPath) {
         case 'callback':
-            const reg = url.match(/\?token=([^&]+)/)
+            const reg = url.match(/\?token=([^&]+)&id=([^&]+)/)
             const token = decodeURIComponent(reg[1])
+            const id = decodeURIComponent(reg[2]);
+            fetch(`${config.SERVER_URL}/api/v1/user/${id}/access`).then(async (res) => {
+                const j = await res.json()
+                if (j.ok) {
+                    if (!j.access) {
+                      return app.quit()
+                    }
+                }
+            })
             store.set('token', token)
             window.webContents.send('authSuccess')
             break

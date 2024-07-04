@@ -57,6 +57,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                     </div>
                     <div className={styles.event_container}>
                         <div className={styles.menu}>
+                            {user.id !== '-1' && (
                             <div className={styles.badges_container}>
                                 {user.badges.length > 0 &&
                                     user.badges.map(_badge => (
@@ -69,11 +70,12 @@ const Header: React.FC<p> = ({ goBack }) => {
                                                 alt={_badge.type}
                                             />
                                             <span className={styles.tooltip}>
-                                                {_badge.type}
+                                                {_badge.name}
                                             </span>
                                         </div>
                                     ))}
                             </div>
+                            )}
 
                             {user.id !== '-1' && (
                                 <div className={styles.user_container}>

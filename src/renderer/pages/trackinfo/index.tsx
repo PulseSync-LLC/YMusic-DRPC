@@ -140,17 +140,17 @@ export default function TrackInfoPage() {
                                 <div className={theme.discordRpc}>
                                     <img
                                         className={theme.userBanner}
-                                        src="https://media.discordapp.net/attachments/482180995752394752/1256554862364065863/image.png?ex=66813168&is=667fdfe8&hm=b1c13419a7d5b98bcda110db1d3d7f646431f432dbac6839733c85c7f9a62437&=&format=webp"
+                                        src={user.banner ? user.banner : "static/assets/images/no_banner.png"}
                                         alt=""
                                     />
                                     <div>
                                         <img
                                             className={theme.userAvatar}
-                                            src="https://cdn.discordapp.com/avatars/302522186504077312/908f5ce4aeac02fbd29e2e1eeecd66ef"
+                                            src={user.avatar}
                                             alt=""
                                         />
                                         <div className={theme.userName}>
-                                            Maks1mio
+                                            {user.username}
                                         </div>
                                         <div className={theme.userRPC}>
                                             <div className={theme.status}>
