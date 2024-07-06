@@ -1,23 +1,21 @@
-import {app, BrowserWindow, dialog, ipcMain, shell} from "electron";
-import logger from "../modules/logger";
-import path from "path";
-import TrackInterface from "../../renderer/api/interfaces/track.interface";
-import https from "https";
-import {getPercent} from "../../renderer/utils/percentage";
-import fs from "fs";
-import * as si from "systeminformation";
-import os from "os";
-import {v4} from "uuid";
-import {corsAnywherePort, mainWindow} from "../../index";
-import {getUpdater} from "../modules/updater/updater";
-import checkAndTerminateYandexMusic from "../../../utils/processUtils";
-import Patcher from "../modules/patcher/patch";
-import {store} from "../modules/storage";
-import UnPatcher from "../modules/patcher/unpatch";
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import logger from '../modules/logger'
+import path from 'path'
+import TrackInterface from '../../renderer/api/interfaces/track.interface'
+import https from 'https'
+import { getPercent } from '../../renderer/utils/percentage'
+import fs from 'fs'
+import * as si from 'systeminformation'
+import os from 'os'
+import { v4 } from 'uuid'
+import { corsAnywherePort, mainWindow } from '../../index'
+import { getUpdater } from '../modules/updater/updater'
+import checkAndTerminateYandexMusic from '../../../utils/processUtils'
+import Patcher from '../modules/patcher/patch'
+import { store } from '../modules/storage'
+import UnPatcher from '../modules/patcher/unpatch'
 
-export const handleEvents = (
-    window: BrowserWindow
-): void => {
+export const handleEvents = (window: BrowserWindow): void => {
     const updater = getUpdater()
 
     ipcMain.on('update-install', () => {
@@ -29,7 +27,7 @@ export const handleEvents = (
     })
 
     ipcMain.on('electron-exit', () => {
-        logger.main.info("Exit app")
+        logger.main.info('Exit app')
         app.quit()
     })
 
@@ -48,25 +46,36 @@ export const handleEvents = (
             await Patcher.patchRum().then(async () => {
                 console.log('Все гуд')
                 store.set('patched', true)
+                mainWindow.webContents.send('UPDATE_APP_DATA', {
+                    patched: true,
+                })
             })
-        }, 3000)
+        }, 2000)
     })
 
     ipcMain.on('electron-repatch', async () => {
         await checkAndTerminateYandexMusic()
         setTimeout(async () => {
             await UnPatcher.unpatch().then(async () => {
-                Patcher.patchRum().then(async () => store.set('patched', true))
+                Patcher.patchRum().then(async () => {
+                    store.set('patched', true)
+                    mainWindow.webContents.send('UPDATE_APP_DATA', {
+                        repatch: true,
+                    })
+                })
             })
-        }, 3000)
+        }, 2000)
     })
     ipcMain.on('electron-depatch', async () => {
         await checkAndTerminateYandexMusic()
         setTimeout(async () => {
             await UnPatcher.unpatch().then(async () => {
                 store.set('patched', false)
+                mainWindow.webContents.send('UPDATE_APP_DATA', {
+                    depatch: true,
+                })
             })
-        }, 3000)
+        }, 2000)
     })
 
     ipcMain.on('electron-corsanywhereport', event => {
@@ -140,7 +149,9 @@ export const handleEvents = (
                         })
                     else mainWindow.webContents.send('download-track-cancelled')
                 })
-                .catch(() => mainWindow.webContents.send('download-track-failed'))
+                .catch(() =>
+                    mainWindow.webContents.send('download-track-failed'),
+                )
         },
     )
     ipcMain.on('get-music-device', event => {
@@ -159,12 +170,22 @@ export const handleEvents = (
         })
     })
     ipcMain.on('checkUpdate', async (event, data) => {
-        logger.main.info('Updater: check update')
-        await updater.check()
+        logger.updater.info('Check update')
+        const checkUpdate = await updater.check()
+        if (
+            checkUpdate !== null &&
+            checkUpdate.updateInfo.version !== app.getVersion()
+        ) {
+            mainWindow.webContents.send('UPDATE_APP_DATA', {
+                update: true,
+            })
+        } else {
+            mainWindow.webContents.send('UPDATE_APP_DATA', {
+                update: false,
+            })
+        }
     })
-
 }
 export const handleAppEvents = (window: BrowserWindow): void => {
     handleEvents(window)
 }
-

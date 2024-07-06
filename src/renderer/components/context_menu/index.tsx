@@ -10,15 +10,24 @@ import getTrackUrl from '../../api/createTrackUrl'
 import hotToast from 'react-hot-toast'
 import toast from '../../api/toast'
 import trackInitials from '../../api/interfaces/track.initials'
-import config from "../../api/config";
-import getUserToken from "../../api/getUserToken";
-import userInitials from "../../api/interfaces/user.initials";
+import config from '../../api/config'
+import getUserToken from '../../api/getUserToken'
+import userInitials from '../../api/interfaces/user.initials'
+import { ModalContext } from '../layout'
 
-const ContextMenu: React.FC = () => {
+interface ContextMenuProps {
+    modalRef: React.RefObject<{ openModal: () => void; closeModal: () => void }>
+}
+
+const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
     const { settings, yaClient, setSettings, setUser } = useContext(userContext)
     const [version, setVersion] = useState(null)
     const { currentTrack } = useContext(playerContext)
-
+    const handleOpenModal = () => {
+        if (modalRef.current) {
+            modalRef.current.openModal()
+        }
+    }
     const patch = () => {
         window.electron.patcher.patch()
         setSettings((prevSettings: SettingsInterface) => ({
@@ -52,7 +61,9 @@ const ContextMenu: React.FC = () => {
         })
     }
     const githubLink = () => {
-        window.open('https://github.com/PulseSync-Official/YMusic-DRPC')
+        window.open(
+            'https://github.com/PulseSync-Official/YMusic-DRPC/tree/patcher-ts',
+        )
     }
     const enableFunc = (type: string, status: boolean) => {
         switch (type) {
@@ -203,12 +214,14 @@ const ContextMenu: React.FC = () => {
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
+                        disabled={settings.autoStartApp}
                         onClick={() => enableFunc('autoStart', true)}
                     >
                         Включить
                     </button>
                     <button
                         className={styles.contextButton}
+                        disabled={!settings.autoStartApp}
                         onClick={() => enableFunc('autoStart', false)}
                     >
                         Выключить
@@ -219,21 +232,28 @@ const ContextMenu: React.FC = () => {
                 Размер интерфейса
                 <ArrowContext />
                 <div className={styles.showButtons}>
-                    <button className={styles.contextButton}>Скоро</button>
+                    <button className={styles.contextButton} disabled>
+                        Скоро
+                    </button>
                 </div>
             </div>
             <div className={styles.innerFunction}>
                 Особое
                 <ArrowContext />
                 <div className={styles.showButtons}>
-                    <div className={styles.contextButton}>Beta v{version}</div>
+                    <div
+                        className={styles.contextButton}
+                        onClick={handleOpenModal}
+                    >
+                        Beta v{version}
+                    </div>
                     <button
                         className={styles.contextButton}
                         onClick={() => {
                             window.desktopEvents?.send('checkUpdate')
                         }}
                     >
-                        Проверить обновление
+                        Проверить обновления
                     </button>
                     <button
                         className={styles.contextButton}
@@ -255,7 +275,9 @@ const ContextMenu: React.FC = () => {
                     </button>
                 </div>
             </div>
-            <button className={styles.contextButton} onClick={logout}>Выйти</button>
+            <button className={styles.contextButton} onClick={logout}>
+                Выйти
+            </button>
         </div>
     )
 }

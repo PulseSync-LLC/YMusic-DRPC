@@ -1,11 +1,4 @@
-import {
-    app,
-    BrowserWindow,
-    ipcMain,
-    shell,
-    session,
-    protocol,
-} from 'electron'
+import { app, BrowserWindow, ipcMain, shell, session, protocol } from 'electron'
 import process from 'process'
 import { getNativeImg } from './main/utils'
 import './main/modules/index'
@@ -26,7 +19,7 @@ import * as Sentry from '@sentry/electron/main'
 import { getTrackInfo } from './main/modules/httpServer'
 import { getUpdater } from './main/modules/updater/updater'
 import { isDev } from './renderer/api/config'
-import {handleAppEvents} from "./main/events";
+import { handleAppEvents } from './main/events'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -231,9 +224,9 @@ app.on('activate', () => {
         createWindow()
     }
 })
-
 setInterval(() => {
     let metadata = getTrackInfo()
-    if (Object.keys(metadata).length >= 1)
+    if (Object.keys(metadata).length >= 1) {
         mainWindow.webContents.send('trackinfo', metadata)
+    }
 }, 5000)

@@ -1,5 +1,11 @@
 import styles from './layout.module.scss'
-import React, { useContext, useEffect, useState } from 'react'
+import React, {
+    createContext,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 import { Helmet } from 'react-helmet'
 import Header from './header'
 import ButtonNav from '../button_nav'
@@ -14,8 +20,8 @@ import {
 } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
 import userContext from '../../api/context/user.context'
-import trackInitials from '../../api/interfaces/track.initials'
 import SettingsInterface from '../../api/interfaces/settings.interface'
+import Modal from '../modal'
 
 interface p {
     title: string
@@ -23,6 +29,15 @@ interface p {
     goBack?: boolean
 }
 
+interface ModalContextType {
+    openModal: () => void
+    closeModal: () => void
+}
+
+export const ModalContext = createContext<ModalContextType>({
+    openModal: () => {},
+    closeModal: () => {},
+})
 const Layout: React.FC<p> = ({ title, children, goBack }) => {
     const { settings, setSettings } = useContext(userContext)
     const [update, setUpdate] = useState(false)

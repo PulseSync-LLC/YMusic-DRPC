@@ -21,7 +21,7 @@ fs.readFile(filePath, 'utf8')
 
         latestYml.updateUrgency = 'soft'
         latestYml.commonConfig = {
-            DEPRECATED_VERSIONS: '<=1.0.0',
+            DEPRECATED_VERSIONS: '<=1.0.5',
             UPDATE_URL: `${config.UPDATE_URL}/beta_build/`,
         }
 

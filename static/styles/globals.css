@@ -1,6 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
 :root {
+    --white: #f0f0f0;
+    --primary: #ffcc66;
+    --red: #ed4245;
+
+    --medium: #131317;
+    --mediumer: #1c1c22;
+    --dark: #08070d;
+
+    --gray: #777;
+    --grayer: #25252d;
     --Main: #16181e;
     --MainBG: #1e2027;
 

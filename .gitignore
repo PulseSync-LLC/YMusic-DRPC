@@ -100,3 +100,4 @@ PulseSync.pvk
 utils/uploadToS3.js
 schema.graphql
 ReactDevTools
+modules

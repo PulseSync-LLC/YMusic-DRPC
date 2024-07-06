@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import UserMeQuery from '../api/queries/user/getMe.query'
 
@@ -164,7 +164,6 @@ function app() {
     }, [socketError])
     useEffect(() => {
         if (user.id !== '-1') {
-            console.log('1')
             if (!socket.connected) socket.connect()
         } else {
             router.navigate('/')
@@ -178,6 +177,38 @@ function app() {
                     ...prevSettings,
                     ya_token: data,
                 }))
+            })
+            window.desktopEvents?.on('UPDATE_APP_DATA', (event, data) => {
+                console.log(data)
+                for (const [key, value] of Object.entries(data)) {
+                    switch (key) {
+                        case 'patched':
+                            toast.success('Успешный патч')
+                            break
+                        case 'repatch':
+                            toast.success('Успешный репатч')
+                            break
+                        case 'depatch':
+                            toast.success('Успешный депатч')
+                            break
+                        case 'update':
+                            if (value) {
+                                toast.success('Обновления найдены')
+                            } else {
+                                toast.error('Обновления не найдены')
+                            }
+                            console.log('update:', value)
+                            break
+                        default:
+                            console.log(
+                                'Unknown object key:',
+                                key,
+                                'with value:',
+                                value,
+                            )
+                            break
+                    }
+                }
             })
             const settingsKeys = [
                 'discordRpc',

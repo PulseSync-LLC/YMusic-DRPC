@@ -122,24 +122,27 @@ class Updater {
             })
     }
 
-    async check() {
+    async check(): Promise<UpdateResult>{
         if (this.updateStatus !== UpdateStatus.IDLE) {
             this.logger.updater.log(
                 'New update is processing',
                 this.updateStatus,
             )
-            return
+            return null
         }
 
         try {
             const updateResult = await autoUpdater.checkForUpdates()
             if (!updateResult) {
                 this.logger.updater.log('No update found')
-                return
+                return null
             }
+            console.log(updateResult)
             this.updateApplier(updateResult)
+            return updateResult
         } catch (error) {
             this.logger.updater.error('Update check error', error)
+            return null
         }
     }
 

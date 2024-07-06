@@ -9,6 +9,8 @@ import MakerDMG from '@electron-forge/maker-dmg'
 import config from './src/config.json'
 import { mainConfig } from './webpack.main.config'
 import { rendererConfig } from './webpack.renderer.config'
+import path from 'path'
+import fs from 'fs-extra'
 
 const forge_config: ForgeConfig = {
     packagerConfig: {
@@ -59,6 +61,26 @@ const forge_config: ForgeConfig = {
             },
         }),
     ],
+    hooks: {
+        packageAfterCopy: async (
+            forgeConfig,
+            buildPath,
+            electronVersion,
+            platform,
+            arch,
+        ) => {
+            console.log(
+                `build app ${platform}-${arch} with electron ${electronVersion}`,
+            )
+
+            const outDir = path.join(buildPath, '..', '..', 'modules')
+            const sourceDir = path.join(__dirname, 'modules')
+            await fs.ensureDir(outDir)
+            await fs.copy(sourceDir, outDir)
+
+            console.log(`Copied modules to ${outDir}`)
+        },
+    },
 }
 
 export default forge_config

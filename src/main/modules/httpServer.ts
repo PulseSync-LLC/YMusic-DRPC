@@ -2,7 +2,7 @@ import * as path from 'path'
 import * as http from 'http'
 import * as fs from 'fs'
 import { getToken } from 'yandex-music-client/token'
-import { mainWindow } from '../../index'
+import {mainWindow} from '../../index'
 import { store } from './storage'
 
 let jsonDataGET: any = {}
