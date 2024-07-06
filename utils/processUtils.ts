@@ -1,13 +1,20 @@
-import psList from 'ps-list'
+import { psList } from '@heyikang/ps-list'
 import { exec } from 'child_process'
-import util from 'util'
 import path from 'path'
+import util from 'util'
 
 const execPromise = util.promisify(exec)
 
 async function isProcessRunning(processName: string): Promise<number | null> {
     try {
-        const processes = await psList()
+        const modulesVendorPath = path.join(
+            __dirname,
+            '../../../../modules/vendor/',
+        )
+        const processes = await psList({
+            pslistX64Path: modulesVendorPath + 'fastlist-0.3.0-x64.exe',
+            pslistIa32Path: modulesVendorPath + 'fastlist-0.3.0-x86.exe',
+        })
         const process = processes.find(p => p.name === processName)
         return process ? process.pid : null
     } catch (error) {
