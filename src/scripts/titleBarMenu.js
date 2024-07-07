@@ -96,7 +96,18 @@ window.onload = async () => {
         .catch(err => {
             console.error('Ошибка при проверке файла:', err)
         })
-
+    window.drp
+        .checkIfPackageInstalled()
+        .then(isInstalled => {
+            console.log(isInstalled)
+            if (!isInstalled) {
+                patcherApp.disabled = true
+                unpatcherApp.disabled = true
+            }
+        })
+        .catch(err => {
+            console.error('Ошиба при проверки пакетов:', err)
+        })
     window.drp
         .checkSelectedStyle()
         .then(theme => {

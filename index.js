@@ -1,4 +1,4 @@
-const { app, shell, BrowserWindow, Tray, ipcMain, Menu } = require('electron')
+const { app, shell, BrowserWindow, Tray, ipcMain, Menu, dialog } = require('electron')
 const path = require('path')
 const { exec } = require('child_process')
 const url = require('url')
@@ -259,27 +259,40 @@ function createWindow() {
             : playerBarTitle
         const largeImage = requestImgTrack[1] || 'ym'
         const smallImage = requestImgTrack[1] ? 'ym' : 'unset'
-        const buttons = linkTitle
-            ? [
-                  {
-                      label: '✌️ Open in YandexMusic',
-                      url: `yandexmusic://album/${encodeURIComponent(linkTitle)}`,
-                  },
-                  {
-                      label: '🤠 Open in GitHub',
-                    url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
+        if(linkTitle) {
+            RPC.setActivity({
+                state: timeRange,
+                details: details,
+                largeImageKey: largeImage,
+                smallImageKey: smallImage,
+                smallImageText: 'Yandex Music',
+                buttons: [
+                    {
+                        label: '✌️ Open in YandexMusic',
+                        url: `yandexmusic://album/${encodeURIComponent(linkTitle)}`,
                     },
-              ]
-            : null
-
-        RPC.setActivity({
-            state: timeRange,
-            details: details,
-            largeImageKey: largeImage,
-            smallImageKey: smallImage,
-            smallImageText: 'Yandex Music',
-            buttons: buttons,
-        })
+                    {
+                        label: '🤠 Open in GitHub',
+                        url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
+                    },
+                ],
+            })
+        }
+        else {
+            RPC.setActivity({
+                state: timeRange,
+                details: details,
+                largeImageKey: largeImage,
+                smallImageKey: smallImage,
+                smallImageText: 'Yandex Music',
+                buttons: [
+                    {
+                        label: '🤠 Open in GitHub',
+                        url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
+                    },
+                ],
+            })
+        }
     }
 
     const noYMAppDiscordRPC = RPC => {
@@ -299,6 +312,52 @@ function createWindow() {
         }
     }, 5000)
 
-}
+    ipcMain.handle("checkIfPackageInstalled", async() => {
+        return await isGlobalPackageInstalled("asar")
+            .then(installed => {
+                if (installed) {
+                    console.log(`You can use the package asar globally.`);
+                    return true
 
-app.on('ready', createWindow)
+                } else {
+                    console.log(`Package asar is not found. Install it globally using npm install -g asar.`);
+                    showMessageBox(`Пакет asar не установлен. Пропиши npm i asar -g`);
+                    return false
+                }
+            })
+            .catch(error => {
+                console.error(`An error occurred: ${error}`);
+            })
+    })
+
+}
+app.on('ready', async () => {
+    createWindow()
+})
+function isGlobalPackageInstalled(packageName) {
+    return new Promise((resolve, reject) => {
+        exec('npm list -g --depth=0', (error, stdout, stderr) => {
+            if (error) {
+                console.error(`An error occurred while checking the package ${packageName}:`, stderr);
+                reject(stderr);
+            } else {
+                if (stdout.includes(packageName)) {
+                    console.log(`Package ${packageName} is installed globally.`);
+                    resolve(true);
+                } else {
+                    console.log(`Package ${packageName} is not installed globally.`);
+                    resolve(false);
+                }
+            }
+        });
+
+    });
+}
+function showMessageBox(message) {
+    dialog.showMessageBox({
+        type: 'info',
+        buttons: ['OK'],
+        title: 'Package Check',
+        message: message
+    });
+}
