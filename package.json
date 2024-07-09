@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "author": "EvT",
-    "license": "MIT",
+    "license": "GPL-3.0",
     "devDependencies": {
         "@electron-forge/cli": "7.4.0",
         "electron": "^31.1.0"
