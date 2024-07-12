@@ -26,13 +26,14 @@ const Header: React.FC<p> = ({ goBack }) => {
     const [modal, setModal] = useState(false)
     const openModal = () => setModal(true)
     const closeModal = () => setModal(false)
-    const [appInfo, setAppInfo] = useState<{
-        version: string
-        changelog: string
-    }>({
-        version: '',
-        changelog: '',
-    })
+    const [appInfo, setAppInfo] = useState<
+        {
+            id: number
+            version: string
+            changelog: string
+            createdAt: number
+        }[]
+    >([])
     const modalRef = useRef<{ openModal: () => void; closeModal: () => void }>(
         null,
     )
@@ -59,14 +60,30 @@ const Header: React.FC<p> = ({ goBack }) => {
     const fetchAppInfo = async () => {
         try {
             const res = await fetch(`${config.SERVER_URL}api/v1/app/info`)
-            const { version, changelog } = await res.json()
-            setAppInfo({ version, changelog })
+            const data = await res.json()
+            if (data.ok && Array.isArray(data.appInfo)) {
+                const sortedAppInfos = data.appInfo.sort(
+                    (a: any, b: any) => b.id - a.id,
+                )
+                setAppInfo(sortedAppInfos)
+            } else {
+                console.error('Invalid response format:', data)
+            }
         } catch (error) {
             console.error('Failed to fetch app info:', error)
         }
     }
 
     const memoizedAppInfo = useMemo(() => appInfo, [appInfo])
+
+    const formatDate = (timestamp: any) => {
+        const date = new Date(timestamp * 1000)
+        return date.toLocaleDateString('ru-RU', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        })
+    }
     return (
         <>
             <Modal
@@ -75,10 +92,22 @@ const Header: React.FC<p> = ({ goBack }) => {
                 reqClose={closeModal}
             >
                 <div className={styles.updateModal}>
-                    <h3>{memoizedAppInfo.version}</h3>
-                    <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
-                        {memoizedAppInfo.changelog}
-                    </ReactMarkdown>
+                    {memoizedAppInfo
+                        .filter(info => info.version <= version)
+                        .map(info => (
+                            <div key={info.id}>
+                                <div className={styles.version_info}>
+                                    <h3>{info.version}</h3>
+                                    <span>{formatDate(info.createdAt)}</span>
+                                </div>
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                                >
+                                    {info.changelog}
+                                </ReactMarkdown>
+                                <hr />
+                            </div>
+                        ))}
                 </div>
             </Modal>
             <header className={styles.nav_bar}>
@@ -87,6 +116,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                         <button
                             className={styles.logoplace}
                             onClick={toggleMenu}
+                            disabled={user.id === '-1'}
                         >
                             <img
                                 className={styles.logoapp}
@@ -99,7 +129,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                                     isMenuOpen ? styles.true : styles.false
                                 }
                             >
-                                <ArrowDown />
+                                {user.id != '-1' && <ArrowDown />}
                             </div>
                             {isMenuOpen && <ContextMenu modalRef={modalRef} />}
                         </button>

@@ -11,6 +11,14 @@
     justify-content: center;
     opacity: 0;
     transition: opacity 0.5s;
+    overflow: hidden;
+}
+.modal-header {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .ReactModal__Overlay--after-open {
@@ -22,7 +30,6 @@
 }
 
 .modal-content {
-    padding: 20px;
     max-width: 500px;
     transform: translateY(-50px);
     transition:
@@ -38,6 +45,8 @@
     background-color: var(--medium);
     width: 400px;
     height: 400px;
+    padding: 10px 20px 20px;
+    overflow-y: auto;
     border-radius: 20px;
     border: none;
 }

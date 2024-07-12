@@ -122,13 +122,13 @@ class Updater {
             })
     }
 
-    async check(): Promise<UpdateResult>{
+    async check(): Promise<UpdateStatus>{
         if (this.updateStatus !== UpdateStatus.IDLE) {
             this.logger.updater.log(
                 'New update is processing',
                 this.updateStatus,
             )
-            return null
+            return this.updateStatus
         }
 
         try {
@@ -139,11 +139,10 @@ class Updater {
             }
             console.log(updateResult)
             this.updateApplier(updateResult)
-            return updateResult
         } catch (error) {
             this.logger.updater.error('Update check error', error)
-            return null
         }
+        return this.updateStatus
     }
 
     start() {

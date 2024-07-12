@@ -2,6 +2,7 @@ import { psList } from '@heyikang/ps-list'
 import { exec } from 'child_process'
 import path from 'path'
 import util from 'util'
+import { store } from '../src/main/modules/storage'
 
 const execPromise = util.promisify(exec)
 
@@ -41,6 +42,21 @@ async function checkAndTerminateYandexMusic() {
     } else {
         console.log(`${processName} not found.`)
     }
+}
+export async function checkAndStartYandexMusic() {
+    let appPath = path.join(
+        process.env.LOCALAPPDATA,
+        'Programs',
+        'YandexMusic',
+        'Яндекс Музыка.exe',
+    )
+    appPath = `"${appPath}"`
+    exec(`${appPath} --remote-allow-origins=*`, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Ошибка при выполнении команды: ${error}`)
+            return
+        }
+    })
 }
 
 export default checkAndTerminateYandexMusic

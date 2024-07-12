@@ -22,6 +22,8 @@ import { NavLink } from 'react-router-dom'
 import userContext from '../../api/context/user.context'
 import SettingsInterface from '../../api/interfaces/settings.interface'
 import Modal from '../modal'
+import hotToast from 'react-hot-toast'
+import toast from '../../api/toast'
 
 interface p {
     title: string
@@ -39,12 +41,35 @@ export const ModalContext = createContext<ModalContextType>({
     closeModal: () => {},
 })
 const Layout: React.FC<p> = ({ title, children, goBack }) => {
-    const { settings, setSettings } = useContext(userContext)
-    const [update, setUpdate] = useState(false)
+    const { settings, setSettings, updateAvailable, setUpdate } =
+        useContext(userContext)
+    const toastLoading = (event: any, title: string) => {
+        let toastId: string
+        toastId = hotToast.loading(title, {
+            style: {
+                background: '#333',
+                color: '#fff',
+            },
+        })
+        const handleUpdateAppData = (event: any, data: any) => {
+            for (const [key] of Object.entries(data)) {
+                switch (key) {
+                    case 'patch':
+                        toast.success('Успешный патч', { id: toastId })
+                        break
+                    default:
+                        hotToast.dismiss(toastId)
+                        break
+                }
+            }
+            window.desktopEvents?.removeAllListeners('UPDATE_APP_DATA')
+        }
+
+        window.desktopEvents?.on('UPDATE_APP_DATA', handleUpdateAppData)
+    }
     useEffect(() => {
         if (typeof window !== 'undefined') {
             window.desktopEvents?.on('update-available', (event, data) => {
-                console.log(data)
                 setUpdate(true)
             })
         }
@@ -73,9 +98,20 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     <Discord height={24} width={24} />
                                 </ButtonNav>
                             </NavLink>
-                            <ButtonNav disabled>
-                                <MdExtension size={24} />
-                            </ButtonNav>
+                            <NavLink
+                                to="/theme"
+                                className={({ isActive, isPending }) =>
+                                    isPending
+                                        ? 'pending'
+                                        : isActive
+                                          ? 'active'
+                                          : ''
+                                }
+                            >
+                                <ButtonNav>
+                                    <MdExtension size={24} />
+                                </ButtonNav>
+                            </NavLink>
                             <ButtonNav disabled>
                                 <MdStoreMallDirectory size={24} />
                             </ButtonNav>
@@ -83,7 +119,7 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 <MdConnectWithoutContact size={24} />
                             </ButtonNav>
                         </div>
-                        {update && (
+                        {updateAvailable && (
                             <button
                                 onClick={() => {
                                     setUpdate(false)
@@ -107,7 +143,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                         </div>
                                     </div>
                                     <button
-                                        onClick={() => {
+                                        onClick={e => {
+                                            toastLoading(e, 'Патч...')
                                             window.electron.patcher.patch()
                                             setSettings(
                                                 (

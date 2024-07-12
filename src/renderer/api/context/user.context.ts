@@ -18,6 +18,8 @@ interface p {
     settings: SettingsInterface
     setSettings: (settingsData: any) => void
     yaClient: YandexMusicClient
+    setUpdate: (state: boolean) => void
+    updateAvailable?: boolean
     setYaClient: (client: YandexMusicClient) => void
 }
 
@@ -31,6 +33,8 @@ const UserContext = createContext<p>({
     settings: settingsInitials,
     setSettings: () => void 0,
     yaClient: null,
+    setUpdate: () => void 0,
+    updateAvailable: false,
     setYaClient: () => void 0,
 })
 

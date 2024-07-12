@@ -1,0 +1,44 @@
+.card {
+    width: 376px;
+    height: 50px;
+    border-radius: 8px;
+    background: var(--panelsColor);
+    outline: 1px solid var(--BorderColor);
+    padding: 16px;
+    color: #ffffff;
+    max-width: 300px;
+    font-family: Arial, sans-serif;
+
+    .header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+
+        .icon {
+            border-radius: 50%;
+            margin-right: 12px;
+        }
+
+        .titleSection {
+            flex-grow: 1;
+
+            .title {
+                font-size: 18px;
+                margin: 0;
+            }
+
+            .author {
+                font-size: 14px;
+                color: #b9bbbe;
+            }
+        }
+
+        .checkbox {
+            img {
+                width: 20px;
+                height: 20px;
+            }
+        }
+
+    }
+}

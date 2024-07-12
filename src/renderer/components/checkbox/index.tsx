@@ -1,66 +1,77 @@
 import React, {
     ButtonHTMLAttributes,
-    CSSProperties,
     useContext,
     useEffect,
     useState,
 } from 'react'
 import styles from './checkbox.module.scss'
-import toast from '../../api/toast'
 import userContext from '../../api/context/user.context'
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
-    children: any
+    children?: any
     disabled?: boolean
     description?: string
     checkType?: string
+    isChecked?: boolean
+    onChange?: (event: any) => void
 }
 
 const Checkbox: React.FC<Props> = ({
-    children,
-    disabled,
-    description,
-    checkType,
-}) => {
+                                       children,
+                                       disabled,
+                                       description,
+                                       checkType,
+                                       isChecked,
+                                       onChange,
+                                   }) => {
     const [isActive, setIsActive] = useState(false)
-    const { user, setUser, settings, setSettings } = useContext(userContext)
+    const { setSettings } = useContext(userContext)
     useEffect(() => {
-        switch (checkType) {
-            case 'startDiscordRpc':
-                setIsActive(window.electron.store.get('discordRpc'))
-                break
-            case 'enableRpcButtonListen':
-                setIsActive(window.electron.store.get('enableRpcButtonListen'))
-                break
-            case 'readPolicy':
-                setIsActive(window.electron.store.get('readPolicy'))
-                break
+        if (isChecked !== undefined) {
+            setIsActive(isChecked)
+        } else {
+            switch (checkType) {
+                case 'startDiscordRpc':
+                    setIsActive(window.electron.store.get('discordRpc'))
+                    break
+                case 'enableRpcButtonListen':
+                    setIsActive(window.electron.store.get('enableRpcButtonListen'))
+                    break
+                case 'readPolicy':
+                    setIsActive(window.electron.store.get('readPolicy'))
+                    break
+            }
         }
-    }, [])
+    }, [isChecked])
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setIsActive(event.target.checked)
-        switch (checkType) {
-            case 'startDiscordRpc':
-                window.discordRpc.discordRpc(event.target.checked)
-                setSettings((prevSettings: any) => ({
-                    ...prevSettings,
-                    discordRpc: event.target.checked,
-                }))
-                break
-            case 'enableRpcButtonListen':
-                window.discordRpc.enableListenButton(event.target.checked)
-                setSettings((prevSettings: any) => ({
-                    ...prevSettings,
-                    enableRpcButtonListen: event.target.checked,
-                }))
-                break
-            case 'readPolicy':
-                setSettings((prevSettings: any) => ({
-                    ...prevSettings,
-                    readPolicy: event.target.checked,
-                }))
-                window.electron.store.set('readPolicy', event.target.checked)
-                break
+        if (onChange) {
+            onChange(event)
+        } else {
+            switch (checkType) {
+                case 'startDiscordRpc':
+                    window.discordRpc.discordRpc(event.target.checked)
+                    setSettings((prevSettings: any) => ({
+                        ...prevSettings,
+                        discordRpc: event.target.checked,
+                    }))
+                    break
+                case 'enableRpcButtonListen':
+                    window.discordRpc.enableListenButton(event.target.checked)
+                    setSettings((prevSettings: any) => ({
+                        ...prevSettings,
+                        enableRpcButtonListen: event.target.checked,
+                    }))
+                    break
+                case 'readPolicy':
+                    setSettings((prevSettings: any) => ({
+                        ...prevSettings,
+                        readPolicy: event.target.checked,
+                    }))
+                    window.electron.store.set('readPolicy', event.target.checked)
+                    break
+            }
         }
     }
 
@@ -74,6 +85,7 @@ const Checkbox: React.FC<Props> = ({
                     className={`${styles.input_checkbox}`}
                     disabled={disabled}
                     type="checkbox"
+                    checked={isActive}
                     name="checkbox-checked"
                     onChange={handleInputChange}
                 />

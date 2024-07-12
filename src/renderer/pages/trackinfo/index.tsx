@@ -153,21 +153,23 @@ export default function TrackInfoPage() {
                                                                         currentTrack.artist
                                                                     }
                                                                 </div>
-                                                                <div
-                                                                    className={
-                                                                        theme.time
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        currentTrack
-                                                                            .timecodes[0]
-                                                                    }{' '}
-                                                                    -{' '}
-                                                                    {
-                                                                        currentTrack
-                                                                            .timecodes[1]
-                                                                    }
-                                                                </div>
+                                                                {currentTrack.timecodes.length > 0 && (
+                                                                    <div
+                                                                        className={
+                                                                            theme.time
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            currentTrack
+                                                                                .timecodes[0]
+                                                                        }{' '}
+                                                                        -{' '}
+                                                                        {
+                                                                            currentTrack
+                                                                                .timecodes[1]
+                                                                        }
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     ) : (

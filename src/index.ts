@@ -16,11 +16,14 @@ import {
 } from './main/modules/handleDeepLink'
 import { checkForSingleInstance } from './main/modules/singleInstance'
 import * as Sentry from '@sentry/electron/main'
-import { getTrackInfo } from './main/modules/httpServer'
+import { getTrackInfo, setTheme } from './main/modules/httpServer'
 import { getUpdater } from './main/modules/updater/updater'
 import { isDev } from './renderer/api/config'
 import { handleAppEvents } from './main/events'
-
+import checkAndTerminateYandexMusic from '../utils/processUtils'
+import { exec } from 'child_process'
+import Theme from './renderer/api/interfaces/theme.interface'
+import logger from './main/modules/logger'
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 
@@ -31,7 +34,21 @@ const isMac = process.platform === 'darwin'
 export let corsAnywherePort: string | number
 export let mainWindow: BrowserWindow
 let preloaderWindow: BrowserWindow
+let availableThemes: Theme[] = [];
+let selectedTheme: string;
+const defaultTheme = {
+    name: 'Default',
+    image: 'url',
+    author: 'Your Name',
+    description: 'Default theme.',
+    version: '1.0.0',
+    css: 'style.css',
+    script: 'script.js',
+};
 
+const defaultCssContent = `{}`;
+
+const defaultScriptContent = ``;
 const icon = getNativeImg('appicon', '.png', 'icon').resize({
     width: 40,
     height: 40,
@@ -147,6 +164,17 @@ protocol.registerSchemesAsPrivileged([
         },
     },
     {
+        scheme: 'file',
+        privileges: {
+            standard: true,
+            bypassCSP: true,
+            allowServiceWorkers: true,
+            supportFetchAPI: true,
+            corsEnabled: true,
+            stream: true,
+        },
+    },
+    {
         scheme: 'https',
         privileges: {
             standard: true,
@@ -174,6 +202,82 @@ app.on('ready', async () => {
         mainWindow.webContents.send('update-available', version)
     })
 })
+function createDefaultThemeIfNotExists(themesFolderPath: string) {
+    const defaultThemePath = path.join(themesFolderPath, defaultTheme.name);
+    try {
+
+
+        if (!fs.existsSync(defaultThemePath)) {
+            fs.mkdirSync(defaultThemePath, { recursive: true });
+
+            const metadataPath = path.join(defaultThemePath, 'metadata.json');
+            const cssPath = path.join(defaultThemePath, defaultTheme.css);
+            const scriptPath = path.join(defaultThemePath, defaultTheme.script);
+
+            fs.writeFileSync(metadataPath, JSON.stringify(defaultTheme, null, 2), 'utf-8');
+            fs.writeFileSync(cssPath, defaultCssContent, 'utf-8');
+            fs.writeFileSync(scriptPath, defaultScriptContent, 'utf-8');
+
+            logger.main.info(`Themes: default theme created at ${defaultThemePath}.`);
+        }
+    }
+    catch (err) {
+        logger.main.error('Theme: error creating default theme:', err);
+    }
+}
+async function loadThemes(): Promise<Theme[]> {
+    const themesFolderPath = path.join(app.getPath('appData'), 'PulseSync', 'themes');
+
+    try {
+        createDefaultThemeIfNotExists(themesFolderPath);
+        const folders = await fs.promises.readdir(themesFolderPath);
+        availableThemes = [];
+
+        for (const folder of folders) {
+            const themeFolderPath = path.join(themesFolderPath, folder);
+            const metadataFilePath = path.join(themeFolderPath, 'metadata.json');
+
+            if (fs.existsSync(metadataFilePath)) {
+                try {
+                    const data = await fs.promises.readFile(metadataFilePath, 'utf-8');
+                    const metadata: Theme = JSON.parse(data);
+                    metadata.path = themeFolderPath;
+                    availableThemes.push(metadata);
+                } catch (err) {
+                    logger.main.error(`Themes: error reading or parsing metadata.json in theme ${folder}:`, err);
+                }
+            } else {
+                logger.main.error(`Themes: metadata.json not found in theme ${folder}`);
+            }
+        }
+
+        logger.main.info('Themes: Available themes:', availableThemes);
+        return availableThemes;
+
+    } catch (err) {
+        console.error('Error reading themes directory:', err);
+        throw err;
+    }
+}
+ipcMain.handle('getThemes', async () => {
+    try {
+        const themes = await loadThemes();
+        return themes;
+    } catch (error) {
+        logger.main.error('Themes: Error loading themes:', error);
+        throw error;
+    }
+});
+
+ipcMain.on('themeChanged', (event, themeName) => {
+    logger.main.info(`Themes: theme changed to: ${themeName}`);
+    selectedTheme = themeName;
+    setTheme(selectedTheme);
+});
+function initializeTheme() {
+    selectedTheme = store.get('theme') || 'Default';
+    setTheme(selectedTheme);
+}
 app.whenReady().then(async () => {
     if (isDev) {
         await session.defaultSession.loadExtension(
@@ -187,6 +291,7 @@ app.whenReady().then(async () => {
             ),
         )
     }
+    initializeTheme();
 })
 async function prestartCheck() {
     const musicDir = app.getPath('music')
@@ -200,7 +305,24 @@ async function prestartCheck() {
         'resources',
         'app.asar.copy',
     )
+    if (store.has('autoStartMusic') && store.get('autoStartMusic')) {
+        let appPath = path.join(
+            process.env.LOCALAPPDATA,
+            'Programs',
+            'YandexMusic',
+            'Яндекс Музыка.exe',
+        )
+        appPath = `"${appPath}"`
 
+        const command = `${appPath} --remote-allow-origins=*`
+        await checkAndTerminateYandexMusic()
+        exec(command, (error, stdout, stderr) => {
+            if (error) {
+                logger.main.error(`MusicAutoStart: Ошибка при выполнении команды: ${error}`)
+                return
+            }
+        })
+    }
     if (store.has('discordRpc') && store.get('discordRpc')) {
         rpc_connect()
     }

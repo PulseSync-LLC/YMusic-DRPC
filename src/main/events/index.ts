@@ -10,10 +10,13 @@ import os from 'os'
 import { v4 } from 'uuid'
 import { corsAnywherePort, mainWindow } from '../../index'
 import { getUpdater } from '../modules/updater/updater'
-import checkAndTerminateYandexMusic from '../../../utils/processUtils'
+import checkAndTerminateYandexMusic, {
+    checkAndStartYandexMusic,
+} from '../../../utils/processUtils'
 import Patcher from '../modules/patcher/patch'
 import { store } from '../modules/storage'
 import UnPatcher from '../modules/patcher/unpatch'
+import { UpdateStatus } from '../modules/updater/constants/updateStatus'
 
 export const handleEvents = (window: BrowserWindow): void => {
     const updater = getUpdater()
@@ -47,8 +50,9 @@ export const handleEvents = (window: BrowserWindow): void => {
                 console.log('Все гуд')
                 store.set('patched', true)
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
-                    patched: true,
+                    patch: true,
                 })
+                await checkAndStartYandexMusic()
             })
         }, 2000)
     })
@@ -56,14 +60,16 @@ export const handleEvents = (window: BrowserWindow): void => {
     ipcMain.on('electron-repatch', async () => {
         await checkAndTerminateYandexMusic()
         setTimeout(async () => {
-            await UnPatcher.unpatch().then(async () => {
+            await UnPatcher.unpatch()
+            setTimeout(async () => {
                 Patcher.patchRum().then(async () => {
                     store.set('patched', true)
                     mainWindow.webContents.send('UPDATE_APP_DATA', {
                         repatch: true,
                     })
+                    await checkAndStartYandexMusic()
                 })
-            })
+            }, 3000)
         }, 2000)
     })
     ipcMain.on('electron-depatch', async () => {
@@ -74,6 +80,7 @@ export const handleEvents = (window: BrowserWindow): void => {
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     depatch: true,
                 })
+                await checkAndStartYandexMusic()
             })
         }, 2000)
     })
@@ -96,6 +103,10 @@ export const handleEvents = (window: BrowserWindow): void => {
                 const musicDir = app.getPath('music')
                 const downloadDir = path.join(musicDir, 'PulseSyncMusic')
                 await shell.openPath(downloadDir)
+                break
+            case 'themePath':
+                const themesFolderPath = path.join(app.getPath('appData'), 'PulseSync', 'themes');
+                await shell.openPath(themesFolderPath)
                 break
         }
     })
@@ -172,10 +183,7 @@ export const handleEvents = (window: BrowserWindow): void => {
     ipcMain.on('checkUpdate', async (event, data) => {
         logger.updater.info('Check update')
         const checkUpdate = await updater.check()
-        if (
-            checkUpdate !== null &&
-            checkUpdate.updateInfo.version !== app.getVersion()
-        ) {
+        if (checkUpdate !== null && checkUpdate === UpdateStatus.DOWNLOADED || checkUpdate === UpdateStatus.DOWNLOADING) {
             mainWindow.webContents.send('UPDATE_APP_DATA', {
                 update: true,
             })

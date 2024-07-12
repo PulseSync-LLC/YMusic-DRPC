@@ -6,6 +6,7 @@ const SettingsInitials: SettingsInterface = {
     patched: false,
     readPolicy: false,
     autoStartInTray: false,
+    autoStartMusic: false,
     autoStartApp: false,
     ya_token: null,
 }

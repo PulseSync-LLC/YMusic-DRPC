@@ -21,16 +21,7 @@ const Modal: React.FC<p> = ({ title, isOpen, reqClose, children }) => {
             overlayClassName="modal-overlay"
             closeTimeoutMS={500}
         >
-            <div
-                style={{
-                    display: 'flex',
-                    position: 'relative',
-                    top: '-5%',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                }}
-            >
+            <div className="modal-header">
                 <h2>{title}</h2>
                 <Button
                     style={{

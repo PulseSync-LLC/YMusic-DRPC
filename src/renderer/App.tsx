@@ -7,9 +7,9 @@ import AppPage from './pages/_app'
 function App() {
     Modal.setAppElement('#root')
     ReactDOM.createRoot(document.getElementById('root')).render(
-        <React.StrictMode>
-            <AppPage />
-        </React.StrictMode>,
+        // <React.StrictMode>
+        // </React.StrictMode>,
+        <AppPage />
     )
 }
 

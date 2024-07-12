@@ -6,6 +6,7 @@ export default interface SettingsInterface {
     patched: boolean
     readPolicy: boolean
     autoStartInTray: boolean
+    autoStartMusic: boolean
     autoStartApp: boolean
     ya_token: string
 }

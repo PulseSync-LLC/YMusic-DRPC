@@ -29,7 +29,9 @@
 
         background: var(--MainBG);
         border-radius: 20px 20px 0px 0px;
-
+        .extension_container {
+            overflow: hidden;
+        }
         .container_witch_text {
             display: flex;
             flex-direction: column;

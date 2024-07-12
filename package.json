@@ -157,13 +157,13 @@
             "oneClick": false,
             "createDesktopShortcut": true,
             "createStartMenuShortcut": true,
-            "perMachine": true,
+            "perMachine": false,
+            "allowElevation": false,
             "unicode": true,
             "language": "1251",
             "deleteAppDataOnUninstall": true,
             "packElevateHelper": true,
             "license": "./license_ru.txt",
-            "allowElevation": true,
             "allowToChangeInstallationDirectory": true,
             "include": "build/installer.nsh"
         }

@@ -22,6 +22,13 @@ log4js.configure({
             KeepfileExt: true,
             alwaysIncludePattern: true,
         },
+        errorsLog: {
+            type: 'dateFile',
+            filename: path.join(LOG_PATH, 'errors'),
+            pattern: 'yyyy-MM-dd.log',
+            KeepfileExt: true,
+            alwaysIncludePattern: true,
+        },
         renderProccessLog: {
             type: 'dateFile',
             filename: path.join(LOG_PATH, 'renderer'),
@@ -40,9 +47,9 @@ log4js.configure({
             type: 'file',
             filename: path.join(LOG_PATH, 'crash.log'),
         },
-        errorLog: {
+        discordRpc: {
             type: 'file',
-            filename: path.join(LOG_PATH, 'error.log'),
+            filename: path.join(LOG_PATH, 'discordRpc.log'),
         },
         error: {
             type: 'logLevelFilter',
@@ -71,6 +78,10 @@ log4js.configure({
             appenders: ['out', 'crashLog'],
             level: 'debug',
         },
+        discordRpc: {
+            appenders: ['out', 'discordRpc'],
+            level: 'debug',
+        },
         default: {
             appenders: ['out', 'alldateFileLog'],
             level: 'debug',
@@ -84,4 +95,5 @@ export default {
     updater: log4js.getLogger('updater'),
     renderer: log4js.getLogger('renderer'),
     crash: log4js.getLogger('crash'),
+    discordRpc: log4js.getLogger('discordRpc'),
 }

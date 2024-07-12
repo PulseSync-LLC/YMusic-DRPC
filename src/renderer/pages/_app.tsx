@@ -33,6 +33,7 @@ function app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
     const [socketError, setSocketError] = useState(-1)
     const [socketConnected, setSocketConnected] = useState(false)
+    const [updateAvailable, setUpdate] = useState(false)
     const [user, setUser] = useState<UserInterface>(userInitials)
     const [settings, setSettings] =
         useState<SettingsInterface>(settingsInitials)
@@ -178,42 +179,11 @@ function app() {
                     ya_token: data,
                 }))
             })
-            window.desktopEvents?.on('UPDATE_APP_DATA', (event, data) => {
-                console.log(data)
-                for (const [key, value] of Object.entries(data)) {
-                    switch (key) {
-                        case 'patched':
-                            toast.success('Успешный патч')
-                            break
-                        case 'repatch':
-                            toast.success('Успешный репатч')
-                            break
-                        case 'depatch':
-                            toast.success('Успешный депатч')
-                            break
-                        case 'update':
-                            if (value) {
-                                toast.success('Обновления найдены')
-                            } else {
-                                toast.error('Обновления не найдены')
-                            }
-                            console.log('update:', value)
-                            break
-                        default:
-                            console.log(
-                                'Unknown object key:',
-                                key,
-                                'with value:',
-                                value,
-                            )
-                            break
-                    }
-                }
-            })
             const settingsKeys = [
                 'discordRpc',
                 'autoStartInTray',
                 'autoStartApp',
+                'autoStartMusic',
                 'enableRpcButtonListen',
                 'patched',
                 'readPolicy',
@@ -251,6 +221,8 @@ function app() {
                     socketConnected,
                     settings,
                     setSettings,
+                    updateAvailable,
+                    setUpdate,
                     setYaClient,
                     yaClient,
                 }}
@@ -279,7 +251,7 @@ const Player: React.FC<any> = ({ children }) => {
                             setTrack(prevTrack => ({
                                 ...prevTrack,
                                 playerBarTitle: data.playerBarTitle,
-                                artist: data.artist,
+                                artist: data.artist ? data.artist : "Нейромузыка",
                                 timecodes: data.timecodes,
                                 requestImgTrack: data.requestImgTrack,
                                 linkTitle: data.linkTitle,
@@ -308,15 +280,17 @@ const Player: React.FC<any> = ({ children }) => {
         console.log('User: ', user)
         console.log('Track: ', track)
         if (settings.discordRpc) {
-            const timeRange =
-                track.timecodes.length === 2
-                    ? `${track.timecodes[0]} - ${track.timecodes[1]}`
-                    : ''
+            const timeRange = track.timecodes.length === 2
+                ? `${track.timecodes[0]} - ${track.timecodes[1]}`
+                : '';
+
             const details = track.artist
                 ? `${track.playerBarTitle} - ${track.artist}`
-                : track.playerBarTitle
-            const largeImage = track.requestImgTrack[1] || 'ym'
-            const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset'
+                : track.playerBarTitle;
+
+            const largeImage = track.requestImgTrack[1] || 'ym';
+            const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset';
+
             const buttons = [
                 {
                     label: '✌️ Open in YandexMusic',
@@ -326,31 +300,36 @@ const Player: React.FC<any> = ({ children }) => {
                     label: '🤠 Open in GitHub',
                     url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
                 },
-            ]
-            if (settings.enableRpcButtonListen && track.linkTitle) {
-                window.discordRpc.setActivity({
-                    state: timeRange,
-                    details: details,
-                    largeImageKey: largeImage,
-                    smallImageKey: smallImage,
-                    smallImageText: 'Yandex Music',
-                    buttons,
-                })
-            } else {
-                window.discordRpc.setActivity({
-                    state: timeRange,
-                    details: details,
-                    largeImageKey: largeImage,
-                    smallImageKey: smallImage,
-                    smallImageText: 'Yandex Music',
-                    buttons: [
-                        {
-                            label: '🤠 Open in GitHub',
-                            url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
-                        },
-                    ],
-                })
+            ];
+
+            const activity: any = {
+                largeImageKey: largeImage,
+                smallImageKey: smallImage,
+                smallImageText: 'Yandex Music',
+                buttons: [
+                    {
+                        label: '🤠 Open in GitHub',
+                        url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
+                    },
+                ],
+            };
+
+            if (timeRange) {
+                activity.state = timeRange;
             }
+
+            if (details) {
+                activity.details = details;
+            }
+
+            if (settings.enableRpcButtonListen && track.linkTitle) {
+                activity.buttons.unshift({
+                    label: '✌️ Open in YandexMusic',
+                    url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
+                });
+            }
+
+            window.discordRpc.setActivity(activity);
         }
     }, [settings, user, track])
     return (

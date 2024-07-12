@@ -41,7 +41,7 @@ export default function CallbackPage() {
                     <div className={styles.container}>
                         <DiscordAuth />
                         {!banned
-                            ? 'Ожидание авторизацие'
+                            ? 'Ожидание авторизации'
                             : 'Вы забанены. Приложение закроется через 5 секунд'}
                     </div>
                 </div>

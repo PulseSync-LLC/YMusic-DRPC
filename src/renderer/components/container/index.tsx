@@ -6,7 +6,7 @@ interface p {
     className?: string
     imageName?: string
     buttonName?: string
-    buttonEvent?: string
+    onClick?: () => void
     children: any
 }
 
@@ -16,11 +16,11 @@ const Container: React.FC<p> = ({
     imageName,
     children,
     buttonName,
-    buttonEvent,
+    onClick
 }) => {
     return (
         <>
-            <div className={`${styles.container} ${className}`}>
+            <div className={`${styles.container} ${className ? className : ''}`}>
                 <div className={styles.title_container}>
                     <div className={styles.left}>
                         <img
@@ -29,10 +29,8 @@ const Container: React.FC<p> = ({
                         />
                         <div className={styles.title}>{titleName}</div>
                     </div>
-                    {buttonEvent && (
-                        <button onClick={() => console.log(buttonEvent)}>
-                            {buttonName}
-                        </button>
+                    {onClick && (
+                        <button onClick={onClick}>{buttonName}</button>
                     )}
                 </div>
                 {children}

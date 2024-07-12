@@ -20,20 +20,14 @@ interface ContextMenuProps {
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
-    const { settings, yaClient, setSettings, setUser } = useContext(userContext)
+    const { settings, yaClient, setSettings, setUser, setUpdate } =
+        useContext(userContext)
     const [version, setVersion] = useState(null)
     const { currentTrack } = useContext(playerContext)
     const handleOpenModal = () => {
         if (modalRef.current) {
             modalRef.current.openModal()
         }
-    }
-    const patch = () => {
-        window.electron.patcher.patch()
-        setSettings((prevSettings: SettingsInterface) => ({
-            ...prevSettings,
-            patched: true,
-        }))
     }
     const repatch = () => {
         window.electron.patcher.repatch()
@@ -81,6 +75,13 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 }))
                 window.electron.store.set('autoStartApp', status)
                 window.desktopEvents?.send('autoStartApp', status)
+                break
+            case 'autoStartMusic':
+                setSettings((prevSettings: any) => ({
+                    ...prevSettings,
+                    autoStartMusic: status,
+                }))
+                window.electron.store.set('autoStartMusic', status)
                 break
         }
     }
@@ -135,12 +136,50 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
 
         window.desktopEvents?.removeAllListeners('download-track-progress')
     }
+    const toastLoading = (event: any, title: string) => {
+        let toastId: string
+        toastId = hotToast.loading(title, {
+            style: {
+                background: '#394045',
+                color: '#DDF2FF',
+                border: 'solid 1px #535A5F',
+                borderRadius: '32px',
+            },
+        })
+        const handleUpdateAppData = (event: any, data: any) => {
+            for (const [key, value] of Object.entries(data)) {
+                console.log(key)
+                switch (key) {
+                    case 'repatch':
+                        toast.success('Успешный репатч', { id: toastId })
+                        break
+                    case 'depatch':
+                        toast.success('Успешный депатч', { id: toastId })
+                        break
+                    case 'update':
+                        if (value) {
+                            toast.success('Обновления найдены', { id: toastId })
+                        } else {
+                            toast.error('Обновления не найдены', {
+                                id: toastId,
+                            })
+                        }
+                        break
+                    default:
+                        hotToast.dismiss(toastId)
+                        break
+                }
+            }
+            window.desktopEvents?.removeAllListeners('UPDATE_APP_DATA')
+        }
+
+        window.desktopEvents?.on('UPDATE_APP_DATA', handleUpdateAppData)
+    }
     useEffect(() => {
         if (typeof window !== 'undefined' && window.desktopEvents) {
             window.desktopEvents
                 ?.invoke('getVersion')
                 .then((version: string | undefined) => {
-                    console.log(version)
                     setVersion(version)
                 })
         }
@@ -160,21 +199,29 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 <ArrowContext />
                 <div className={styles.showButtons}>
                     <button
-                        onClick={patch}
+                        key="patch_button"
                         disabled={settings.patched}
                         className={styles.contextButton}
                     >
                         Патч
                     </button>
                     <button
-                        onClick={repatch}
+                        onClick={e => {
+                            toastLoading(e, 'Репатч...')
+                            repatch()
+                        }}
+                        key="repatch_button"
                         disabled={!settings.patched}
                         className={styles.contextButton}
                     >
                         Репатч
                     </button>
                     <button
-                        onClick={depatch}
+                        onClick={e => {
+                            toastLoading(e, 'Депатч...')
+                            depatch()
+                        }}
+                        key="depatch_button"
                         disabled={!settings.patched}
                         className={styles.contextButton}
                     >
@@ -189,7 +236,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 </div>
             </div>
             <div className={styles.innerFunction}>
-                Авто-трей
+                Автотрей
                 <ArrowContext />
                 <div className={styles.showButtons}>
                     <button
@@ -209,7 +256,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 </div>
             </div>
             <div className={styles.innerFunction}>
-                Авто-запуск
+                Автозапуск приложения
                 <ArrowContext />
                 <div className={styles.showButtons}>
                     <button
@@ -223,6 +270,26 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                         className={styles.contextButton}
                         disabled={!settings.autoStartApp}
                         onClick={() => enableFunc('autoStart', false)}
+                    >
+                        Выключить
+                    </button>
+                </div>
+            </div>
+            <div className={styles.innerFunction}>
+                Автозапуск Яндекс Музыки
+                <ArrowContext />
+                <div className={styles.showButtons}>
+                    <button
+                        className={styles.contextButton}
+                        disabled={settings.autoStartMusic}
+                        onClick={() => enableFunc('autoStartMusic', true)}
+                    >
+                        Включить
+                    </button>
+                    <button
+                        className={styles.contextButton}
+                        disabled={!settings.autoStartMusic}
+                        onClick={() => enableFunc('autoStartMusic', false)}
                     >
                         Выключить
                     </button>
@@ -249,7 +316,8 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                     </div>
                     <button
                         className={styles.contextButton}
-                        onClick={() => {
+                        onClick={e => {
+                            toastLoading(e, 'Поиск обновлений')
                             window.desktopEvents?.send('checkUpdate')
                         }}
                     >

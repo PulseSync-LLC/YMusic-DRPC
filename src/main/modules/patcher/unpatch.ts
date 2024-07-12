@@ -50,7 +50,6 @@ class UnPatcher {
     }
     static async unpatch() {
         this.deleteFiles([this.appAsarPath]).then(r => {
-            console.log('Успешно удалено: ' + r)
             this.replaceFile(this.appAsarPath)
         })
     }
