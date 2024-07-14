@@ -236,7 +236,7 @@ class Patcher {
                                         headers: {
                                             'Content-Type': 'application/json',
                                         },
-                                        body: JSON.stringify({ value: token }),
+                                        body: token,
                                     });
 
                     `
