@@ -107,6 +107,16 @@
             padding: 0px;
             gap: 15px;
         }
+
+        label {
+            gap: 0;
+            width: fit-content;
+
+            div {
+                gap: 0;
+                width: fit-content;
+            }
+        }
     }
 
     &:hover {
