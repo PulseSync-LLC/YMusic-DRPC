@@ -2,6 +2,10 @@
   width: -webkit-fill-available;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: min-content;
+  grid-auto-rows: min-content;
   gap: 20px;
+  overflow: scroll;
+  padding: 1px;
+  padding-bottom: 20px;
+  height: 100%;
 }
