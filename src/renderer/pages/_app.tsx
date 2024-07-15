@@ -44,6 +44,7 @@ function app() {
         auth: {
             token: getUserToken(),
         },
+
     })
     const router = createHashRouter([
         {

@@ -4,7 +4,8 @@ import { MakerZIP } from '@electron-forge/maker-zip'
 import { MakerDeb } from '@electron-forge/maker-deb'
 import { MakerRpm } from '@electron-forge/maker-rpm'
 import { WebpackPlugin } from '@electron-forge/plugin-webpack'
-
+import { FusesPlugin } from '@electron-forge/plugin-fuses'
+import { FuseV1Options, FuseVersion } from '@electron/fuses'
 import MakerDMG from '@electron-forge/maker-dmg'
 import config from './src/config.json'
 import { mainConfig } from './webpack.main.config'
@@ -60,6 +61,13 @@ const forge_config: ForgeConfig = {
                 ],
             },
         }),
+        new FusesPlugin({
+            version: FuseVersion.V1,
+            [FuseV1Options.RunAsNode]: true,
+            [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
+            [FuseV1Options.EnableCookieEncryption]: true,
+            [FuseV1Options.OnlyLoadAppFromAsar]: true
+        })
     ],
     hooks: {
         packageAfterCopy: async (
