@@ -2,7 +2,7 @@ import Layout from '../../components/layout'
 import Container from '../../components/container'
 
 import styles from '../../../../static/styles/page/index.module.scss'
-import extension from './extension.module.scss'
+import theme from './extension.module.scss'
 import ExtensionCard from '../../components/extensionCard'
 import { useEffect, useMemo, useState } from 'react'
 import ThemeInterface from '../../api/interfaces/theme.interface'
@@ -54,12 +54,10 @@ export default function ThemePage() {
                         <Container
                             titleName={'Ваши Расширения'}
                             imageName={'extension'}
-                            className={styles.extension_container}
                             onClick={() => window.desktopEvents.send("openPath", "themePath")}
                             buttonName={"Директория аддонов"}
                         >
-                            hi
-                            {/* <div className={theme.container}>
+                            <div className={theme.grid}>
                                 {themes.filter(theme => theme.name != "Default").map(theme => (
                                     <ExtensionCard
                                         key={theme.name}
@@ -68,7 +66,7 @@ export default function ThemePage() {
                                         onCheckboxChange={handleCheckboxChange}
                                     />
                                 ))}
-                            </div> */}
+                            </div>
                         </Container>
                     </div>
                 </div>

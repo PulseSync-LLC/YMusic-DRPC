@@ -3,7 +3,7 @@ import { createHashRouter, RouterProvider } from 'react-router-dom'
 import UserMeQuery from '../api/queries/user/getMe.query'
 
 import TrackInfoPage from './trackinfo'
-import ThemePage from './theme'
+import ExtensionPage from './extension'
 import JointPage from './joint'
 
 import { Toaster } from 'react-hot-toast'
@@ -60,8 +60,8 @@ function app() {
             element: <TrackInfoPage />,
         },
         {
-            path: '/theme',
-            element: <ThemePage />,
+            path: '/extension',
+            element: <ExtensionPage />,
         },
         {
             path: '/joint',

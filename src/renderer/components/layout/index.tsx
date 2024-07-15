@@ -99,7 +99,7 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 </ButtonNav>
                             </NavLink>
                             <NavLink
-                                to="/theme"
+                                to="/extension"
                                 className={({ isActive, isPending }) =>
                                     isPending
                                         ? 'pending'

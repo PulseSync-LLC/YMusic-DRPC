@@ -1,44 +1,130 @@
 .card {
-    width: 376px;
-    height: 50px;
+    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+
+    width: -webkit-fill-available;
     border-radius: 8px;
     background: var(--panelsColor);
     outline: 1px solid var(--BorderColor);
-    padding: 16px;
+    padding: 0;
     color: #ffffff;
-    max-width: 300px;
     font-family: Arial, sans-serif;
+    cursor: pointer;
 
-    .header {
+    .cardContainer {
         display: flex;
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
-        margin-bottom: 16px;
+        padding: 10px 20px;
+        gap: 10px;
 
-        .icon {
-            border-radius: 50%;
-            margin-right: 12px;
-        }
+        .containerDetail {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 10px;
 
-        .titleSection {
-            flex-grow: 1;
-
-            .title {
-                font-size: 18px;
-                margin: 0;
+            .icon {
+                border-radius: 8px;
             }
 
-            .author {
+            .themeDetals {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 0px;
+                gap: 2px;
+                display: grid;
+
+                .title {
+                    font-weight: 700;
+                    font-size: 18px;
+                    line-height: 140%;
+
+                    color: #FFFFFF;
+
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    width: 100%;
+                }
+
+                .author {
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 140%;
+
+                    color: #B0B0B0;
+
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    width: 100%;
+                }
+            }
+        }
+
+        .themeVerStar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0px;
+            gap: 5px;
+
+            .star {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 0px;
+                gap: 4px;
+
+                font-weight: 700;
                 font-size: 14px;
-                color: #b9bbbe;
+                line-height: 140%;
+
+                color: #FFD333;
             }
         }
-
-        .checkbox {
-            img {
-                width: 20px;
-                height: 20px;
-            }
-        }
-
     }
+
+    .cardContainerTab {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        gap: 15px;
+
+        border-top: 1px solid var(--BorderColor);
+
+        .leftTab {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            gap: 15px;
+        }
+    }
+
+    &:hover {
+        transform: translate(4px, 4px);
+        box-shadow: -4px -4px 0px #3468f2;
+    }
+}
+
+.tabDetail {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px;
+    gap: 4px;
+
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 140%;
+
+    color: #E4E5EA;
 }

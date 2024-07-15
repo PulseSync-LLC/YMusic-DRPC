@@ -36,8 +36,6 @@
     user-select: none;
     font-family: 'Nunito Sans';
     font-style: normal;
-    color: var(--HeaderBarTextColor);
-    stroke: var(--HeaderBarTextColor);
 }
 
 .discord_svg__noStroke,

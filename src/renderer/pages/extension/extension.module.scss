@@ -1,10 +1,7 @@
-.container {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 20px;
-  padding-top: 5px;
-  overflow-y: auto;
+.grid {
   width: -webkit-fill-available;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: min-content;
+  gap: 20px;
 }

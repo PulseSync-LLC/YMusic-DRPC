@@ -20,9 +20,14 @@
             height: 430px;
             overflow: scroll;
             background: var(--MainBG);
+            color: white;
             border-radius: var(--BorderRadius);
             padding: 20px;
             margin-bottom: 10px;
+
+            a {
+                color: #3468F2;
+            }
         }
 
         .discordAuth {
