@@ -50,6 +50,9 @@
     overflow-y: auto;
     border-radius: 20px;
     border: none;
+    &a {
+        color: #3468f2;
+    }
 }
 
 .ReactModal__Content--after-open {
