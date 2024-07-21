@@ -8,6 +8,7 @@ import webpack from 'webpack'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ForkTsCheckerWebpackPlugin: typeof IForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 
+
 export const plugins = [
     new ForkTsCheckerWebpackPlugin({
         logger: 'webpack-infrastructure',
@@ -22,7 +23,7 @@ export const plugins = [
         Buffer: ['buffer', 'Buffer'],
         process: 'process/browser',
     }),
-    new NodePolyfillPlugin(),
+    new NodePolyfillPlugin()
     // sentryWebpackPlugin({
     //     org: "pulsesync",
     //     project: "electron",

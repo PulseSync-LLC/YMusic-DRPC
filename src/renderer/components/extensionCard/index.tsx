@@ -11,14 +11,23 @@ interface Props {
     children?: any
 }
 
-const ExtensionCard: React.FC<Props> = ({ theme, isChecked, onCheckboxChange, children }) => {
+const ExtensionCard: React.FC<Props> = ({
+    theme,
+    isChecked,
+    onCheckboxChange,
+    children,
+}) => {
     return (
         <div className={styles.card}>
             <div className={styles.cardContainer}>
                 <div className={styles.containerDetail}>
                     <img
                         className={styles.icon}
-                        src={theme.image ? theme.path + "\\" + theme.image : "https://cdn.discordapp.com/avatars/449211993585614849/6c9a8a2b2733b6ea468756e37ab5f7ff.png?size=4096"}
+                        src={
+                            theme.image
+                                ? theme.path + '\\' + theme.image
+                                : 'https://cdn.discordapp.com/avatars/449211993585614849/6c9a8a2b2733b6ea468756e37ab5f7ff.png?size=4096'
+                        }
                         width="50"
                         height="50"
                         alt="Theme image"
@@ -29,8 +38,13 @@ const ExtensionCard: React.FC<Props> = ({ theme, isChecked, onCheckboxChange, ch
                     </div>
                 </div>
                 <div className={styles.themeVerStar}>
-                    <div className={styles.tabDetail}><MdDesignServices size={20} /> ver</div>
-                    <div className={styles.star}><MdStar size={20} /> Null</div>
+                    <div className={styles.tabDetail}>
+                        <MdDesignServices size={20} />
+                        ver. {theme.version}
+                    </div>
+                    <div className={styles.star}>
+                        <MdStar size={20} /> Null
+                    </div>
                 </div>
             </div>
             <div className={styles.cardContainerTab}>
@@ -38,11 +52,19 @@ const ExtensionCard: React.FC<Props> = ({ theme, isChecked, onCheckboxChange, ch
                     <Checkbox
                         checkType="changeTheme"
                         isChecked={isChecked}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => onCheckboxChange(theme.name, e.target.checked)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            onCheckboxChange(theme.name, e.target.checked)
+                        }
                     />
-                    <div className={styles.tabDetail}><MdFolder size={20} />--MB</div>
+                    <div className={styles.tabDetail}>
+                        <MdFolder size={20} />
+                        {theme.size}
+                    </div>
                 </div>
-                <div className={styles.tabDetail}><MdDateRange size={20} />--d ago (local)</div>
+                <div className={styles.tabDetail}>
+                    <MdDateRange size={20} />
+                    {theme.lastModified} (local)
+                </div>
             </div>
         </div>
     )

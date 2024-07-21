@@ -16,11 +16,13 @@ const Container: React.FC<p> = ({
     imageName,
     children,
     buttonName,
-    onClick
+    onClick,
 }) => {
     return (
         <>
-            <div className={`${styles.container} ${className ? className : ''}`}>
+            <div
+                className={`${styles.container} ${className ? className : ''}`}
+            >
                 <div className={styles.title_container}>
                     <div className={styles.left}>
                         <img
@@ -29,9 +31,7 @@ const Container: React.FC<p> = ({
                         />
                         <div className={styles.title}>{titleName}</div>
                     </div>
-                    {onClick && (
-                        <button onClick={onClick}>{buttonName}</button>
-                    )}
+                    {onClick && <button onClick={onClick}>{buttonName}</button>}
                 </div>
                 {children}
             </div>

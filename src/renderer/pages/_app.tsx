@@ -44,7 +44,6 @@ function app() {
         auth: {
             token: getUserToken(),
         },
-
     })
     const router = createHashRouter([
         {
@@ -140,7 +139,6 @@ function app() {
     socket.on('disconnect', (reason, description) => {
         console.log('Socket disconnected')
         console.log(reason + ' ' + description)
-        console.log(socketError)
 
         setSocketError(1)
         setSocket(null)
@@ -149,7 +147,6 @@ function app() {
 
     socket.on('connect_error', err => {
         console.log('Socket connect error: ' + err)
-        console.log(socketError)
         setSocketError(1)
 
         setSocket(null)
@@ -157,7 +154,6 @@ function app() {
     })
 
     useEffect(() => {
-        console.log(socketError)
         if (socketError === 1 || socketError === 0) {
             toast.error('Сервер не доступен')
         } else if (socketConnected) {
@@ -166,7 +162,9 @@ function app() {
     }, [socketError])
     useEffect(() => {
         if (user.id !== '-1') {
-            if (!socket.connected) socket.connect()
+            if (!socket.connected) {
+                socket.connect()
+            }
         } else {
             router.navigate('/')
         }
@@ -252,7 +250,9 @@ const Player: React.FC<any> = ({ children }) => {
                             setTrack(prevTrack => ({
                                 ...prevTrack,
                                 playerBarTitle: data.playerBarTitle,
-                                artist: data.artist ? data.artist : "Нейромузыка",
+                                artist: data.artist
+                                    ? data.artist
+                                    : 'Нейромузыка',
                                 timecodes: data.timecodes,
                                 requestImgTrack: data.requestImgTrack,
                                 linkTitle: data.linkTitle,
@@ -281,16 +281,17 @@ const Player: React.FC<any> = ({ children }) => {
         console.log('User: ', user)
         console.log('Track: ', track)
         if (settings.discordRpc) {
-            const timeRange = track.timecodes.length === 2
-                ? `${track.timecodes[0]} - ${track.timecodes[1]}`
-                : '';
+            const timeRange =
+                track.timecodes.length === 2
+                    ? `${track.timecodes[0]} - ${track.timecodes[1]}`
+                    : ''
 
             const details = track.artist
                 ? `${track.playerBarTitle} - ${track.artist}`
-                : track.playerBarTitle;
+                : track.playerBarTitle
 
-            const largeImage = track.requestImgTrack[1] || 'ym';
-            const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset';
+            const largeImage = track.requestImgTrack[1] || 'ym'
+            const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset'
 
             const buttons = [
                 {
@@ -301,7 +302,7 @@ const Player: React.FC<any> = ({ children }) => {
                     label: '🤠 Open in GitHub',
                     url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
                 },
-            ];
+            ]
 
             const activity: any = {
                 largeImageKey: largeImage,
@@ -313,24 +314,24 @@ const Player: React.FC<any> = ({ children }) => {
                         url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
                     },
                 ],
-            };
+            }
 
             if (timeRange) {
-                activity.state = timeRange;
+                activity.state = timeRange
             }
 
             if (details) {
-                activity.details = details;
+                activity.details = details
             }
 
             if (settings.enableRpcButtonListen && track.linkTitle) {
                 activity.buttons.unshift({
                     label: '✌️ Open in YandexMusic',
                     url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
-                });
+                })
             }
 
-            window.discordRpc.setActivity(activity);
+            window.discordRpc.setActivity(activity)
         }
     }, [settings, user, track])
     return (

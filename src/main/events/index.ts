@@ -105,7 +105,11 @@ export const handleEvents = (window: BrowserWindow): void => {
                 await shell.openPath(downloadDir)
                 break
             case 'themePath':
-                const themesFolderPath = path.join(app.getPath('appData'), 'PulseSync', 'themes');
+                const themesFolderPath = path.join(
+                    app.getPath('appData'),
+                    'PulseSync',
+                    'themes',
+                )
                 await shell.openPath(themesFolderPath)
                 break
         }
@@ -183,7 +187,10 @@ export const handleEvents = (window: BrowserWindow): void => {
     ipcMain.on('checkUpdate', async (event, data) => {
         logger.updater.info('Check update')
         const checkUpdate = await updater.check()
-        if (checkUpdate !== null && checkUpdate === UpdateStatus.DOWNLOADED || checkUpdate === UpdateStatus.DOWNLOADING) {
+        if (
+            (checkUpdate !== null && checkUpdate === UpdateStatus.DOWNLOADED) ||
+            checkUpdate === UpdateStatus.DOWNLOADING
+        ) {
             mainWindow.webContents.send('UPDATE_APP_DATA', {
                 update: true,
             })

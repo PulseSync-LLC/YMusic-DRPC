@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, session, protocol } from 'electron'
+import { app, BrowserWindow, ipcMain, protocol, session, shell } from 'electron'
 import process from 'process'
 import { getNativeImg } from './main/utils'
 import './main/modules/index'
@@ -24,6 +24,7 @@ import checkAndTerminateYandexMusic from '../utils/processUtils'
 import { exec } from 'child_process'
 import Theme from './renderer/api/interfaces/theme.interface'
 import logger from './main/modules/logger'
+
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 
@@ -34,8 +35,8 @@ const isMac = process.platform === 'darwin'
 export let corsAnywherePort: string | number
 export let mainWindow: BrowserWindow
 let preloaderWindow: BrowserWindow
-let availableThemes: Theme[] = [];
-let selectedTheme: string;
+let availableThemes: Theme[] = []
+let selectedTheme: string
 const defaultTheme = {
     name: 'Default',
     image: 'url',
@@ -44,11 +45,11 @@ const defaultTheme = {
     version: '1.0.0',
     css: 'style.css',
     script: 'script.js',
-};
+}
 
-const defaultCssContent = `{}`;
+const defaultCssContent = `{}`
 
-const defaultScriptContent = ``;
+const defaultScriptContent = ``
 const icon = getNativeImg('appicon', '.png', 'icon').resize({
     width: 40,
     height: 40,
@@ -203,80 +204,166 @@ app.on('ready', async () => {
     })
 })
 function createDefaultThemeIfNotExists(themesFolderPath: string) {
-    const defaultThemePath = path.join(themesFolderPath, defaultTheme.name);
+    const defaultThemePath = path.join(themesFolderPath, defaultTheme.name)
     try {
-
-
         if (!fs.existsSync(defaultThemePath)) {
-            fs.mkdirSync(defaultThemePath, { recursive: true });
+            fs.mkdirSync(defaultThemePath, { recursive: true })
 
-            const metadataPath = path.join(defaultThemePath, 'metadata.json');
-            const cssPath = path.join(defaultThemePath, defaultTheme.css);
-            const scriptPath = path.join(defaultThemePath, defaultTheme.script);
+            const metadataPath = path.join(defaultThemePath, 'metadata.json')
+            const cssPath = path.join(defaultThemePath, defaultTheme.css)
+            const scriptPath = path.join(defaultThemePath, defaultTheme.script)
 
-            fs.writeFileSync(metadataPath, JSON.stringify(defaultTheme, null, 2), 'utf-8');
-            fs.writeFileSync(cssPath, defaultCssContent, 'utf-8');
-            fs.writeFileSync(scriptPath, defaultScriptContent, 'utf-8');
+            fs.writeFileSync(
+                metadataPath,
+                JSON.stringify(defaultTheme, null, 2),
+                'utf-8',
+            )
+            fs.writeFileSync(cssPath, defaultCssContent, 'utf-8')
+            fs.writeFileSync(scriptPath, defaultScriptContent, 'utf-8')
 
-            logger.main.info(`Themes: default theme created at ${defaultThemePath}.`);
+            logger.main.info(
+                `Themes: default theme created at ${defaultThemePath}.`,
+            )
         }
-    }
-    catch (err) {
-        logger.main.error('Theme: error creating default theme:', err);
+    } catch (err) {
+        logger.main.error('Theme: error creating default theme:', err)
     }
 }
 async function loadThemes(): Promise<Theme[]> {
-    const themesFolderPath = path.join(app.getPath('appData'), 'PulseSync', 'themes');
+    const themesFolderPath = path.join(
+        app.getPath('appData'),
+        'PulseSync',
+        'themes',
+    )
 
     try {
-        createDefaultThemeIfNotExists(themesFolderPath);
-        const folders = await fs.promises.readdir(themesFolderPath);
-        availableThemes = [];
+        createDefaultThemeIfNotExists(themesFolderPath)
+        const folders = await fs.promises.readdir(themesFolderPath)
+        availableThemes = []
 
         for (const folder of folders) {
-            const themeFolderPath = path.join(themesFolderPath, folder);
-            const metadataFilePath = path.join(themeFolderPath, 'metadata.json');
+            const themeFolderPath = path.join(themesFolderPath, folder)
+            const metadataFilePath = path.join(themeFolderPath, 'metadata.json')
 
             if (fs.existsSync(metadataFilePath)) {
                 try {
-                    const data = await fs.promises.readFile(metadataFilePath, 'utf-8');
-                    const metadata: Theme = JSON.parse(data);
-                    metadata.path = themeFolderPath;
-                    availableThemes.push(metadata);
+                    const data = await fs.promises.readFile(
+                        metadataFilePath,
+                        'utf-8',
+                    )
+                    console.log(data)
+                    const stats = await fs.promises.stat(metadataFilePath)
+                    const folderSize = await getFolderSize(themeFolderPath)
+                    const modificationDate = new Date(stats.mtime)
+                    const now = new Date()
+
+                    const diffTime = Math.abs(
+                        now.getTime() - modificationDate.getTime(),
+                    )
+                    let diffString
+
+                    const diffSeconds = Math.floor(diffTime / 1000)
+                    const diffMinutes = Math.floor(diffSeconds / 60)
+                    const diffHours = Math.floor(diffMinutes / 60)
+                    const diffDays = Math.floor(diffHours / 24)
+
+                    if (diffSeconds < 60) {
+                        diffString = `${diffSeconds} sec ago`
+                    } else if (diffMinutes < 60) {
+                        diffString = `${diffMinutes} min ago`
+                    } else if (diffHours < 24) {
+                        diffString = `${diffHours} hours ago`
+                    } else {
+                        diffString = `${diffDays} days ago`
+                    }
+
+                    const versionRegex = /^\d+(\.\d+){0,2}$/;
+                    const metadata = JSON.parse(data);
+                    const versionMatch = metadata.version.match(versionRegex);
+                    if (!versionMatch) {
+                        logger.main.log(`Themes: No valid version found in theme ${metadataFilePath}. Setting version to 1.0.0`);
+                        metadata.version = '1.0.0';
+                        await fs.promises.writeFile(metadataFilePath, JSON.stringify(metadata, null, 4), 'utf-8').catch((err) => {
+                            logger.main.error(`Themes: error writing metadata.json in theme ${folder}:`, err);
+                        });
+                    } else {
+                        metadata.version = versionMatch[0];
+                    }
+                    metadata.lastModified = diffString
+                    metadata.path = themeFolderPath
+                    metadata.size = formatSizeUnits(folderSize)
+                    availableThemes.push(metadata)
                 } catch (err) {
-                    logger.main.error(`Themes: error reading or parsing metadata.json in theme ${folder}:`, err);
+                    logger.main.error(
+                        `Themes: error reading or parsing metadata.json in theme ${folder}:`,
+                        err,
+                    )
                 }
             } else {
-                logger.main.error(`Themes: metadata.json not found in theme ${folder}`);
+                logger.main.error(
+                    `Themes: metadata.json not found in theme ${folder}`,
+                )
             }
         }
 
-        logger.main.info('Themes: Available themes:', availableThemes);
-        return availableThemes;
-
+        logger.main.info('Themes: Available themes:', availableThemes)
+        return availableThemes
     } catch (err) {
-        console.error('Error reading themes directory:', err);
-        throw err;
+        console.error('Error reading themes directory:', err)
+        throw err
     }
+}
+const formatSizeUnits = (bytes: any) => {
+    if (bytes >= 1073741824) {
+        return (bytes / 1073741824).toFixed(2) + ' GB'
+    } else if (bytes >= 1048576) {
+        return (bytes / 1048576).toFixed(2) + ' MB'
+    } else if (bytes >= 1024) {
+        return (bytes / 1024).toFixed(2) + ' KB'
+    } else if (bytes > 1) {
+        return bytes + ' bytes'
+    } else if (bytes == 1) {
+        return bytes + ' byte'
+    } else {
+        return '0 byte'
+    }
+}
+const getFolderSize = async (folderPath: any) => {
+    let totalSize = 0
+
+    const files = await fs.promises.readdir(folderPath)
+
+    for (const file of files) {
+        const filePath = path.join(folderPath, file)
+        const stats = await fs.promises.stat(filePath)
+
+        if (stats.isDirectory()) {
+            totalSize += await getFolderSize(filePath)
+        } else {
+            totalSize += stats.size
+        }
+    }
+
+    return totalSize
 }
 ipcMain.handle('getThemes', async () => {
     try {
-        const themes = await loadThemes();
-        return themes;
+        const themes = await loadThemes()
+        return themes
     } catch (error) {
-        logger.main.error('Themes: Error loading themes:', error);
-        throw error;
+        logger.main.error('Themes: Error loading themes:', error)
+        throw error
     }
-});
+})
 
 ipcMain.on('themeChanged', (event, themeName) => {
-    logger.main.info(`Themes: theme changed to: ${themeName}`);
-    selectedTheme = themeName;
-    setTheme(selectedTheme);
-});
+    logger.main.info(`Themes: theme changed to: ${themeName}`)
+    selectedTheme = themeName
+    setTheme(selectedTheme)
+})
 function initializeTheme() {
-    selectedTheme = store.get('theme') || 'Default';
-    setTheme(selectedTheme);
+    selectedTheme = store.get('theme') || 'Default'
+    setTheme(selectedTheme)
 }
 app.whenReady().then(async () => {
     if (isDev) {
@@ -291,7 +378,7 @@ app.whenReady().then(async () => {
             ),
         )
     }
-    initializeTheme();
+    initializeTheme()
 })
 async function prestartCheck() {
     const musicDir = app.getPath('music')
@@ -318,7 +405,9 @@ async function prestartCheck() {
         await checkAndTerminateYandexMusic()
         exec(command, (error, stdout, stderr) => {
             if (error) {
-                logger.main.error(`MusicAutoStart: Ошибка при выполнении команды: ${error}`)
+                logger.main.error(
+                    `MusicAutoStart: Ошибка при выполнении команды: ${error}`,
+                )
                 return
             }
         })

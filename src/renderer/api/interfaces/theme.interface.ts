@@ -5,4 +5,6 @@ export default interface ThemeInterface {
     description: string
     version: string
     path: string
+    lastModified: number
+    size: number
 }

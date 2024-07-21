@@ -10,39 +10,42 @@ import Button_nav from '../../components/button_nav'
 import { MdAdminPanelSettings } from 'react-icons/md'
 
 export default function ThemePage() {
-    const [themes, setThemes] = useState<ThemeInterface[]>([]);
-    const [selectedTheme, setSelectedTheme] = useState(window.electron.store.get("theme"))
+    const [themes, setThemes] = useState<ThemeInterface[]>([])
+    const [selectedTheme, setSelectedTheme] = useState(
+        window.electron.store.get('theme'),
+    )
 
     useEffect(() => {
-        console.log("useEffect called");
-        if (typeof window !== "undefined" && window.desktopEvents) {
-            console.log("Fetching themes");
-            window.desktopEvents.invoke('getThemes')
+        console.log('useEffect called')
+        if (typeof window !== 'undefined' && window.desktopEvents) {
+            console.log('Fetching themes')
+            window.desktopEvents
+                .invoke('getThemes')
                 .then((themes: ThemeInterface[]) => {
-                    console.log("Received themes:", themes);
-                    setThemes(themes);
+                    console.log('Received themes:', themes)
+                    setThemes(themes)
                 })
                 .catch(error => {
-                    console.error('Error receiving themes:', error);
-                });
+                    console.error('Error receiving themes:', error)
+                })
         }
-    }, []);
+    }, [])
     useEffect(() => {
         if (!selectedTheme) {
-            setSelectedTheme("Default")
-            window.electron.store.set("theme", "Default")
+            setSelectedTheme('Default')
+            window.electron.store.set('theme', 'Default')
         }
     }, [selectedTheme])
 
     const handleCheckboxChange = (themeName: string, isChecked: boolean) => {
         if (isChecked) {
-            window.electron.store.set("theme", themeName)
+            window.electron.store.set('theme', themeName)
             setSelectedTheme(themeName)
             window.desktopEvents.send('themeChanged', themeName)
         } else {
-            window.electron.store.set("theme", "Default")
-            setSelectedTheme("Default")
-            window.desktopEvents.send('themeChanged', "Default")
+            window.electron.store.set('theme', 'Default')
+            setSelectedTheme('Default')
+            window.desktopEvents.send('themeChanged', 'Default')
         }
     }
 
@@ -54,18 +57,29 @@ export default function ThemePage() {
                         <Container
                             titleName={'Ваши Расширения'}
                             imageName={'extension'}
-                            onClick={() => window.desktopEvents.send("openPath", "themePath")}
-                            buttonName={"Директория аддонов"}
+                            onClick={() =>
+                                window.desktopEvents.send(
+                                    'openPath',
+                                    'themePath',
+                                )
+                            }
+                            buttonName={'Директория аддонов'}
                         >
                             <div className={theme.grid}>
-                                {themes.filter(theme => theme.name != "Default").map(theme => (
-                                    <ExtensionCard
-                                        key={theme.name}
-                                        theme={theme}
-                                        isChecked={selectedTheme === theme.name}
-                                        onCheckboxChange={handleCheckboxChange}
-                                    />
-                                ))}
+                                {themes
+                                    .filter(theme => theme.name != 'Default')
+                                    .map(theme => (
+                                        <ExtensionCard
+                                            key={theme.name}
+                                            theme={theme}
+                                            isChecked={
+                                                selectedTheme === theme.name
+                                            }
+                                            onCheckboxChange={
+                                                handleCheckboxChange
+                                            }
+                                        />
+                                    ))}
                             </div>
                         </Container>
                     </div>

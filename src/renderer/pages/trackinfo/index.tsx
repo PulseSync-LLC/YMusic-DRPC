@@ -153,7 +153,10 @@ export default function TrackInfoPage() {
                                                                         currentTrack.artist
                                                                     }
                                                                 </div>
-                                                                {currentTrack.timecodes.length > 0 && (
+                                                                {currentTrack
+                                                                    .timecodes
+                                                                    .length >
+                                                                    0 && (
                                                                     <div
                                                                         className={
                                                                             theme.time
