@@ -6,9 +6,51 @@ import { mainWindow } from '../../index';
 import { store } from './storage';
 
 let jsonDataGET: any = {};
-let selectedTheme: string = 'Default';  // Значение по умолчанию
+let selectedTheme: string = 'Default';
 
 const server = http.createServer();
+
+const getFilePathInAssets = (filename: string, assetsPath: string): string | null => {
+    const filePath = findFileInDirectory(filename, assetsPath);
+    console.log('File Path:', filePath);
+    return filePath;
+};
+
+const findFileInDirectory = (filename: string, dirPath: string): string | null => {
+    const list = fs.readdirSync(dirPath);
+    for (const file of list) {
+        const filePath = path.join(dirPath, file);
+        const stat = fs.statSync(filePath);
+
+        if (stat.isDirectory()) {
+            const result = findFileInDirectory(filename, filePath);
+            if (result) return result;
+        } else if (path.basename(file) === filename) {
+            return filePath;
+        }
+    }
+    return null;
+};
+
+const getFilesInDirectory = (dirPath: string): { [key: string]: string } => {
+    let results: { [key: string]: string } = {};
+    const list = fs.readdirSync(dirPath);
+
+    list.forEach((file) => {
+        const filePath = path.join(dirPath, file);
+        const stat = fs.statSync(filePath);
+
+        if (stat && stat.isDirectory()) {
+            results = { ...results, ...getFilesInDirectory(filePath) };
+        } else {
+            const fileName = path.basename(file);
+            const key = fileName;
+            results[key] = filePath;
+        }
+    });
+
+    return results;
+};
 
 server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
     if (req.method === 'OPTIONS') {
@@ -92,7 +134,7 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
                 let cssContent = '';
                 let jsContent = '';
                 const styleCSS = path.join(themePath, metadata.css);
-                if(metadata.script) {
+                if (metadata.script) {
                     scriptJS = path.join(themePath, metadata.script);
                     if (fs.existsSync(scriptJS)) {
                         jsContent = fs.readFileSync(scriptJS, 'utf8');
@@ -122,6 +164,73 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
         return;
     }
 
+    if (req.method === 'GET' && req.url === '/assets') {
+        try {
+            const themesPath = path.join(app.getPath('appData'), 'PulseSync', 'themes');
+            const themePath = path.join(themesPath, selectedTheme);
+            const assetsPath = path.join(themePath, 'Assets');
+
+            if (fs.existsSync(assetsPath)) {
+                const files = getFilesInDirectory(assetsPath);
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({
+                    ok: true,
+                    themePath: themePath,
+                    assetsPath: assetsPath,
+                    files: files
+                }));
+            } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'Assets folder not found' }));
+            }
+        } catch (error) {
+            console.error('Error reading theme files:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error reading theme files' }));
+        }
+        return;
+    }
+
+    if (req.method === 'GET' && req.url?.startsWith('/assets/')) {
+        try {
+            const themesPath = path.join(app.getPath('appData'), 'PulseSync', 'themes');
+            const themePath = path.join(themesPath, selectedTheme);
+            const assetsPath = path.join(themePath, 'Assets');
+    
+            console.log('Themes Path:', themesPath);
+            console.log('Theme Path:', themePath);
+            console.log('Assets Path:', assetsPath);
+    
+            const fileName = req.url.substring('/assets/'.length);
+            console.log('Requested File Name:', fileName);
+    
+            const filePath = getFilePathInAssets(fileName, assetsPath);
+            console.log('File Path:', filePath);
+            if (filePath) {
+                const ext = path.extname(filePath).substring(1);
+                const mimeTypes: { [key: string]: string } = {
+                    'jpg': 'image/jpeg',
+                    'jpeg': 'image/jpeg',
+                    'png': 'image/png',
+                    'gif': 'image/gif',
+                    'svg': 'image/svg+xml',
+                    'ico': 'image/x-icon'
+                };
+    
+                res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+                fs.createReadStream(filePath).pipe(res);
+            } else {
+                res.writeHead(404, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: 'File not found' }));
+            }
+        } catch (error) {
+            console.error('Error serving static file:', error);
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ error: 'Error serving static file' }));
+        }
+        return;
+    }
 
     res.writeHead(404, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({ error: 'Not found' }));
