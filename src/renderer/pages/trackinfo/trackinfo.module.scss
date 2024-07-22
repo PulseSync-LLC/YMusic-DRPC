@@ -4,12 +4,112 @@
     align-items: flex-start;
     padding: 15px 25px;
     gap: 25px;
-
     width: -webkit-fill-available;
-
     background: var(--panelsColor);
     outline: 1px solid var(--BorderColor);
     border-radius: var(--BorderRadius);
+    overflow: auto;
+    position: relative;
+
+    .modal {
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        overflow-wrap: anywhere;
+        overflow: hidden;
+        background: #171A22;
+        border: 1px solid var(--NavigationOnColor);
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.51);
+        border-radius: var(--BorderRadius);
+        position: fixed;
+        z-index: 1;
+        top: 52px;
+        bottom: 2px;
+        right: 2px;
+        width: 375px;
+        transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) opacity 0.8s;
+
+        .modalTitle {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 14px 23px;
+            gap: 10px;
+
+            background: #0D0F14;
+            width: 100%;
+
+            font-family: 'Nunito Sans';
+            font-style: normal;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 140%;
+
+            color: #FFFFFF;
+        }
+
+        .modalContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 3px 0px;
+            width: 100%;
+            height: fit-content;
+
+            .modalContextButton {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                background: transparent;
+                border: 0;
+                padding: 8px 23px;
+                gap: 2px;
+                width: 100%;
+                height: fit-content;
+                cursor: pointer;
+
+                &:hover {
+                    background: #12151B;
+                    .contextPreview {
+                        background: #3E424C;
+                    }
+                }
+
+                .contextPreview {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 2px 10px;
+                    gap: 10px;
+
+                    background: #0D0F14;
+                    border-radius: 4px;
+
+                    font-family: 'Nunito Sans';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 140%;
+
+                    color: #FFFFFF;
+                }
+
+                .contextInfo {
+                    font-family: 'Nunito Sans';
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 140%;
+
+                    color: #ABAFBF;
+                }
+            }
+
+        }
+    }
 
     .discordRpcSettings {
         display: flex;
@@ -48,7 +148,7 @@
             z-index: 0;
         }
 
-        > div {
+        >div {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -223,8 +323,9 @@
     padding: 0px;
     gap: 2px;
     width: -webkit-fill-available;
+    position: relative;
 
-    > div {
+    >div {
         font-weight: 700;
         font-size: 12px;
         line-height: 140%;
