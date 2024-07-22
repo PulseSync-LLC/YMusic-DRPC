@@ -36,6 +36,7 @@
     user-select: none;
     font-family: 'Nunito Sans';
     font-style: normal;
+    max-width: -webkit-fill-available;
 }
 
 .discord_svg__noStroke,
