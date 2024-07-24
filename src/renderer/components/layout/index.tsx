@@ -37,8 +37,8 @@ interface ModalContextType {
 }
 
 export const ModalContext = createContext<ModalContextType>({
-    openModal: () => {},
-    closeModal: () => {},
+    openModal: () => { },
+    closeModal: () => { },
 })
 const Layout: React.FC<p> = ({ title, children, goBack }) => {
     const { settings, setSettings, updateAvailable, setUpdate } =
@@ -90,8 +90,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                          ? 'active'
-                                          : ''
+                                            ? 'active'
+                                            : ''
                                 }
                             >
                                 <ButtonNav>
@@ -104,8 +104,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                          ? 'active'
-                                          : ''
+                                            ? 'active'
+                                            : ''
                                 }
                             >
                                 <ButtonNav>
@@ -134,15 +134,19 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
 
                     {!settings.patched && (
                         <div className={styles.alert_patch}>
-                            <div>
-                                <div>
-                                    <div className={styles.container_warn}>
-                                        <MdWarning size={38} />
-                                        <div>
-                                            У Яндекс Музыки отсутствует патч!
-                                        </div>
+                            <div className={styles.patch_container}>
+                                <img
+                                    className={styles.alert_patch_image}
+                                    src="static\assets\images\imageAlertPatch.png"
+                                    alt=""
+                                />
+                                <div className={styles.patch_detail}>
+                                    <div className={styles.alert_info}>
+                                        <div className={styles.alert_title}>Отсутствует патч!</div>
+                                        <div className={styles.alert_warn}>Убедитесь что Яндекс Музыка закрыта!</div>
                                     </div>
                                     <button
+                                        className={styles.patch_button}
                                         onClick={e => {
                                             toastLoading(e, 'Патч...')
                                             window.electron.patcher.patch()
@@ -156,13 +160,9 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                             )
                                         }}
                                     >
-                                        <MdEngineering size={22} /> Запатчить
+                                        <MdEngineering size={20} />Запатчить
                                     </button>
                                 </div>
-                                <img
-                                    src="static\assets\images\O^O.png"
-                                    alt=""
-                                />
                             </div>
                         </div>
                     )}
