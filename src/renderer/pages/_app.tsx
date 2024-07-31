@@ -50,8 +50,7 @@ function _app() {
     const router = createHashRouter([
         {
             path: '/',
-            // element: <AuthPage />,
-            element: <TrackInfoPage />,
+            element: <AuthPage />,
         },
         {
             path: '/auth/callback',
@@ -364,8 +363,8 @@ function _app() {
                 <Player>
                     <SkeletonTheme baseColor="#1c1c22" highlightColor="#333">
                         <CssVarsProvider>
-                            <Preloader />
-                            {/* <RouterProvider router={router} /> */}
+                            {/* <Preloader /> */}
+                            <RouterProvider router={router} />
                         </CssVarsProvider>
                     </SkeletonTheme>
                 </Player>
@@ -379,7 +378,7 @@ const Player: React.FC<any> = ({ children }) => {
 
     useEffect(() => {
         if (user.id !== '-1') {
-            ;(async () => {
+            ; (async () => {
                 if (typeof window !== 'undefined') {
                     if (app.discordRpc.status) {
                         window.desktopEvents?.on('trackinfo', (event, data) => {
