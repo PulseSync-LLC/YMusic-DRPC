@@ -2,6 +2,8 @@ import { app, BrowserWindow } from 'electron'
 import { state } from './state'
 import { store } from './storage'
 import config from "../../renderer/api/config";
+import path from "path";
+import isAppDev from 'electron-is-dev'
 
 let deeplinkUrl: string | null = null
 
@@ -26,7 +28,6 @@ export const navigateToDeeplink = (
     const match = url.match(regex)
     if (!match) return
     const mainPath = match[1]
-    const argsPath = match[2]
     switch (mainPath) {
         case 'callback':
             const reg = url.match(/\?token=([^&]+)&id=([^&]+)/)
@@ -44,7 +45,9 @@ export const navigateToDeeplink = (
             window.webContents.send('authSuccess')
             break
         case 'ban':
-            window.webContents.send('authBanned')
+            const regex = url.match(/\?reason=([^&]+)/)
+            const reason = decodeURIComponent(regex[1])
+            window.webContents.send('authBanned', {reason: reason})
             break
         case 'joinRoom':
             break
@@ -58,7 +61,11 @@ export const handleDeeplinkOnApplicationStartup = (): void => {
     if (lastArgFromProcessArgs && checkIsDeeplink(lastArgFromProcessArgs)) {
         state.deeplink = lastArgFromProcessArgs
     }
-    if (!app.isDefaultProtocolClient('pulsesync')) {
+    console.log(process.execPath)
+    console.log(lastArgFromProcessArgs)
+    if (isAppDev) {
+        app.setAsDefaultProtocolClient('pulsesync', process.execPath)
+    } else {
         app.setAsDefaultProtocolClient('pulsesync')
     }
     app.on('open-url', (event, url) => {

@@ -11,7 +11,7 @@ import userContext from '../../api/context/user.context'
 export default function CallbackPage() {
     const navigate = useNavigate()
     const { user, authorize } = useContext(userContext)
-    const [banned, setBanned] = useState(false)
+    const [banned, setBanned] = useState('')
 
     useEffect(() => {
         if (user.id !== '-1') {
@@ -25,7 +25,7 @@ export default function CallbackPage() {
                 authorize()
             })
             window.desktopEvents?.on('authBanned', (event, data) => {
-                setBanned(true)
+                setBanned(data.reason)
                 setTimeout(
                     () => window.desktopEvents?.send('electron-exit'),
                     5000,
@@ -42,7 +42,7 @@ export default function CallbackPage() {
                         <DiscordAuth />
                         {!banned
                             ? 'Ожидание авторизации'
-                            : 'Вы забанены. Приложение закроется через 5 секунд'}
+                            : `Вы забанены. По причине: ${banned}. Приложение закроется через 5 секунд`}
                     </div>
                 </div>
             </div>
