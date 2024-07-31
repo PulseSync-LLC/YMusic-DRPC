@@ -6,7 +6,7 @@ body {
     margin: 0;
     height: 100vh;
     border-radius: 20px;
-    background: #1b1f21;
+    background: #16181E;
 }
 
 .container {
@@ -18,7 +18,7 @@ body {
 
 .load {
     animation: spin 6s ease-in-out infinite;
-    box-shadow: inset #d2e5f10f 0px 0px 0px 30px;
+    box-shadow: inset #16181E 0px 0px 0px 30px;
     border-radius: 200px;
 }
 

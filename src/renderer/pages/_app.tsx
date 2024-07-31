@@ -29,6 +29,8 @@ import { YandexMusicClient } from 'yandex-music-client'
 import config from '../api/config'
 import { AppInfoInterface } from '../api/interfaces/appinfo.interface'
 
+import Preloader from '../components/preloader'
+
 function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
     const [socketError, setSocketError] = useState(-1)
@@ -48,7 +50,8 @@ function _app() {
     const router = createHashRouter([
         {
             path: '/',
-            element: <AuthPage />,
+            // element: <AuthPage />,
+            element: <TrackInfoPage />,
         },
         {
             path: '/auth/callback',
@@ -250,10 +253,10 @@ function _app() {
                 let toastId: string
                 toastId = hotToast.loading('Проверка обновлений', {
                     style: {
-                        background: '#394045',
-                        color: '#DDF2FF',
-                        border: 'solid 1px #535A5F',
-                        borderRadius: '32px',
+                        background: '#292C36',
+                        color: '#ffffff',
+                        border: 'solid 1px #363944',
+                        borderRadius: '8px',
                     },
                 })
                 if (data.updateAvailable) {
@@ -361,7 +364,8 @@ function _app() {
                 <Player>
                     <SkeletonTheme baseColor="#1c1c22" highlightColor="#333">
                         <CssVarsProvider>
-                            <RouterProvider router={router} />
+                            <Preloader />
+                            {/* <RouterProvider router={router} /> */}
                         </CssVarsProvider>
                     </SkeletonTheme>
                 </Player>

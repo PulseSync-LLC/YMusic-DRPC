@@ -1,6 +1,5 @@
 .card {
-    transition: ease-in-out all 0.2s;
-
+    transition: cubic-bezier(0.645, 0.045, 0.355, 1) all 0.2s;
     width: -webkit-fill-available;
     border-radius: 8px;
     background: var(--panelsColor);
@@ -91,6 +90,7 @@
     }
 
     .cardContainerTab {
+        transition: cubic-bezier(0.645, 0.045, 0.355, 1) all 0.2s;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -120,9 +120,11 @@
     }
 
     &:hover {
-        transform: translate(0px, 2px);
-        box-shadow: 0px -4px 1px #3468f2;
-        scale: 0.96;
+        background: #313442;
+        outline: 1px solid #5d6480;
+        .cardContainerTab {
+            border-top: 1px solid #5d6480;
+        }
     }
 }
 

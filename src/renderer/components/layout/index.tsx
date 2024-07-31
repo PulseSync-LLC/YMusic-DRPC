@@ -29,10 +29,10 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
         let toastId: string
         toastId = hotToast.loading(title, {
             style: {
-                background: '#394045',
-                color: '#DDF2FF',
-                border: 'solid 1px #535A5F',
-                borderRadius: '32px',
+                background: '#292C36',
+                color: '#ffffff',
+                border: 'solid 1px #363944',
+                borderRadius: '8px',
             },
         })
         const handleUpdateAppData = (event: any, data: any) => {

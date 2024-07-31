@@ -21,6 +21,7 @@ export default function TrackInfoPage() {
     const { user, app } = useContext(userContext)
     const { currentTrack } = useContext(playerContext)
     const [modal, setModal] = useState(false)
+    const [modalAnim, setModalAnim] = useState(false)
     const [previousValues, setPreviousValues] = useState({
         appId: '',
         details: '',
@@ -47,6 +48,8 @@ export default function TrackInfoPage() {
         button: string(),
     })
     const copyValues = async (value: string) => {
+        setModalAnim(false)
+        setTimeout(() => setModal(false), 200)
         await navigator.clipboard.writeText(value)
         toast.success('Скопировано в буфер обмена')
     }
@@ -132,7 +135,7 @@ export default function TrackInfoPage() {
                                                     name="appId"
                                                     aria-errormessage={
                                                         (formik.errors as any)[
-                                                            'appId'
+                                                        'appId'
                                                         ]
                                                     }
                                                     placeholder="984031241357647892"
@@ -149,7 +152,7 @@ export default function TrackInfoPage() {
                                                     }}
                                                 />
                                                 {formik.touched.appId &&
-                                                formik.errors.appId ? (
+                                                    formik.errors.appId ? (
                                                     <div
                                                         className={theme.error}
                                                     >
@@ -181,7 +184,7 @@ export default function TrackInfoPage() {
                                                     }}
                                                 />
                                                 {formik.touched.details &&
-                                                formik.errors.details ? (
+                                                    formik.errors.details ? (
                                                     <div
                                                         className={theme.error}
                                                     >
@@ -211,7 +214,7 @@ export default function TrackInfoPage() {
                                                     }}
                                                 />
                                                 {formik.touched.state &&
-                                                formik.errors.state ? (
+                                                    formik.errors.state ? (
                                                     <div
                                                         className={theme.error}
                                                     >
@@ -223,7 +226,7 @@ export default function TrackInfoPage() {
                                                 className={
                                                     theme.openModalButton
                                                 }
-                                                onClick={() => setModal(true)}
+                                                onClick={() => { setModalAnim(true), setModal(true) }}
                                             >
                                                 Посмотреть все параметры полей.
                                             </div>
@@ -233,13 +236,6 @@ export default function TrackInfoPage() {
                                                 description="Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord."
                                             >
                                                 Включить кнопку (Слушать)
-                                            </CheckboxNav>
-                                            <CheckboxNav
-                                                disabled={!isSupporter}
-                                                checkType="enableGithubButton"
-                                                description="Активируйте этот параметр, чтобы показать что вы любите разработчиков."
-                                            >
-                                                Включить кнопку (Open in Github)
                                             </CheckboxNav>
                                             <div
                                                 className={
@@ -263,7 +259,7 @@ export default function TrackInfoPage() {
                                                     }}
                                                 />
                                                 {formik.touched.button &&
-                                                formik.errors.button ? (
+                                                    formik.errors.button ? (
                                                     <div
                                                         className={theme.error}
                                                     >
@@ -271,6 +267,13 @@ export default function TrackInfoPage() {
                                                     </div>
                                                 ) : null}
                                             </div>
+                                            <CheckboxNav
+                                                disabled={!isSupporter}
+                                                checkType="enableGithubButton"
+                                                description="Активируйте этот параметр, чтобы показать что вы любите разработчиков."
+                                            >
+                                                Включить кнопку (Open in Github)
+                                            </CheckboxNav>
                                         </div>
                                     </div>
                                 </form>
@@ -295,12 +298,12 @@ export default function TrackInfoPage() {
                                         </div>
                                         <div className={theme.userRPC}>
                                             <div className={theme.status}>
-                                                Играет в игру
+                                                Слушает
                                             </div>
                                             <div className={theme.statusRPC}>
                                                 <div>
                                                     {app.discordRpc.status &&
-                                                    currentTrack !==
+                                                        currentTrack !==
                                                         trackInitials ? (
                                                         <div
                                                             className={
@@ -315,7 +318,7 @@ export default function TrackInfoPage() {
                                                                     currentTrack
                                                                         .requestImgTrack[1]
                                                                         ? currentTrack
-                                                                              .requestImgTrack[1]
+                                                                            .requestImgTrack[1]
                                                                         : './static/assets/logo/logoappsummer.png'
                                                                 }
                                                                 alt=""
@@ -349,22 +352,22 @@ export default function TrackInfoPage() {
                                                                     .timecodes
                                                                     .length >
                                                                     0 && (
-                                                                    <div
-                                                                        className={
-                                                                            theme.time
-                                                                        }
-                                                                    >
-                                                                        {
-                                                                            currentTrack
-                                                                                .timecodes[0]
-                                                                        }{' '}
-                                                                        -{' '}
-                                                                        {
-                                                                            currentTrack
-                                                                                .timecodes[1]
-                                                                        }
-                                                                    </div>
-                                                                )}
+                                                                        <div
+                                                                            className={
+                                                                                theme.time
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                currentTrack
+                                                                                    .timecodes[0]
+                                                                            }{' '}
+                                                                            -{' '}
+                                                                            {
+                                                                                currentTrack
+                                                                                    .timecodes[1]
+                                                                            }
+                                                                        </div>
+                                                                    )}
                                                             </div>
                                                         </div>
                                                     ) : (
@@ -398,41 +401,45 @@ export default function TrackInfoPage() {
                                                         </div>
                                                     )}
                                                 </div>
-                                                <div
-                                                    className={theme.button}
-                                                    onClick={() => {
-                                                        window.open(
-                                                            'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                                                        )
-                                                    }}
-                                                >
-                                                    Слушать трек на Яндекс
-                                                    Музыке
-                                                </div>
-                                                <div
-                                                    className={theme.button}
-                                                    onClick={() => {
-                                                        window.open(
-                                                            'https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts',
-                                                        )
-                                                    }}
-                                                >
-                                                    Open in Github
+                                                <div className={theme.buttonRpc}>
+                                                    <div
+                                                        className={theme.button}
+                                                        onClick={() => {
+                                                            window.open(
+                                                                'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+                                                            )
+                                                        }}
+                                                    >
+                                                        Слушать трек на Яндекс
+                                                        Музыке
+                                                    </div>
+                                                    <div
+                                                        className={theme.button}
+                                                        onClick={() => {
+                                                            window.open(
+                                                                'https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts',
+                                                            )
+                                                        }}
+                                                    >
+                                                        Open in Github
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 {modal && (
-                                    <div className={theme.modalBlur}>
+                                    <div className={modalAnim ? (theme.modalBlur) : (theme.modalBlurOff)}>
+                                        <div className={theme.modalCloseZone} onClick={() => { setModalAnim(false), setTimeout(() => setModal(false), 200) }}></div>
                                         <div className={theme.modal}>
                                             <div className={theme.modalTitle}>
                                                 <div>Параметры полей</div>
                                                 <button
                                                     className={theme.closeModal}
-                                                    onClick={() =>
-                                                        setModal(false)
-                                                    }
+                                                    onClick={() => {
+                                                        setModalAnim(false)
+                                                        setTimeout(() => setModal(false), 200)
+                                                    }}
                                                 >
                                                     <MdClose size={20} />
                                                 </button>
@@ -460,6 +467,7 @@ export default function TrackInfoPage() {
                                                         - название трека
                                                     </div>
                                                     <MdContentCopy
+                                                        cursor={'pointer'}
                                                         size={18}
                                                         onClick={() =>
                                                             copyValues(
@@ -488,6 +496,7 @@ export default function TrackInfoPage() {
                                                         - имя артиста
                                                     </div>
                                                     <MdContentCopy
+                                                        cursor={'pointer'}
                                                         size={18}
                                                         onClick={() =>
                                                             copyValues(
@@ -516,6 +525,7 @@ export default function TrackInfoPage() {
                                                         - начальное время
                                                     </div>
                                                     <MdContentCopy
+                                                        cursor={'pointer'}
                                                         size={18}
                                                         onClick={() =>
                                                             copyValues(
@@ -544,6 +554,7 @@ export default function TrackInfoPage() {
                                                         - конечное время
                                                     </div>
                                                     <MdContentCopy
+                                                        cursor={'pointer'}
                                                         size={18}
                                                         onClick={() =>
                                                             copyValues(
