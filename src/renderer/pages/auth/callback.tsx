@@ -1,7 +1,7 @@
 import Header from '../../components/layout/header'
 import Container from '../../components/container'
 
-import styles from './callback.module.scss'
+import * as styles from './callback.module.scss'
 
 import DiscordAuth from './../../../../static/assets/icons/discordAuth.svg'
 import { useContext, useEffect, useState } from 'react'
@@ -10,7 +10,7 @@ import userContext from '../../api/context/user.context'
 
 export default function CallbackPage() {
     const navigate = useNavigate()
-    const { user, settings, loading, authorize } = useContext(userContext)
+    const { user, authorize } = useContext(userContext)
     const [banned, setBanned] = useState(false)
 
     useEffect(() => {

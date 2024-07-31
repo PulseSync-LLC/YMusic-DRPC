@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import styles from './context_menu.module.scss'
+import * as styles from './context_menu.module.scss'
 import userContext from '../../api/context/user.context'
 import { shell } from 'electron'
 import SettingsInterface from '../../api/interfaces/settings.interface'
@@ -9,18 +9,17 @@ import playerContext from '../../api/context/player.context'
 import getTrackUrl from '../../api/createTrackUrl'
 import hotToast from 'react-hot-toast'
 import toast from '../../api/toast'
-import trackInitials from '../../api/interfaces/track.initials'
+import trackInitials from '../../api/initials/track.initials'
 import config from '../../api/config'
 import getUserToken from '../../api/getUserToken'
-import userInitials from '../../api/interfaces/user.initials'
-import { ModalContext } from '../layout'
+import userInitials from '../../api/initials/user.initials'
 
 interface ContextMenuProps {
     modalRef: React.RefObject<{ openModal: () => void; closeModal: () => void }>
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
-    const { settings, yaClient, setSettings, setUser, setUpdate } =
+    const { app, yaClient, setApp, setUser, setUpdate } =
         useContext(userContext)
     const [version, setVersion] = useState(null)
     const { currentTrack } = useContext(playerContext)
@@ -34,10 +33,13 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
     }
     const depatch = () => {
         window.electron.patcher.depatch()
-        setSettings((prevSettings: SettingsInterface) => ({
-            ...prevSettings,
-            patched: false,
-        }))
+        setApp({
+            ...app,
+            settings: {
+                ...app.settings,
+                patched: false,
+            },
+        })
     }
     const logout = () => {
         fetch(config.SERVER_URL + 'auth/logout', {
@@ -62,26 +64,35 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
     const enableFunc = (type: string, status: boolean) => {
         switch (type) {
             case 'autoTray':
-                setSettings((prevSettings: any) => ({
-                    ...prevSettings,
-                    autoStartInTray: status,
-                }))
-                window.electron.store.set('autoStartInTray', status)
+                setApp({
+                    ...app,
+                    settings: {
+                        ...app.settings,
+                        autoStartInTray: status,
+                    },
+                })
+                window.electron.store.set('settings.autoStartInTray', status)
                 break
             case 'autoStart':
-                setSettings((prevSettings: any) => ({
-                    ...prevSettings,
-                    autoStartApp: status,
-                }))
-                window.electron.store.set('autoStartApp', status)
-                window.desktopEvents?.send('autoStartApp', status)
+                setApp({
+                    ...app,
+                    settings: {
+                        ...app.settings,
+                        autoStartApp: status,
+                    },
+                })
+                window.electron.store.set('settings.autoStartApp', status)
+                window.desktopEvents?.send('settings.autoStartApp', status)
                 break
             case 'autoStartMusic':
-                setSettings((prevSettings: any) => ({
-                    ...prevSettings,
-                    autoStartMusic: status,
-                }))
-                window.electron.store.set('autoStartMusic', status)
+                setApp({
+                    ...app,
+                    settings: {
+                        ...app.settings,
+                        autoStartMusic: status,
+                    },
+                })
+                window.electron.store.set('settings.autoStartMusic', status)
                 break
         }
     }
@@ -156,15 +167,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                     case 'depatch':
                         toast.success('Успешный депатч', { id: toastId })
                         break
-                    case 'update':
-                        if (value) {
-                            toast.success('Обновления найдены', { id: toastId })
-                        } else {
-                            toast.error('Обновления не найдены', {
-                                id: toastId,
-                            })
-                        }
-                        break
                     default:
                         hotToast.dismiss(toastId)
                         break
@@ -200,7 +202,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 <div className={styles.showButtons}>
                     <button
                         key="patch_button"
-                        disabled={settings.patched}
+                        disabled={app.settings.patched}
                         className={styles.contextButton}
                     >
                         Патч
@@ -211,7 +213,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                             repatch()
                         }}
                         key="repatch_button"
-                        disabled={!settings.patched}
+                        disabled={!app.settings.patched}
                         className={styles.contextButton}
                     >
                         Репатч
@@ -222,7 +224,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                             depatch()
                         }}
                         key="depatch_button"
-                        disabled={!settings.patched}
+                        disabled={!app.settings.patched}
                         className={styles.contextButton}
                     >
                         Депатч
@@ -241,14 +243,14 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
-                        disabled={settings.autoStartInTray}
+                        disabled={app.settings.autoStartInTray}
                         onClick={() => enableFunc('autoTray', true)}
                     >
                         Включить
                     </button>
                     <button
                         className={styles.contextButton}
-                        disabled={!settings.autoStartInTray}
+                        disabled={!app.settings.autoStartInTray}
                         onClick={() => enableFunc('autoTray', false)}
                     >
                         Выключить
@@ -261,14 +263,14 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
-                        disabled={settings.autoStartApp}
+                        disabled={app.settings.autoStartApp}
                         onClick={() => enableFunc('autoStart', true)}
                     >
                         Включить
                     </button>
                     <button
                         className={styles.contextButton}
-                        disabled={!settings.autoStartApp}
+                        disabled={!app.settings.autoStartApp}
                         onClick={() => enableFunc('autoStart', false)}
                     >
                         Выключить
@@ -281,14 +283,14 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
-                        disabled={settings.autoStartMusic}
+                        disabled={app.settings.autoStartMusic}
                         onClick={() => enableFunc('autoStartMusic', true)}
                     >
                         Включить
                     </button>
                     <button
                         className={styles.contextButton}
-                        disabled={!settings.autoStartMusic}
+                        disabled={!app.settings.autoStartMusic}
                         onClick={() => enableFunc('autoStartMusic', false)}
                     >
                         Выключить
@@ -317,7 +319,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                     <button
                         className={styles.contextButton}
                         onClick={e => {
-                            toastLoading(e, 'Поиск обновлений')
                             window.desktopEvents?.send('checkUpdate')
                         }}
                     >

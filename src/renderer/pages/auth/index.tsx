@@ -1,37 +1,41 @@
 import Header from '../../components/layout/header'
 import Container from '../../components/container'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import MarkDown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { useNavigate } from 'react-router-dom'
 
-import styles from './auth.module.scss'
+import * as styles from './auth.module.scss'
 
 import CheckboxNav from '../../components/checkbox'
 
-import { MdAdminPanelSettings, MdWarning } from 'react-icons/md'
-import Discord from './../../../../static/assets/icons/discordLogin.svg'
+import { MdAdminPanelSettings } from 'react-icons/md'
 import userContext from '../../api/context/user.context'
 import config from '../../api/config'
 
 export default function AuthPage() {
     const navigate = useNavigate()
     const [mdText, setMdText] = useState(null)
-    const { user, settings } = useContext(userContext)
-    useEffect(() => {
+    const { user, app } = useContext(userContext)
+    if (mdText === null) {
         fetch('./static/assets/policy/terms.ru.md')
             .then(response => response.text())
             .then(text => setMdText(text))
-    }, [])
+    }
     const auth = () => {
         window.open(config.SERVER_URL + 'auth/discord')
-        navigate('/auth/callback')
+        navigate('/auth/callback', {
+            replace: true,
+        })
     }
     useEffect(() => {
         if (user.id !== '-1') {
-            navigate('/trackinfo')
+            navigate('/trackinfo', {
+                replace: true,
+            })
         }
     }, [user.id])
+    const memoizedMdText = useMemo(() => mdText, [mdText])
     return (
         <>
             <Header />
@@ -39,7 +43,7 @@ export default function AuthPage() {
                 <div className={styles.container}>
                     <div className={styles.policy}>
                         <MarkDown remarkPlugins={[remarkGfm]}>
-                            {mdText}
+                            {memoizedMdText}
                         </MarkDown>
                         <CheckboxNav checkType="readPolicy">
                             Я соглашаюсь со всеми выше перечисленными условиями.
@@ -47,7 +51,7 @@ export default function AuthPage() {
                     </div>
                     <button
                         className={styles.discordAuth}
-                        disabled={!settings.readPolicy}
+                        disabled={!app.settings.readPolicy}
                         onClick={() => auth()}
                     >
                         <MdAdminPanelSettings size={20} />

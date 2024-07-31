@@ -14,7 +14,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
     operation.setContext({
         headers: {
             Authorization:
-                `Bearer: ${window.electron.store.get('token')}` || null,
+                `Bearer: ${window.electron.store.get('tokens.token')}` || null,
         },
     })
 

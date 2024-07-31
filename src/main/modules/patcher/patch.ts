@@ -105,6 +105,7 @@ class Patcher {
                 
                                         if (bodyElement && !isScriptExecuted) {
                                             const customHtmlElement = document.createElement('div');
+                                            customHtmlElement.className = 'PSBpanel';
                                             customHtmlElement.style = "position: absolute;top: -7px;right: 140px;color: rgb(255 255 255 / 29%);font-family: var(--ym-font-text);font-style: normal;font-weight: 100;letter-spacing: normal;line-height: var(--ym-font-line-height-label-s);z-index: 1;"
                 
                                             customHtmlElement.innerHTML = '<p class="PSB">PulseSync</p>';
@@ -162,7 +163,7 @@ class Patcher {
                                     setInterval(() => {
                                         const result = logPlayerBarInfo();
                 
-                                        fetch('http://127.0.0.1:19582/update_data', {
+                                        fetch('http://127.0.0.1:2007/update_data', {
                                             method: 'POST',
                                             headers: {
                                                 'Content-Type': 'application/json',
@@ -173,7 +174,7 @@ class Patcher {
                 
                                 
                                     function updateTheme() {
-                                        fetch('http://127.0.0.1:19582/get_theme')
+                                        fetch('http://127.0.0.1:2007/get_theme')
                                             .then(response => response.json())
                                             .then(data => {
                                                 if (data.ok) {
@@ -231,7 +232,7 @@ class Patcher {
                                         setInterval(updateTheme, 2000);
                 });
                                     const token = localStorage.getItem("oauth"); 
-                                    fetch('http://127.0.0.1:19582/send_token', {
+                                    fetch('http://127.0.0.1:2007/send_token', {
                                         method: 'POST',
                                         headers: {
                                             'Content-Type': 'application/json',
@@ -282,7 +283,7 @@ class Patcher {
             if (match && match[1]) {
                 const trackId = match[1];
                 console.log("Track ID found:", trackId);
-                fetch("http://127.0.0.1:19582/track_info", {
+                fetch("http://127.0.0.1:2007/track_info", {
                     method: "POST",
                     body: trackId
                 })

@@ -40,7 +40,7 @@ export const navigateToDeeplink = (
                     }
                 }
             })
-            store.set('token', token)
+            store.set('tokens.token', token)
             window.webContents.send('authSuccess')
             break
         case 'ban':

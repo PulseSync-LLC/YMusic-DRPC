@@ -48,7 +48,6 @@ declare global {
         discordRpc: {
             discordRpc: (val: boolean) => void
             setActivity: (props: Presence) => void
-            enableListenButton: (val: boolean) => void
             clearActivity: () => void
         }
         desktopEvents: {

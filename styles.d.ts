@@ -1,4 +1,12 @@
 declare module '*.scss' {
-    const content: Record<string, string>
-    export default content
+    const classes: { [key: string]: string }
+    export = classes
+}
+declare module '*.module.scss' {
+    const classes: { [key: string]: string }
+    export = classes
+}
+declare module '*.module.css' {
+    const classes: { [key: string]: string }
+    export = classes
 }

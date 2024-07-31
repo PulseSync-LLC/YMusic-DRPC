@@ -1,11 +1,5 @@
-import styles from './layout.module.scss'
-import React, {
-    createContext,
-    useContext,
-    useEffect,
-    useRef,
-    useState,
-} from 'react'
+import * as styles from './layout.module.scss'
+import React, { useContext, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import Header from './header'
 import ButtonNav from '../button_nav'
@@ -20,8 +14,6 @@ import {
 } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
 import userContext from '../../api/context/user.context'
-import SettingsInterface from '../../api/interfaces/settings.interface'
-import Modal from '../modal'
 import hotToast from 'react-hot-toast'
 import toast from '../../api/toast'
 
@@ -31,24 +23,16 @@ interface p {
     goBack?: boolean
 }
 
-interface ModalContextType {
-    openModal: () => void
-    closeModal: () => void
-}
-
-export const ModalContext = createContext<ModalContextType>({
-    openModal: () => {},
-    closeModal: () => {},
-})
 const Layout: React.FC<p> = ({ title, children, goBack }) => {
-    const { settings, setSettings, updateAvailable, setUpdate } =
-        useContext(userContext)
+    const { app, setApp, updateAvailable, setUpdate } = useContext(userContext)
     const toastLoading = (event: any, title: string) => {
         let toastId: string
         toastId = hotToast.loading(title, {
             style: {
-                background: '#333',
-                color: '#fff',
+                background: '#394045',
+                color: '#DDF2FF',
+                border: 'solid 1px #535A5F',
+                borderRadius: '32px',
             },
         })
         const handleUpdateAppData = (event: any, data: any) => {
@@ -72,6 +56,9 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
             window.desktopEvents?.on('update-available', (event, data) => {
                 setUpdate(true)
             })
+            return () => {
+                window.desktopEvents?.removeAllListeners('update-available')
+            }
         }
     }, [])
     return (
@@ -132,37 +119,36 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                         )}
                     </div>
 
-                    {!settings.patched && (
+                    {!app.settings.patched && (
                         <div className={styles.alert_patch}>
-                            <div>
-                                <div>
-                                    <div className={styles.container_warn}>
-                                        <MdWarning size={38} />
-                                        <div>
-                                            У Яндекс Музыки отсутствует патч!
-                                        </div>
+                            <div className={styles.patch_container}>
+                                <img
+                                    className={styles.alert_patch_image}
+                                    src="static\assets\images\imageAlertPatch.png"
+                                    alt=""
+                                />
+                                <div className={styles.patch_detail}>
+                                    <div className={styles.alert_info}>
+                                        <div className={styles.alert_title}>Отсутствует патч!</div>
+                                        <div className={styles.alert_warn}>Убедитесь что Яндекс Музыка закрыта!</div>
                                     </div>
                                     <button
+                                        className={styles.patch_button}
                                         onClick={e => {
                                             toastLoading(e, 'Патч...')
                                             window.electron.patcher.patch()
-                                            setSettings(
-                                                (
-                                                    prevSettings: SettingsInterface,
-                                                ) => ({
-                                                    ...prevSettings,
+                                            setApp({
+                                                ...app,
+                                                settings: {
+                                                    ...app.settings,
                                                     patched: true,
-                                                }),
-                                            )
+                                                },
+                                            })
                                         }}
                                     >
-                                        <MdEngineering size={22} /> Запатчить
+                                        <MdEngineering size={20} />Запатчить
                                     </button>
                                 </div>
-                                <img
-                                    src="static\assets\images\O^O.png"
-                                    alt=""
-                                />
                             </div>
                         </div>
                     )}

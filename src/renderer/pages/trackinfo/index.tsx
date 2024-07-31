@@ -3,45 +3,88 @@ import Container from '../../components/container'
 
 import CheckboxNav from '../../components/checkbox'
 
-import styles from '../../../../static/styles/page/indexBP20.module.scss'
-import theme from './trackinfo.module.scss'
+import * as styles from '../../../../static/styles/page/indexBP20.module.scss'
+import * as theme from './trackinfo.module.scss'
 
-import { useState, useContext, ChangeEvent } from 'react'
+import React, { useContext, useState } from 'react'
 import userContext from '../../api/context/user.context'
-import trackInitials from '../../api/interfaces/track.initials'
+import trackInitials from '../../api/initials/track.initials'
 import Skeleton from 'react-loading-skeleton'
 import playerContext from '../../api/context/player.context'
+import { object, string } from 'yup'
+import { useFormik } from 'formik'
+import { MdClose, MdContentCopy } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
+import toast from '../../api/toast'
+
 export default function TrackInfoPage() {
-    const { user, settings, yaClient } = useContext(userContext)
+    const { user, app } = useContext(userContext)
     const { currentTrack } = useContext(playerContext)
-
-    const [detailsValue, setDetailsValue] = useState('');
-    const [buttonValue, setButtonValue] = useState('');
-    const [stateValue, setStateValue] = useState('');
-    const [isTooltipVisible, setTooltipVisible] = useState(false);
-    const [activeInputCount, setActiveInputCount] = useState(0);
-
-    const handleFocus = () => {
-        if (activeInputCount === 0) {
-            setTooltipVisible(true);
-        }
-        setActiveInputCount(prev => prev + 1);
-    };
-
-    const handleBlur = () => {
-        setActiveInputCount(prev => {
-            const newCount = prev - 1;
-            if (newCount === 0) {
-                setTooltipVisible(false);
+    const [modal, setModal] = useState(false)
+    const [previousValues, setPreviousValues] = useState({
+        appId: '',
+        details: '',
+        state: '',
+        button: '',
+    })
+    const navigate = useNavigate()
+    const schema = object().shape({
+        appId: string()
+            .nullable()
+            .notRequired()
+            .test(
+                'len',
+                'Минимальная длина 18 символов',
+                val => !val || val.length >= 18,
+            )
+            .test(
+                'len',
+                'Максимальная длина 20 символов',
+                val => !val || val.length <= 20,
+            ),
+        details: string(),
+        state: string(),
+        button: string(),
+    })
+    const copyValues = async (value: string) => {
+        await navigator.clipboard.writeText(value)
+        toast.success('Скопировано в буфер обмена')
+    }
+    const getChangedValues = (initialValues: any, currentValues: any) => {
+        const changedValues: any = {}
+        for (const key in initialValues) {
+            if (initialValues[key] !== currentValues[key]) {
+                changedValues[key] = currentValues[key]
             }
-            return newCount;
-        });
-    };
+        }
+        return changedValues
+    }
+    const formik = useFormik({
+        initialValues: {
+            appId: '',
+            details: '',
+            state: '',
+            button: '',
+        },
+        validationSchema: schema,
+        onSubmit: values => {
+            const changedValues = getChangedValues(previousValues, values)
+            if (Object.keys(changedValues).length > 0) {
+                window.desktopEvents?.send('update-rpcSettings', changedValues)
+                setPreviousValues(values)
+            }
+        },
+    })
 
-    const handleInputChange = (event: ChangeEvent<HTMLInputElement>, setValue: React.Dispatch<React.SetStateAction<string>>) => {
-        setValue(event.target.value);
-    };
-
+    const handleBlur = (e: any) => {
+        formik.handleBlur(e)
+        const changedValues = getChangedValues(previousValues, formik.values)
+        if (formik.isValid && Object.keys(changedValues).length > 0) {
+            formik.handleSubmit()
+        }
+    }
+    const isSupporter = user.badges.some(badge => badge.type === "supporter");
+    console.log(isSupporter);
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
@@ -52,80 +95,185 @@ export default function TrackInfoPage() {
                             imageName={'discord'}
                         >
                             <div className={theme.container}>
-                                <div className={theme.discordRpcSettings}>
-                                    <div className={theme.optionalContainer}>
-                                        <div className={theme.optionalTitle}>
-                                            Обзор
-                                        </div>
-                                        <CheckboxNav
-                                            checkType="startDiscordRpc"
-                                            description="Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord."
-                                        >
-                                            Включить статус дискорд
-                                        </CheckboxNav>
-                                    </div>
-                                    <div className={theme.line}></div>
-                                    <div className={theme.optionalContainer}>
-                                        <div className={theme.optionalTitle}>
-                                            Настроить статус
-                                        </div>
+                                <form>
+                                    <div className={theme.discordRpcSettings}>
                                         <div
-                                            className={theme.textInputContainer}
+                                            className={theme.optionalContainer}
                                         >
-                                            <div>App ID</div>
-                                            <input
-                                                type="text"
-                                                placeholder={'984031241357647892'}
-                                                className={theme.styledInput}
-                                            />
-                                        </div>
-                                        <div className={theme.textInputContainer}>
-                                            <div>Details</div>
-                                            <input
-                                                type="text"
-                                                value={detailsValue}
-                                                placeholder="enter text"
-                                                className={theme.styledInput}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(event) => handleInputChange(event, setDetailsValue)}
-                                            />
-                                        </div>
-                                        <div className={theme.textInputContainer}>
-                                            <div>State</div>
-                                            <input
-                                                type="text"
-                                                value={stateValue}
-                                                placeholder="enter text"
-                                                className={theme.styledInput}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(event) => handleInputChange(event, setStateValue)}
-                                            />
+                                            <div
+                                                className={theme.optionalTitle}
+                                            >
+                                                Обзор
+                                            </div>
+                                            <CheckboxNav
+                                                checkType="startDiscordRpc"
+                                                description="Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord."
+                                            >
+                                                Включить статус дискорд
+                                            </CheckboxNav>
                                         </div>
                                         <div className={theme.line}></div>
-                                        <CheckboxNav
-                                            checkType="enableRpcButtonListen"
-                                            description="Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord."
-                                        >
-                                            Включить кнопку (Слушать)
-                                        </CheckboxNav>
                                         <div
-                                            className={theme.textInputContainer}
+                                            className={theme.optionalContainer}
                                         >
-                                            <div>Button</div>
-                                            <input
-                                                type="text"
-                                                value={buttonValue}
-                                                placeholder="enter text"
-                                                className={theme.styledInput}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={(event) => handleInputChange(event, setButtonValue)}
-                                            />
+                                            <div
+                                                className={theme.optionalTitle}
+                                            >
+                                                Настроить статус
+                                            </div>
+                                            <div
+                                                className={
+                                                    theme.textInputContainer
+                                                }
+                                            >
+                                                <div>App ID</div>
+                                                <input
+                                                    type="text"
+                                                    name="appId"
+                                                    aria-errormessage={
+                                                        (formik.errors as any)[
+                                                            'appId'
+                                                        ]
+                                                    }
+                                                    placeholder="984031241357647892"
+                                                    className={
+                                                        theme.styledInput
+                                                    }
+                                                    value={formik.values.appId}
+                                                    onChange={
+                                                        formik.handleChange
+                                                    }
+                                                    onBlur={e => {
+                                                        handleBlur(e)
+                                                        //handleBlurCount()
+                                                    }}
+                                                />
+                                                {formik.touched.appId &&
+                                                formik.errors.appId ? (
+                                                    <div
+                                                        className={theme.error}
+                                                    >
+                                                        {formik.errors.appId}
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                            <div
+                                                className={
+                                                    theme.textInputContainer
+                                                }
+                                            >
+                                                <div>Details</div>
+                                                <input
+                                                    type="text"
+                                                    name="details"
+                                                    placeholder="enter text"
+                                                    className={
+                                                        theme.styledInput
+                                                    }
+                                                    value={
+                                                        formik.values.details
+                                                    }
+                                                    onChange={
+                                                        formik.handleChange
+                                                    }
+                                                    onBlur={e => {
+                                                        handleBlur(e)
+                                                    }}
+                                                />
+                                                {formik.touched.details &&
+                                                formik.errors.details ? (
+                                                    <div
+                                                        className={theme.error}
+                                                    >
+                                                        {formik.errors.details}
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                            <div
+                                                className={
+                                                    theme.textInputContainer
+                                                }
+                                            >
+                                                <div>State</div>
+                                                <input
+                                                    type="text"
+                                                    name="state"
+                                                    placeholder="enter text"
+                                                    className={
+                                                        theme.styledInput
+                                                    }
+                                                    value={formik.values.state}
+                                                    onChange={
+                                                        formik.handleChange
+                                                    }
+                                                    onBlur={e => {
+                                                        handleBlur(e)
+                                                    }}
+                                                />
+                                                {formik.touched.state &&
+                                                formik.errors.state ? (
+                                                    <div
+                                                        className={theme.error}
+                                                    >
+                                                        {formik.errors.state}
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                            <div
+                                                className={
+                                                    theme.openModalButton
+                                                }
+                                                onClick={() => setModal(true)}
+                                            >
+                                                Посмотреть все параметры полей.
+                                            </div>
+                                            <div className={theme.line}></div>
+                                            <CheckboxNav
+                                                checkType="enableRpcButtonListen"
+                                                description="Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord."
+                                            >
+                                                Включить кнопку (Слушать)
+                                            </CheckboxNav>
+                                            <CheckboxNav
+                                                disabled={!isSupporter}
+                                                checkType="enableGithubButton"
+                                                description="Активируйте этот параметр, чтобы показать что вы любите разработчиков."
+                                            >
+                                                Включить кнопку (Open in Github)
+                                            </CheckboxNav>
+                                            <div
+                                                className={
+                                                    theme.textInputContainer
+                                                }
+                                            >
+                                                <div>Button</div>
+                                                <input
+                                                    type="text"
+                                                    name="button"
+                                                    placeholder="enter text"
+                                                    className={
+                                                        theme.styledInput
+                                                    }
+                                                    value={formik.values.button}
+                                                    onChange={
+                                                        formik.handleChange
+                                                    }
+                                                    onBlur={e => {
+                                                        handleBlur(e)
+                                                    }}
+                                                />
+                                                {formik.touched.button &&
+                                                formik.errors.button ? (
+                                                    <div
+                                                        className={theme.error}
+                                                    >
+                                                        {formik.errors.button}
+                                                    </div>
+                                                ) : null}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                                 <div className={theme.discordRpc}>
                                     <img
                                         className={theme.userBanner}
@@ -151,8 +299,8 @@ export default function TrackInfoPage() {
                                             </div>
                                             <div className={theme.statusRPC}>
                                                 <div>
-                                                    {settings.discordRpc &&
-                                                        currentTrack !==
+                                                    {app.discordRpc.status &&
+                                                    currentTrack !==
                                                         trackInitials ? (
                                                         <div
                                                             className={
@@ -167,7 +315,7 @@ export default function TrackInfoPage() {
                                                                     currentTrack
                                                                         .requestImgTrack[1]
                                                                         ? currentTrack
-                                                                            .requestImgTrack[1]
+                                                                              .requestImgTrack[1]
                                                                         : './static/assets/logo/logoappsummer.png'
                                                                 }
                                                                 alt=""
@@ -201,22 +349,22 @@ export default function TrackInfoPage() {
                                                                     .timecodes
                                                                     .length >
                                                                     0 && (
-                                                                        <div
-                                                                            className={
-                                                                                theme.time
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                currentTrack
-                                                                                    .timecodes[0]
-                                                                            }{' '}
-                                                                            -{' '}
-                                                                            {
-                                                                                currentTrack
-                                                                                    .timecodes[1]
-                                                                            }
-                                                                        </div>
-                                                                    )}
+                                                                    <div
+                                                                        className={
+                                                                            theme.time
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            currentTrack
+                                                                                .timecodes[0]
+                                                                        }{' '}
+                                                                        -{' '}
+                                                                        {
+                                                                            currentTrack
+                                                                                .timecodes[1]
+                                                                        }
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     ) : (
@@ -261,30 +409,150 @@ export default function TrackInfoPage() {
                                                     Слушать трек на Яндекс
                                                     Музыке
                                                 </div>
+                                                <div
+                                                    className={theme.button}
+                                                    onClick={() => {
+                                                        window.open(
+                                                            'https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts',
+                                                        )
+                                                    }}
+                                                >
+                                                    Open in Github
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {isTooltipVisible && (
-                                    <div className={theme.modal}>
-                                        <div className={theme.modalTitle}>Параметры поля</div>
-                                        <div className={theme.modalContainer}>
-                                            <button className={theme.modalContextButton}>
-                                                <div className={theme.contextPreview}>track live</div>
-                                                <div className={theme.contextInfo}>&#123;track&#125; - название трека</div>
-                                            </button>
-                                            <button className={theme.modalContextButton}>
-                                                <div className={theme.contextPreview}>atrist live</div>
-                                                <div className={theme.contextInfo}>&#123;atrist&#125; - имя артиста</div>
-                                            </button>
-                                            <button className={theme.modalContextButton}>
-                                                <div className={theme.contextPreview}>startTime live</div>
-                                                <div className={theme.contextInfo}>&#123;startTime&#125; - начальное время</div>
-                                            </button>
-                                            <button className={theme.modalContextButton}>
-                                                <div className={theme.contextPreview}>endTime live</div>
-                                                <div className={theme.contextInfo}>&#123;endTime&#125; - конечное время</div>
-                                            </button>
+                                {modal && (
+                                    <div className={theme.modalBlur}>
+                                        <div className={theme.modal}>
+                                            <div className={theme.modalTitle}>
+                                                <div>Параметры полей</div>
+                                                <button
+                                                    className={theme.closeModal}
+                                                    onClick={() =>
+                                                        setModal(false)
+                                                    }
+                                                >
+                                                    <MdClose size={20} />
+                                                </button>
+                                            </div>
+                                            <div
+                                                className={theme.modalContainer}
+                                            >
+                                                <button
+                                                    className={
+                                                        theme.modalContextButton
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            theme.contextInfo
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                theme.contextPreview
+                                                            }
+                                                        >
+                                                            track live
+                                                        </div>
+                                                        - название трека
+                                                    </div>
+                                                    <MdContentCopy
+                                                        size={18}
+                                                        onClick={() =>
+                                                            copyValues(
+                                                                '{track}',
+                                                            )
+                                                        }
+                                                    />
+                                                </button>
+                                                <button
+                                                    className={
+                                                        theme.modalContextButton
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            theme.contextInfo
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                theme.contextPreview
+                                                            }
+                                                        >
+                                                            atrist live
+                                                        </div>
+                                                        - имя артиста
+                                                    </div>
+                                                    <MdContentCopy
+                                                        size={18}
+                                                        onClick={() =>
+                                                            copyValues(
+                                                                '{artist}',
+                                                            )
+                                                        }
+                                                    />
+                                                </button>
+                                                <button
+                                                    className={
+                                                        theme.modalContextButton
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            theme.contextInfo
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                theme.contextPreview
+                                                            }
+                                                        >
+                                                            startTime live
+                                                        </div>
+                                                        - начальное время
+                                                    </div>
+                                                    <MdContentCopy
+                                                        size={18}
+                                                        onClick={() =>
+                                                            copyValues(
+                                                                '{startTime}',
+                                                            )
+                                                        }
+                                                    />
+                                                </button>
+                                                <button
+                                                    className={
+                                                        theme.modalContextButton
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            theme.contextInfo
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                theme.contextPreview
+                                                            }
+                                                        >
+                                                            endTime live
+                                                        </div>
+                                                        - конечное время
+                                                    </div>
+                                                    <MdContentCopy
+                                                        size={18}
+                                                        onClick={() =>
+                                                            copyValues(
+                                                                '{endTime}',
+                                                            )
+                                                        }
+                                                    />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 )}

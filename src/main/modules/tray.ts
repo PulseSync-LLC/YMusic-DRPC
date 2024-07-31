@@ -39,7 +39,6 @@ function createTray() {
             click: app.quit,
         }),
     )
-    tray.setTitle("PulseSync")
     tray.setToolTip("PulseSync")
     tray.setContextMenu(menu)
     tray.on('click', event => {

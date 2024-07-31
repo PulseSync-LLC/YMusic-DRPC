@@ -1,4 +1,4 @@
-import ThemeInterface from './theme.interface'
+import ThemeInterface from '../interfaces/theme.interface'
 
 const ThemeInitials: ThemeInterface = {
     name: 'Default',
@@ -8,6 +8,6 @@ const ThemeInitials: ThemeInterface = {
     version: '1.0.0',
     path: 'local',
     lastModified: 0,
-    size: 0
+    size: 0,
 }
 export default ThemeInitials

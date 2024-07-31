@@ -1,4 +1,4 @@
-import TrackInterface from './track.interface'
+import TrackInterface from '../interfaces/track.interface'
 
 const TrackInitials: TrackInterface = {
     playerBarTitle: 'Death Note',

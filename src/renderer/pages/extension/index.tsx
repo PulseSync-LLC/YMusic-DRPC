@@ -1,8 +1,8 @@
 import Layout from '../../components/layout'
 import Container from '../../components/container'
 
-import styles from '../../../../static/styles/page/index.module.scss'
-import theme from './extension.module.scss'
+import * as styles from '../../../../static/styles/page/index.module.scss'
+import * as theme from './extension.module.scss'
 import ExtensionCard from '../../components/extensionCard'
 import { useEffect, useMemo, useState } from 'react'
 import ThemeInterface from '../../api/interfaces/theme.interface'

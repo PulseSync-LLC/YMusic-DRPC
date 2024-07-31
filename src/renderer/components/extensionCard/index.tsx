@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './card.module.scss'
+import * as styles from './card.module.scss'
 import Checkbox from '../checkbox'
 import ThemeInterface from '../../api/interfaces/theme.interface'
 import { MdDateRange, MdDesignServices, MdFolder, MdStar } from 'react-icons/md'

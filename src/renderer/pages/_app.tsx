@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import UserMeQuery from '../api/queries/user/getMe.query'
 
@@ -6,37 +6,36 @@ import TrackInfoPage from './trackinfo'
 import ExtensionPage from './extension'
 import JointPage from './joint'
 
-import { Toaster } from 'react-hot-toast'
+import hotToast, { Toaster } from 'react-hot-toast'
 import { CssVarsProvider } from '@mui/joy'
 import { Socket } from 'socket.io-client'
 import UserInterface from '../api/interfaces/user.interface'
-import userInitials from '../api/interfaces/user.initials'
+import userInitials from '../api/initials/user.initials'
 import { io } from 'socket.io-client'
 import UserContext from '../api/context/user.context'
 import toast from '../api/toast'
 import { SkeletonTheme } from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
-import trackInitials from '../api/interfaces/track.initials'
+import trackInitials from '../api/initials/track.initials'
 import TrackInterface from '../api/interfaces/track.interface'
 import PlayerContext from '../api/context/player.context'
 import apolloClient from '../api/apolloClient'
 import SettingsInterface from '../api/interfaces/settings.interface'
-import settingsInitials from '../api/interfaces/settings.initials'
+import settingsInitials from '../api/initials/settings.initials'
 import AuthPage from './auth'
 import CallbackPage from './auth/callback'
-import * as Sentry from '@sentry/electron/renderer'
 import getUserToken from '../api/getUserToken'
 import { YandexMusicClient } from 'yandex-music-client'
 import config from '../api/config'
+import { AppInfoInterface } from '../api/interfaces/appinfo.interface'
 
-function app() {
+function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
     const [socketError, setSocketError] = useState(-1)
     const [socketConnected, setSocketConnected] = useState(false)
     const [updateAvailable, setUpdate] = useState(false)
     const [user, setUser] = useState<UserInterface>(userInitials)
-    const [settings, setSettings] =
-        useState<SettingsInterface>(settingsInitials)
+    const [app, setApp] = useState<SettingsInterface>(settingsInitials)
     const [yaClient, setYaClient] = useState<YandexMusicClient | null>(null)
     const [loading, setLoading] = useState(false)
     const socket = io(config.SOCKET_URL, {
@@ -45,6 +44,7 @@ function app() {
             token: getUserToken(),
         },
     })
+    const [appInfo, setAppInfo] = useState<AppInfoInterface[]>([])
     const router = createHashRouter([
         {
             path: '/',
@@ -68,51 +68,114 @@ function app() {
         },
     ])
     const authorize = async () => {
+        const sendErrorAuthNotify = () => {
+            toast.error('Ошибка авторизации')
+            window.desktopEvents?.send('show-notification', {
+                title: 'Ошибка авторизации 😡',
+                body: 'Произошла ошибка при авторизации в программе',
+            })
+        }
         setLoading(true)
         try {
             let res = await apolloClient.query({
                 query: UserMeQuery,
+                fetchPolicy: 'no-cache',
             })
 
             const { data } = res
             if (data.getMe && data.getMe.id) {
                 setUser(data.getMe)
                 setLoading(false)
-
                 return true
             } else {
                 setLoading(false)
-                window.electron.store.delete('token')
+                window.electron.store.delete('tokens.token')
 
-                await router.navigate('/')
+                await router.navigate('/', {
+                    replace: true,
+                })
                 setUser(userInitials)
+                sendErrorAuthNotify()
                 return false
             }
         } catch (e) {
             setLoading(false)
-            toast.error('Ошибка авторизации')
+            sendErrorAuthNotify()
 
-            if (window.electron.store.has('token')) {
-                window.electron.store.delete('token')
+            if (window.electron.store.has('tokens.token')) {
+                window.electron.store.delete('tokens.token')
             }
-            await router.navigate('/')
+            await router.navigate('/', {
+                replace: true,
+            })
             setUser(userInitials)
             return false
         }
     }
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const token = window.electron.store.get('token')
-            if (user.id === '-1' && token) {
-                authorize()
-            } else {
-                router.navigate('/')
+        const handleMouseButton = (event: MouseEvent) => {
+            if (event.button === 3) {
+                event.preventDefault()
             }
+            if (event.button === 4) {
+                event.preventDefault()
+            }
+        }
+
+        window.addEventListener('mouseup', handleMouseButton)
+
+        return () => {
+            window.removeEventListener('mouseup', handleMouseButton)
         }
     }, [])
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            const ya_token = window.electron.store.get('ya_token')
+            const checkAuthorization = async () => {
+                try {
+                    const isAuthorized = await authorize()
+                    if (isAuthorized) {
+                        console.error('User is authorized.')
+                    }
+                } catch (error) {
+                    console.error('Authorization error:', error)
+                }
+            }
+
+            if (user.id === '-1') {
+                checkAuthorization()
+            } else {
+                router.navigate('/trackinfo', {
+                    replace: true,
+                })
+            }
+            // auth interval 15 minutes (10 * 60 * 1000)
+            const intervalId = setInterval(checkAuthorization, 10 * 60 * 1000)
+
+            return () => clearInterval(intervalId)
+        }
+    }, [])
+    useEffect(() => {
+        const fetchAppInfo = async () => {
+            try {
+                const res = await fetch(`${config.SERVER_URL}api/v1/app/info`)
+                const data = await res.json()
+                if (data.ok && Array.isArray(data.appInfo)) {
+                    const sortedAppInfos = data.appInfo.sort(
+                        (a: any, b: any) => b.id - a.id,
+                    )
+                    setAppInfo(sortedAppInfos)
+                } else {
+                    console.error('Invalid response format:', data)
+                }
+            } catch (error) {
+                console.error('Failed to fetch app info:', error)
+            }
+        }
+        fetchAppInfo()
+    }, [])
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const ya_token = window.electron.store.get('tokens.ya_token')
             const client = new YandexMusicClient({
                 BASE: `https://api.music.yandex.net`,
                 HEADERS: {
@@ -125,7 +188,7 @@ function app() {
             })
             setYaClient(client)
         }
-    }, [settings.ya_token])
+    }, [app.tokens.ya_token])
     socket.on('connect', () => {
         console.log('Socket connected')
         toast.success('Соединение установлено')
@@ -138,7 +201,6 @@ function app() {
 
     socket.on('disconnect', (reason, description) => {
         console.log('Socket disconnected')
-        console.log(reason + ' ' + description)
 
         setSocketError(1)
         setSocket(null)
@@ -165,43 +227,112 @@ function app() {
             if (!socket.connected) {
                 socket.connect()
             }
+            window.desktopEvents?.send('updater-start')
         } else {
-            router.navigate('/')
+            router.navigate('/', {
+                replace: true,
+            })
         }
     }, [user.id])
 
     useEffect(() => {
         if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
             window.desktopEvents?.on('ya_token', (event, data) => {
-                setSettings(prevSettings => ({
+                setApp(prevSettings => ({
                     ...prevSettings,
-                    ya_token: data,
+                    tokens: {
+                        ...prevSettings.tokens,
+                        ya_token: data.ya_token,
+                    },
                 }))
             })
-            const settingsKeys = [
-                'discordRpc',
-                'autoStartInTray',
-                'autoStartApp',
-                'autoStartMusic',
-                'enableRpcButtonListen',
-                'patched',
-                'readPolicy',
-                'ya_token',
-            ]
-
-            settingsKeys.forEach(key => {
-                if (window.electron.store.get(key)) {
-                    setSettings(prevSettings => ({
-                        ...prevSettings,
-                        [key]: true,
-                    }))
+            window.desktopEvents?.on('check-update', (event, data) => {
+                let toastId: string
+                toastId = hotToast.loading('Проверка обновлений', {
+                    style: {
+                        background: '#394045',
+                        color: '#DDF2FF',
+                        border: 'solid 1px #535A5F',
+                        borderRadius: '32px',
+                    },
+                })
+                if (data.updateAvailable) {
+                    console.log(data)
+                    window.desktopEvents?.on(
+                        'download-update-progress',
+                        (event, value) => {
+                            toast.loading(
+                                <>
+                                    <span>Загрузка обновления</span>
+                                    <b style={{ marginLeft: '.5em' }}>
+                                        {Math.floor(value)}%
+                                    </b>
+                                </>,
+                                {
+                                    id: toastId,
+                                },
+                            )
+                        },
+                    )
+                    window.desktopEvents?.once(
+                        'download-update-cancelled',
+                        () => hotToast.dismiss(toastId),
+                    )
+                    window.desktopEvents?.once('download-update-failed', () =>
+                        toast.error('Ошибка загрузки обновления', {
+                            id: toastId,
+                        }),
+                    )
+                    window.desktopEvents?.once('download-update-finished', () =>
+                        toast.success('Обновление загружено', { id: toastId }),
+                    )
+                } else {
+                    toast.error('Обновления не найдены', {
+                        id: toastId,
+                    })
                 }
             })
-            const token = window.electron.store.get('ya_token')
+            const fetchSettings = async () => {
+                const keys = [
+                    'settings.autoStartInTray',
+                    'settings.autoStartApp',
+                    'settings.autoStartMusic',
+                    'settings.patched',
+                    'settings.readPolicy',
+                    'tokens.ya_token',
+                    'tokens.token',
+                    'discordRpc.enableRpcButtonListen',
+                    'discordRpc.enableGithubButton',
+                    'discordRpc.status',
+                ]
+
+                const config = { ...settingsInitials } as any
+
+                keys.forEach(key => {
+                    const value = window.electron.store.get(key)
+                    if (value !== undefined) {
+                        const [mainKey, subKey] = key.split('.')
+                        if (subKey) {
+                            config[mainKey] = {
+                                ...config[mainKey],
+                                [subKey]: value,
+                            }
+                        }
+                    }
+                })
+
+                setApp(config)
+            }
+
+            fetchSettings()
+            const token = window.electron.store.get('tokens.ya_token')
             if (token) {
-                setSettings(prevSettings => ({
+                setApp(prevSettings => ({
                     ...prevSettings,
-                    ya_token: token,
+                    tokens: {
+                        ...prevSettings.tokens,
+                        token,
+                    },
                 }))
             }
             setLoading(false)
@@ -218,12 +349,13 @@ function app() {
                     loading,
                     socket: socketIo,
                     socketConnected,
-                    settings,
-                    setSettings,
+                    app,
+                    setApp,
                     updateAvailable,
                     setUpdate,
                     setYaClient,
                     yaClient,
+                    appInfo,
                 }}
             >
                 <Player>
@@ -238,21 +370,19 @@ function app() {
     )
 }
 const Player: React.FC<any> = ({ children }) => {
-    const { user, settings } = useContext(UserContext)
+    const { user, app } = useContext(UserContext)
     const [track, setTrack] = useState<TrackInterface>(trackInitials)
 
     useEffect(() => {
-        if (user.id != '-1') {
+        if (user.id !== '-1') {
             ;(async () => {
                 if (typeof window !== 'undefined') {
-                    if (settings.discordRpc) {
+                    if (app.discordRpc.status) {
                         window.desktopEvents?.on('trackinfo', (event, data) => {
                             setTrack(prevTrack => ({
                                 ...prevTrack,
                                 playerBarTitle: data.playerBarTitle,
-                                artist: data.artist
-                                    ? data.artist
-                                    : 'Нейромузыка',
+                                artist: data.artist,
                                 timecodes: data.timecodes,
                                 requestImgTrack: data.requestImgTrack,
                                 linkTitle: data.linkTitle,
@@ -273,49 +403,39 @@ const Player: React.FC<any> = ({ children }) => {
                     }
                 }
             })()
+        } else {
+            window.discordRpc.clearActivity()
         }
-    }, [user.id, settings.discordRpc])
+    }, [user.id, app.discordRpc.status])
     useEffect(() => {
         console.log('useEffect triggered')
-        console.log('Settings: ', settings)
+        console.log('Settings: ', app.settings)
+        console.log('RpcSettings: ', app.discordRpc)
         console.log('User: ', user)
         console.log('Track: ', track)
-        if (settings.discordRpc) {
+        if (app.discordRpc.status && user.id !== '-1') {
             const timeRange =
                 track.timecodes.length === 2
                     ? `${track.timecodes[0]} - ${track.timecodes[1]}`
                     : ''
 
-            const details = track.artist
-                ? `${track.playerBarTitle} - ${track.artist}`
-                : track.playerBarTitle
+            let details
+            if (track.artist.length > 0) {
+                details = `${track.playerBarTitle} - ${track.artist}`
+            } else {
+                details = track.playerBarTitle
+            }
 
             const largeImage = track.requestImgTrack[1] || 'ym'
             const smallImage = track.requestImgTrack[1] ? 'ym' : 'unset'
 
-            const buttons = [
-                {
-                    label: '✌️ Open in YandexMusic',
-                    url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
-                },
-                {
-                    label: '🤠 Open in GitHub',
-                    url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
-                },
-            ]
-
             const activity: any = {
+                type: 2,
                 largeImageKey: largeImage,
                 smallImageKey: smallImage,
-                smallImageText: 'Yandex Music',
-                buttons: [
-                    {
-                        label: '🤠 Open in GitHub',
-                        url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
-                    },
-                ],
+                smallImageText: 'Yandex Music'
             }
-
+            activity.buttons = [];
             if (timeRange) {
                 activity.state = timeRange
             }
@@ -324,16 +444,36 @@ const Player: React.FC<any> = ({ children }) => {
                 activity.details = details
             }
 
-            if (settings.enableRpcButtonListen && track.linkTitle) {
-                activity.buttons.unshift({
+
+            if (app.discordRpc.enableRpcButtonListen && track.linkTitle) {
+                activity.buttons.push({
                     label: '✌️ Open in YandexMusic',
-                    url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
-                })
+                    url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`
+                });
             }
 
+            if (app.discordRpc.enableGithubButton) {
+                activity.buttons.push({
+                    label: '🤠 Open in GitHub',
+                    url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`
+                });
+            }
+            if (activity.buttons.length === 0) {
+                delete activity.buttons;
+            }
+            if (!track.artist && !timeRange) {
+                track.artist = 'Нейромузыка'
+                setTrack(prevTrack => ({
+                    ...prevTrack,
+                    artist: 'Нейромузыка',
+                }))
+                activity.details = `${track.playerBarTitle} - ${track.artist}`
+            }
             window.discordRpc.setActivity(activity)
+        } else {
+            window.discordRpc.clearActivity()
         }
-    }, [settings, user, track])
+    }, [app.settings, user, track, app.discordRpc])
     return (
         <PlayerContext.Provider
             value={{
@@ -344,4 +484,4 @@ const Player: React.FC<any> = ({ children }) => {
         </PlayerContext.Provider>
     )
 }
-export default app
+export default _app

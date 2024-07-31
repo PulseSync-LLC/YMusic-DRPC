@@ -1,4 +1,11 @@
-import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import {
+    app,
+    BrowserWindow,
+    dialog,
+    ipcMain,
+    shell,
+    Notification,
+} from 'electron'
 import logger from '../modules/logger'
 import path from 'path'
 import TrackInterface from '../../renderer/api/interfaces/track.interface'
@@ -17,10 +24,9 @@ import Patcher from '../modules/patcher/patch'
 import { store } from '../modules/storage'
 import UnPatcher from '../modules/patcher/unpatch'
 import { UpdateStatus } from '../modules/updater/constants/updateStatus'
-
+import { updateAppId } from '../modules/discordRpc'
+const updater = getUpdater()
 export const handleEvents = (window: BrowserWindow): void => {
-    const updater = getUpdater()
-
     ipcMain.on('update-install', () => {
         updater.install()
     })
@@ -48,7 +54,7 @@ export const handleEvents = (window: BrowserWindow): void => {
         setTimeout(async () => {
             await Patcher.patchRum().then(async () => {
                 console.log('Все гуд')
-                store.set('patched', true)
+                store.set('settings.patched', true)
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     patch: true,
                 })
@@ -63,7 +69,7 @@ export const handleEvents = (window: BrowserWindow): void => {
             await UnPatcher.unpatch()
             setTimeout(async () => {
                 Patcher.patchRum().then(async () => {
-                    store.set('patched', true)
+                    store.set('settings.patched', true)
                     mainWindow.webContents.send('UPDATE_APP_DATA', {
                         repatch: true,
                     })
@@ -76,7 +82,7 @@ export const handleEvents = (window: BrowserWindow): void => {
         await checkAndTerminateYandexMusic()
         setTimeout(async () => {
             await UnPatcher.unpatch().then(async () => {
-                store.set('patched', false)
+                store.set('settings.patched', false)
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     depatch: true,
                 })
@@ -184,23 +190,53 @@ export const handleEvents = (window: BrowserWindow): void => {
             path: app.getPath('exe'),
         })
     })
-    ipcMain.on('checkUpdate', async (event, data) => {
-        logger.updater.info('Check update')
-        const checkUpdate = await updater.check()
-        if (
-            (checkUpdate !== null && checkUpdate === UpdateStatus.DOWNLOADED) ||
-            checkUpdate === UpdateStatus.DOWNLOADING
-        ) {
-            mainWindow.webContents.send('UPDATE_APP_DATA', {
-                update: true,
-            })
-        } else {
-            mainWindow.webContents.send('UPDATE_APP_DATA', {
-                update: false,
-            })
+    ipcMain.on('checkUpdate', async () => await checkOrFindUpdate())
+    ipcMain.on('updater-start', async (event, data) => {
+        await checkOrFindUpdate()
+        updater.start()
+        updater.onUpdate(version => {
+            mainWindow.webContents.send('update-available', version)
+        })
+    })
+    ipcMain.on('update-rpcSettings', async (event, data) => {
+        console.log(data)
+        switch (Object.keys(data)[0]) {
+            case 'appId':
+                console.log(data.appId)
+                updateAppId(data.appId)
+                break
+            case 'details':
+                store.set('discordRpc.details', data.details)
+                break
+            case 'state':
+                store.set('discordRpc.state', data.state)
+                break
+            case 'button':
+                store.set('discordRpc.button', data.button)
+                break
         }
+    })
+    ipcMain.on('show-notification', async (event, data) => {
+        return new Notification({ title: data.title, body: data.body }).show()
+    })
+    ipcMain.on('send-crashreport', async (event, data) => {
+        // TODO: add c++ module for crash reporter
     })
 }
 export const handleAppEvents = (window: BrowserWindow): void => {
     handleEvents(window)
+}
+export const checkOrFindUpdate = async () => {
+    logger.updater.info('Check update')
+    const checkUpdate = await updater.check()
+    if (checkUpdate === UpdateStatus.DOWNLOADING) {
+        mainWindow.webContents.send('check-update', {
+            updateAvailable: true,
+        })
+    } else if (checkUpdate === UpdateStatus.DOWNLOADED) {
+        mainWindow.webContents.send('check-update', {
+            updateAvailable: true,
+        })
+        mainWindow.webContents.send('download-update-finished')
+    }
 }

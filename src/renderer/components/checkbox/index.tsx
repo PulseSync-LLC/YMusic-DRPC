@@ -4,7 +4,7 @@ import React, {
     useEffect,
     useState,
 } from 'react'
-import styles from './checkbox.module.scss'
+import * as styles from './checkbox.module.scss'
 import userContext from '../../api/context/user.context'
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -25,22 +25,33 @@ const Checkbox: React.FC<Props> = ({
     onChange,
 }) => {
     const [isActive, setIsActive] = useState(false)
-    const { setSettings } = useContext(userContext)
+    const { app, setApp } = useContext(userContext)
     useEffect(() => {
         if (isChecked !== undefined) {
             setIsActive(isChecked)
         } else {
             switch (checkType) {
                 case 'startDiscordRpc':
-                    setIsActive(window.electron.store.get('discordRpc'))
+                    setIsActive(window.electron.store.get('discordRpc.status'))
                     break
                 case 'enableRpcButtonListen':
                     setIsActive(
-                        window.electron.store.get('enableRpcButtonListen'),
+                        window.electron.store.get(
+                            'discordRpc.enableRpcButtonListen',
+                        ),
+                    )
+                    break
+                case 'enableGithubButton':
+                    setIsActive(
+                        window.electron.store.get(
+                            'discordRpc.enableGithubButton',
+                        ),
                     )
                     break
                 case 'readPolicy':
-                    setIsActive(window.electron.store.get('readPolicy'))
+                    setIsActive(
+                        window.electron.store.get('settings.readPolicy'),
+                    )
                     break
             }
         }
@@ -54,25 +65,50 @@ const Checkbox: React.FC<Props> = ({
             switch (checkType) {
                 case 'startDiscordRpc':
                     window.discordRpc.discordRpc(event.target.checked)
-                    setSettings((prevSettings: any) => ({
-                        ...prevSettings,
-                        discordRpc: event.target.checked,
-                    }))
+                    setApp({
+                        ...app,
+                        discordRpc: {
+                            ...app.discordRpc,
+                            status: event.target.checked,
+                        },
+                    })
                     break
                 case 'enableRpcButtonListen':
-                    window.discordRpc.enableListenButton(event.target.checked)
-                    setSettings((prevSettings: any) => ({
-                        ...prevSettings,
-                        enableRpcButtonListen: event.target.checked,
-                    }))
+                    window.electron.store.set(
+                        'discordRpc.enableRpcButtonListen',
+                        event.target.checked,
+                    )
+                    setApp({
+                        ...app,
+                        discordRpc: {
+                            ...app.discordRpc,
+                            enableRpcButtonListen: event.target.checked,
+                        },
+                    })
+                    break
+                case 'enableGithubButton':
+                    window.electron.store.set(
+                        'discordRpc.enableGithubButton',
+                        event.target.checked,
+                    )
+                    setApp({
+                        ...app,
+                        discordRpc: {
+                            ...app.discordRpc,
+                            enableGithubButton: event.target.checked,
+                        },
+                    })
                     break
                 case 'readPolicy':
-                    setSettings((prevSettings: any) => ({
-                        ...prevSettings,
-                        readPolicy: event.target.checked,
-                    }))
+                    setApp({
+                        ...app,
+                        settings: {
+                            ...app.settings,
+                            readPolicy: event.target.checked,
+                        },
+                    })
                     window.electron.store.set(
-                        'readPolicy',
+                        'settings.readPolicy',
                         event.target.checked,
                     )
                     break

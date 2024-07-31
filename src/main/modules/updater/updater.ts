@@ -1,10 +1,11 @@
 import * as semver from 'semver'
 import { app } from 'electron'
-import { autoUpdater } from 'electron-updater'
+import {autoUpdater, ProgressInfo} from 'electron-updater'
 import { state } from '../state'
 import { UpdateUrgency } from './constants/updateUrgency'
 import { UpdateStatus } from './constants/updateStatus'
 import logger from '../logger'
+import {mainWindow} from "../../../index";
 
 type UpdateInfo = {
     version: string
@@ -40,7 +41,14 @@ class Updater {
         autoUpdater.on('checking-for-update', () => {
             this.logger.updater.log('Checking for update')
         })
-
+        autoUpdater.on('download-progress', (info: ProgressInfo) => {
+            console.log(info)
+            mainWindow.setProgressBar(info.percent / 100)
+            mainWindow.webContents.send(
+                'download-update-progress',
+                info.percent,
+            )
+        })
         autoUpdater.on('update-downloaded', (updateInfo: UpdateInfo) => {
             this.logger.updater.log('Update downloaded', updateInfo.version)
 
@@ -96,6 +104,9 @@ class Updater {
         }
 
         if (!downloadPromise) {
+            mainWindow.webContents.send('check-update', {
+                updateAvailable: false,
+            })
             return
         }
 
@@ -114,25 +125,36 @@ class Updater {
                     this.logger.updater.info(
                         `Download result: ${downloadResult}`,
                     )
+                    mainWindow.webContents.send('download-update-finished')
+                    mainWindow.webContents.send('UPDATE_APP_DATA', {
+                        update: true,
+                    })
                 }
             })
             .catch(error => {
                 this.updateStatus = UpdateStatus.IDLE
                 this.logger.updater.error('Downloader error', error)
+                mainWindow.webContents.send('download-update-failed')
             })
     }
 
     async check(): Promise<UpdateStatus>{
+        console.log(this.updateStatus)
         if (this.updateStatus !== UpdateStatus.IDLE) {
             this.logger.updater.log(
                 'New update is processing',
                 this.updateStatus,
             )
+            if(this.updateStatus === UpdateStatus.DOWNLOADED)
+                mainWindow.webContents.send('update-available', this.latestAvailableVersion)
             return this.updateStatus
         }
 
         try {
-            const updateResult = await autoUpdater.checkForUpdates()
+            const updateResult = await autoUpdater.checkForUpdatesAndNotify({
+                title: "Новое обновление готово к установке",
+                body: `PulseSync версия {version} успешно скачана и будет установлена автоматически при выходе из приложения`,
+            })
             if (!updateResult) {
                 this.logger.updater.log('No update found')
                 return null
@@ -146,7 +168,6 @@ class Updater {
     }
 
     start() {
-        this.check()
         this.updaterId = setInterval(() => {
             this.check()
         }, 900000)

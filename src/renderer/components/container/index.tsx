@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from './container.module.scss'
+import * as styles from './container.module.scss'
 
 interface p {
     titleName: string

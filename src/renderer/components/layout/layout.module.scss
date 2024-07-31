@@ -48,7 +48,7 @@
                 background: var(--downloadH);
             }
 
-            > svg {
+            >svg {
                 fill: var(--downloadColor);
             }
         }
@@ -72,7 +72,91 @@
         background: rgba(22, 24, 30, 0.85);
         backdrop-filter: blur(9.5px);
 
-        > div {
+        >.patch_container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 0px;
+            isolation: isolate;
+            overflow: hidden;
+
+            width: 100%;
+            max-width: 670px;
+
+            background: #1E2027;
+            border: 1px solid #363944;
+            border-radius: 10px;
+
+            >.alert_patch_image {
+                width: 255px;
+                height: max-content;
+            }
+
+            >.patch_detail {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                padding: 35px;
+                gap: 12px;
+
+                width: 100%;
+                height: fit-content;
+
+                background: linear-gradient(270deg, rgba(41, 44, 54, 0) 0%, #262832 100%);
+
+                >.alert_info {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: flex-start;
+                    padding: 0px;
+
+                    >.alert_title {
+                        font-weight: 900;
+                        font-size: 25px;
+                        line-height: 140%;
+                        text-transform: uppercase;
+
+                        color: #FFFFFF;
+
+                    }
+
+                    >.alert_warn {
+                        font-weight: 400;
+                        font-size: 14px;
+                        line-height: 140%;
+
+                        color: #FFFFFF;
+                    }
+                }
+
+                >.patch_button {
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    padding: 7px 19px;
+                    gap: 10px;
+
+                    background: #3468F2;
+                    border-radius: 4px;
+                    border: 0;
+
+                    font-weight: 700;
+                    font-size: 14px;
+                    line-height: 140%;
+
+                    color: #FFFFFF;
+
+                    &:hover {
+                        background: #2C56C8;
+                    }
+                }
+            }
+        }
+
+        >.gfdiv {
             display: flex;
             flex-direction: row;
             align-items: center;
@@ -83,7 +167,7 @@
             background: #fffb9c;
             border-radius: 10px;
 
-            > div {
+            >div {
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
@@ -93,7 +177,7 @@
                 width: -webkit-fill-available;
                 height: fit-content;
 
-                > .container_warn {
+                >.container_warn {
                     display: flex;
                     flex-direction: row;
                     justify-content: center;
@@ -106,7 +190,7 @@
                         color: #535240;
                     }
 
-                    > div {
+                    >div {
                         font-weight: 800;
                         font-size: 20px;
                         line-height: 27px;

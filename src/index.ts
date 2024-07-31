@@ -1,4 +1,12 @@
-import { app, BrowserWindow, ipcMain, protocol, session, shell } from 'electron'
+import {
+    app,
+    BrowserWindow,
+    globalShortcut,
+    ipcMain, Notification,
+    protocol,
+    session,
+    shell,
+} from 'electron'
 import process from 'process'
 import { getNativeImg } from './main/utils'
 import './main/modules/index'
@@ -6,7 +14,7 @@ import path from 'path'
 import fs from 'fs'
 import { store } from './main/modules/storage'
 import createTray from './main/modules/tray'
-import rpc_connect from './main/modules/discordRpc'
+import { rpc_connect } from './main/modules/discordRpc'
 import corsAnywhereServer from 'cors-anywhere'
 import getPort from 'get-port'
 
@@ -24,6 +32,7 @@ import checkAndTerminateYandexMusic from '../utils/processUtils'
 import { exec } from 'child_process'
 import Theme from './renderer/api/interfaces/theme.interface'
 import logger from './main/modules/logger'
+import isAppDev from 'electron-is-dev'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -34,9 +43,11 @@ declare const PRELOADER_WEBPACK_ENTRY: string
 const isMac = process.platform === 'darwin'
 export let corsAnywherePort: string | number
 export let mainWindow: BrowserWindow
+
 let preloaderWindow: BrowserWindow
 let availableThemes: Theme[] = []
 let selectedTheme: string
+
 const defaultTheme = {
     name: 'Default',
     image: 'url',
@@ -54,14 +65,30 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
     width: 40,
     height: 40,
 })
-const updater = getUpdater()
-
+app.setAppUserModelId("pulsesync.app")
 Sentry.init({
+    debug: isAppDev,
     dsn: 'https://6aaeb7f8130ebacaad9f8535d0c77aa8@o4507369806954496.ingest.de.sentry.io/4507369809182800',
     enableRendererProfiling: true,
     enableTracing: true,
 })
-
+function checkCLIArguments() {
+    const args = process.argv.slice(1)
+    new Notification({
+        title: "Start Args",
+        body: JSON.stringify(args),
+    }).show()
+    if (args.length > 0 && !isAppDev) {
+        console.log(args.includes('--updated'))
+        if(args.includes('--updated')) {
+            new Notification({
+                title: "Обновление завершено",
+                body: "Посмотреть список изменений можно в приложении",
+            }).show()
+        }
+        else app.quit()
+    }
+}
 const createWindow = (): void => {
     preloaderWindow = new BrowserWindow({
         width: 250,
@@ -78,7 +105,7 @@ const createWindow = (): void => {
         webPreferences: {
             preload: PRELOADER_PRELOAD_WEBPACK_ENTRY,
             contextIsolation: true,
-            devTools: false,
+            devTools: isAppDev,
             nodeIntegration: true,
             webSecurity: false,
         },
@@ -100,7 +127,7 @@ const createWindow = (): void => {
         icon,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-            devTools: true,
+            devTools: isAppDev,
             nodeIntegration: true,
             webSecurity: false,
         },
@@ -121,8 +148,13 @@ const createWindow = (): void => {
         shell.openExternal(electronData.url)
         return { action: 'deny' }
     })
-    if (isDev) {
+    if (isAppDev) {
         mainWindow.webContents.openDevTools()
+        Object.defineProperty(app, 'isPackaged', {
+            get() {
+                return true
+            },
+        })
     }
 }
 const corsAnywhere = async () => {
@@ -190,6 +222,7 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 app.on('ready', async () => {
+    checkCLIArguments()
     await prestartCheck()
     await corsAnywhere()
     createWindow() // Все что связано с mainWindow должно устанавливаться после этого метода
@@ -198,16 +231,18 @@ app.on('ready', async () => {
     handleDeeplinkOnApplicationStartup()
     handleDeeplink(mainWindow)
     createTray()
-    updater.start()
-    updater.onUpdate(version => {
-        mainWindow.webContents.send('update-available', version)
-    })
 })
 function createDefaultThemeIfNotExists(themesFolderPath: string) {
     const defaultThemePath = path.join(themesFolderPath, defaultTheme.name)
     try {
         if (!fs.existsSync(defaultThemePath)) {
             fs.mkdirSync(defaultThemePath, { recursive: true })
+            fs.mkdirSync(
+                path.join(themesFolderPath, defaultTheme.name, 'Assets'),
+                {
+                    recursive: true,
+                },
+            )
 
             const metadataPath = path.join(defaultThemePath, 'metadata.json')
             const cssPath = path.join(defaultThemePath, defaultTheme.css)
@@ -277,17 +312,28 @@ async function loadThemes(): Promise<Theme[]> {
                         diffString = `${diffDays} days ago`
                     }
 
-                    const versionRegex = /^\d+(\.\d+){0,2}$/;
-                    const metadata = JSON.parse(data);
-                    const versionMatch = metadata.version.match(versionRegex);
+                    const versionRegex = /^\d+(\.\d+){0,2}$/
+                    const metadata = JSON.parse(data)
+                    const versionMatch = metadata.version.match(versionRegex)
                     if (!versionMatch) {
-                        logger.main.log(`Themes: No valid version found in theme ${metadataFilePath}. Setting version to 1.0.0`);
-                        metadata.version = '1.0.0';
-                        await fs.promises.writeFile(metadataFilePath, JSON.stringify(metadata, null, 4), 'utf-8').catch((err) => {
-                            logger.main.error(`Themes: error writing metadata.json in theme ${folder}:`, err);
-                        });
+                        logger.main.log(
+                            `Themes: No valid version found in theme ${metadataFilePath}. Setting version to 1.0.0`,
+                        )
+                        metadata.version = '1.0.0'
+                        await fs.promises
+                            .writeFile(
+                                metadataFilePath,
+                                JSON.stringify(metadata, null, 4),
+                                'utf-8',
+                            )
+                            .catch(err => {
+                                logger.main.error(
+                                    `Themes: error writing metadata.json in theme ${folder}:`,
+                                    err,
+                                )
+                            })
                     } else {
-                        metadata.version = versionMatch[0];
+                        metadata.version = versionMatch[0]
                     }
                     metadata.lastModified = diffString
                     metadata.path = themeFolderPath
@@ -366,7 +412,7 @@ function initializeTheme() {
     setTheme(selectedTheme)
 }
 app.whenReady().then(async () => {
-    if (isDev) {
+    if (isAppDev) {
         await session.defaultSession.loadExtension(
             path.join(
                 __dirname,
@@ -392,7 +438,10 @@ async function prestartCheck() {
         'resources',
         'app.asar.copy',
     )
-    if (store.has('autoStartMusic') && store.get('autoStartMusic')) {
+    if (
+        store.has('settings.autoStartMusic') &&
+        store.get('settings.autoStartMusic')
+    ) {
         let appPath = path.join(
             process.env.LOCALAPPDATA,
             'Programs',
@@ -403,7 +452,7 @@ async function prestartCheck() {
 
         const command = `${appPath} --remote-allow-origins=*`
         await checkAndTerminateYandexMusic()
-        exec(command, (error, stdout, stderr) => {
+        exec(command, error => {
             if (error) {
                 logger.main.error(
                     `MusicAutoStart: Ошибка при выполнении команды: ${error}`,
@@ -412,15 +461,15 @@ async function prestartCheck() {
             }
         })
     }
-    if (store.has('discordRpc') && store.get('discordRpc')) {
+    if (store.has('discordRpc.status') && store.get('discordRpc.status')) {
         rpc_connect()
     }
-    if (store.has('patched') && store.get('patched')) {
+    if (store.has('settings.patched') && store.get('settings.patched')) {
         if (!fs.existsSync(asarCopy)) {
-            store.set('patched', false)
+            store.set('settings.patched', false)
         }
     } else if (fs.existsSync(asarCopy)) {
-        store.set('patched', true)
+        store.set('settings.patched', true)
     }
 }
 app.on('window-all-closed', () => {

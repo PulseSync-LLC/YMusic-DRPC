@@ -3,8 +3,9 @@ import { Client } from '@xhayper/discord-rpc'
 import { SetActivity } from '@xhayper/discord-rpc/dist/structures/ClientUser'
 import { store } from './storage'
 import logger from './logger'
+import config from '../../config.json'
 
-const clientId = `984031241357647892`
+const clientId = config.CLIENT_ID ? config.CLIENT_ID : store.get("discordRpc.сlient_id")
 
 const client = new Client({
     clientId,
@@ -26,7 +27,7 @@ ipcMain.on('discordrpc-setstate', (event, activity: SetActivity) => {
 })
 ipcMain.on('discordrpc-discordRpc', (event, val) => {
     console.log('discordRpc state: ' + val)
-    store.set('discordRpc', val)
+    store.set('discordRpc.status', val)
     if (val && !rpcConnected) {
         client.login().catch((e) => {
             logger.discordRpc.error(e)
@@ -38,6 +39,18 @@ ipcMain.on('discordrpc-discordRpc', (event, val) => {
         rpcConnected = false
     }
 })
+function updateAppId(newAppId: string) {
+    if(newAppId === config.CLIENT_ID) return;
+    client.clientId = newAppId.length > 0 ? newAppId : config.CLIENT_ID.toString();
+    store.set('discordRpc.сlient_id', newAppId)
+    client.destroy().then(() => {
+        client.login().catch((e) => {
+            logger.discordRpc.error(e);
+        });
+    }).catch((e) => {
+        logger.discordRpc.error(e);
+    });
+}
 client.on('disconnected', () => {
     rpcConnected = false
     logger.discordRpc.info('discordRpc state: closed')
@@ -47,15 +60,14 @@ client.on('ERROR', () => {
     rpcConnected = false
     console.info('discordRpc: error')
 })
-ipcMain.on('discordrpc-enablerpcbuttonlisten', (event, val) => {
-    console.log('enableRpcButtonListen: ' + val)
-    store.set('enableRpcButtonListen', val)
-})
 
 ipcMain.on('discordrpc-clearstate', () => {
     if (rpcConnected) client.user?.clearActivity()
 })
-client.on('ready', () => (rpcConnected = true))
+client.on('ready', () => {
+    rpcConnected = true
+    logger.discordRpc.info('discordRpc state: connected')
+})
 
 function rpc_connect() {
     client.login().catch((e) => {
@@ -63,5 +75,7 @@ function rpc_connect() {
     })
     rpcConnected = true
 }
-
-export default rpc_connect
+const getRpcUser = () => {
+    return client.user
+}
+export { rpc_connect, updateAppId, getRpcUser}

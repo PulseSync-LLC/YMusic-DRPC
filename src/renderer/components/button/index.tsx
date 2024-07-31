@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes, CSSProperties } from 'react'
-import styles from './button.module.scss'
+import * as styles from './button.module.scss'
 
 interface p extends ButtonHTMLAttributes<HTMLButtonElement> {
     onClick?: () => void

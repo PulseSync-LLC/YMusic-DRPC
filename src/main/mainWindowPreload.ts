@@ -44,10 +44,6 @@ contextBridge.exposeInMainWorld('electron', {
     downloadTrack(url: any) {
         ipcRenderer.send('download-track', url)
     },
-    clickMinimize: () => ipcRenderer.send('minimizeWin'),
-    clickClose: () => ipcRenderer.send('closeWin'),
-    clickPatcher: () => ipcRenderer.send('patcherWin'),
-    clickUnpatcher: () => ipcRenderer.send('unpatcherWin'),
     pathAppOpen: () => ipcRenderer.send('pathAppOpen'),
     pathStyleOpen: () => ipcRenderer.send('pathStyleOpen'),
     checkSelectedStyle: () => ipcRenderer.send('checkSelectedStyle'),
@@ -67,9 +63,6 @@ contextBridge.exposeInMainWorld('discordRpc', {
     },
     async discordRpc(val: boolean) {
         ipcRenderer.send('discordrpc-discordRpc', val)
-    },
-    async enableListenButton(val: boolean) {
-        ipcRenderer.send('discordrpc-enablerpcbuttonlisten', val)
     },
 })
 contextBridge.exposeInMainWorld('desktopEvents', {

@@ -17,10 +17,10 @@ const forge_config: ForgeConfig = {
     packagerConfig: {
         icon: './icons/win/icon.ico',
         name: 'PulseSync',
-        appCopyright: 'Copyright (C) 2024 PulseSync-Official',
+        appCopyright: 'Copyright (C) 2024 PulseSync LLC',
         asar: true,
         win32metadata: {
-            CompanyName: 'PulseSync-Official',
+            CompanyName: 'PulseSync LLC',
         },
         extraResource: ['./app-update.yml'],
     },
@@ -29,7 +29,7 @@ const forge_config: ForgeConfig = {
         {
             name: '@electron-forge/maker-zip',
             config: (arch: any) => ({
-                macUpdateManifestBaseUrl: `${config.UPDATE_URL}/beta_build/darwin/${arch}`,
+                macUpdateManifestBaseUrl: `${config.UPDATE_URL}/dev_build/darwin/${arch}`,
             }),
         },
         new MakerDMG({}),

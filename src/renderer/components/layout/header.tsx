@@ -1,4 +1,4 @@
-import styles from './header.module.scss'
+import * as styles from './header.module.scss'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import Minus from './../../../../static/assets/icons/minus.svg'
@@ -22,18 +22,10 @@ interface p {
 const Header: React.FC<p> = ({ goBack }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [version, setVersion] = useState(null)
-    const { user } = useContext(userContext)
+    const { user, appInfo } = useContext(userContext)
     const [modal, setModal] = useState(false)
     const openModal = () => setModal(true)
     const closeModal = () => setModal(false)
-    const [appInfo, setAppInfo] = useState<
-        {
-            id: number
-            version: string
-            changelog: string
-            createdAt: number
-        }[]
-    >([])
     const modalRef = useRef<{ openModal: () => void; closeModal: () => void }>(
         null,
     )
@@ -51,28 +43,6 @@ const Header: React.FC<p> = ({ goBack }) => {
                 })
         }
     }, [])
-    useEffect(() => {
-        if (user.id !== '-1') {
-            fetchAppInfo()
-        }
-    }, [user])
-
-    const fetchAppInfo = async () => {
-        try {
-            const res = await fetch(`${config.SERVER_URL}api/v1/app/info`)
-            const data = await res.json()
-            if (data.ok && Array.isArray(data.appInfo)) {
-                const sortedAppInfos = data.appInfo.sort(
-                    (a: any, b: any) => b.id - a.id,
-                )
-                setAppInfo(sortedAppInfos)
-            } else {
-                console.error('Invalid response format:', data)
-            }
-        } catch (error) {
-            console.error('Failed to fetch app info:', error)
-        }
-    }
 
     const memoizedAppInfo = useMemo(() => appInfo, [appInfo])
 
@@ -83,6 +53,13 @@ const Header: React.FC<p> = ({ goBack }) => {
             month: 'long',
             day: 'numeric',
         })
+    }
+    function LinkRenderer(props: any) {
+        return (
+            <a href={props.href} target="_blank" rel="noreferrer">
+                {props.children}
+            </a>
+        )
     }
     return (
         <>
@@ -102,6 +79,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                                 </div>
                                 <ReactMarkdown
                                     remarkPlugins={[remarkGfm, remarkBreaks]}
+                                    components={{ a: LinkRenderer }}
                                 >
                                     {info.changelog}
                                 </ReactMarkdown>

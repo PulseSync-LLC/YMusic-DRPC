@@ -13,5 +13,9 @@ Sentry.init({
     replaysSessionSampleRate: 1.0,
     replaysOnErrorSampleRate: 1.0,
     profilesSampleRate: 1.0,
-    tracePropagationTargets: ['localhost', /^https:\/\/api\.pulsesync\.dev/],
+    tracePropagationTargets: [
+        '127.0.0.1',
+        'localhost',
+        /^https:\/\/api\.pulsesync\.dev/,
+    ],
 })
