@@ -4,6 +4,8 @@ import Container from '../../components/container'
 import * as styles from './callback.module.scss'
 
 import DiscordAuth from './../../../../static/assets/icons/discordAuth.svg'
+import HandBlock from './../../../../static/assets/icons/handBlock.svg'
+import UserBlock from './../../../../static/assets/icons/userBlock.svg'
 import { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import userContext from '../../api/context/user.context'
@@ -39,10 +41,16 @@ export default function CallbackPage() {
             <div className={styles.main_window}>
                 <div>
                     <div className={styles.container}>
-                        <DiscordAuth />
+                        {!banned && <DiscordAuth />}
+                        {banned &&
+                            <div className={styles.animBan}>
+                                <HandBlock className={styles.svg1} />
+                                <UserBlock className={styles.svg2} />
+                            </div>
+                        }
                         {!banned
                             ? 'Ожидание авторизации'
-                            : `Вы забанены. По причине: ${banned}. Приложение закроется через 5 секунд`}
+                            : <p>Вы забанены. По причине: {banned}. <br/> Приложение закроется через 5 секунд</p>}
                     </div>
                 </div>
             </div>

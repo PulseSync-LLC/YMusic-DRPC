@@ -418,6 +418,14 @@
     width: -webkit-fill-available;
     position: relative;
 
+    .error {
+        color: black;
+        background: #ffcb38;
+        font-weight: 900;
+        padding: 5px 10px;
+        border-radius: 2px;
+    }
+
     >div {
         font-weight: 700;
         font-size: 12px;
@@ -451,10 +459,4 @@
             border-color: #5a5e6b;
         }
     }
-}
-
-.error {
-    color: red;
-    font-size: 12px;
-    margin-top: 5px;
 }
