@@ -286,7 +286,6 @@ async function loadThemes(): Promise<Theme[]> {
                         metadataFilePath,
                         'utf-8',
                     )
-                    console.log(data)
                     const stats = await fs.promises.stat(metadataFilePath)
                     const folderSize = await getFolderSize(themeFolderPath)
                     const modificationDate = new Date(stats.mtime)

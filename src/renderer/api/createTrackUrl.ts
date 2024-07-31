@@ -19,9 +19,7 @@ export default async function getTrackUrl(
         client.request.config.HEADERS,
         highRate,
     )
-    const url = createTrackURL(downloadInfo)
-
-    return url
+    return createTrackURL(downloadInfo)
 }
 
 async function getDownloadInfo(
