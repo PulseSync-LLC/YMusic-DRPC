@@ -70,6 +70,7 @@ function _app() {
         },
     ])
     const authorize = async () => {
+        const token = await getUserToken()
         const sendErrorAuthNotify = () => {
             toast.error('Ошибка авторизации')
             window.desktopEvents?.send('show-notification', {
@@ -77,42 +78,45 @@ function _app() {
                 body: 'Произошла ошибка при авторизации в программе',
             })
         }
-        setLoading(true)
-        try {
-            let res = await apolloClient.query({
-                query: UserMeQuery,
-                fetchPolicy: 'no-cache',
-            })
+        if(token) {
+            setLoading(true)
+            try {
+                let res = await apolloClient.query({
+                    query: UserMeQuery,
+                    fetchPolicy: 'no-cache',
+                })
 
-            const { data } = res
-            if (data.getMe && data.getMe.id) {
-                setUser(data.getMe)
-                setLoading(false)
-                return true
-            } else {
-                setLoading(false)
-                window.electron.store.delete('tokens.token')
+                const {data} = res
+                if (data.getMe && data.getMe.id) {
+                    setUser(data.getMe)
+                    setLoading(false)
+                    return true
+                } else {
+                    setLoading(false)
+                    window.electron.store.delete('tokens.token')
 
+                    await router.navigate('/', {
+                        replace: true,
+                    })
+                    setUser(userInitials)
+                    sendErrorAuthNotify()
+                    return false
+                }
+            } catch (e) {
+                setLoading(false)
+                sendErrorAuthNotify()
+
+                if (window.electron.store.has('tokens.token')) {
+                    window.electron.store.delete('tokens.token')
+                }
                 await router.navigate('/', {
                     replace: true,
                 })
                 setUser(userInitials)
-                sendErrorAuthNotify()
                 return false
             }
-        } catch (e) {
-            setLoading(false)
-            sendErrorAuthNotify()
-
-            if (window.electron.store.has('tokens.token')) {
-                window.electron.store.delete('tokens.token')
-            }
-            await router.navigate('/', {
-                replace: true,
-            })
-            setUser(userInitials)
-            return false
         }
+        else return false
     }
     useEffect(() => {
         const handleMouseButton = (event: MouseEvent) => {
@@ -157,24 +161,26 @@ function _app() {
         }
     }, [])
     useEffect(() => {
-        const fetchAppInfo = async () => {
-            try {
-                const res = await fetch(`${config.SERVER_URL}api/v1/app/info`)
-                const data = await res.json()
-                if (data.ok && Array.isArray(data.appInfo)) {
-                    const sortedAppInfos = data.appInfo.sort(
-                        (a: any, b: any) => b.id - a.id,
-                    )
-                    setAppInfo(sortedAppInfos)
-                } else {
-                    console.error('Invalid response format:', data)
+        if(user.id !== '-1') {
+            const fetchAppInfo = async () => {
+                try {
+                    const res = await fetch(`${config.SERVER_URL}api/v1/app/info`)
+                    const data = await res.json()
+                    if (data.ok && Array.isArray(data.appInfo)) {
+                        const sortedAppInfos = data.appInfo.sort(
+                            (a: any, b: any) => b.id - a.id,
+                        )
+                        setAppInfo(sortedAppInfos)
+                    } else {
+                        console.error('Invalid response format:', data)
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch app info:', error)
                 }
-            } catch (error) {
-                console.error('Failed to fetch app info:', error)
             }
+            fetchAppInfo()
         }
-        fetchAppInfo()
-    }, [])
+    }, [user.id])
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const ya_token = window.electron.store.get('tokens.ya_token')
