@@ -78,6 +78,7 @@
         "@types/socket.io-client": "^3.0.0",
         "@vitejs/plugin-react": "^4.3.1",
         "@xhayper/discord-rpc": "^1.2.0",
+        "asar-async": "^1.0.2",
         "aws-sdk": "^2.1665.0",
         "axios": "^1.7.2",
         "browserify-fs": "^1.0.0",

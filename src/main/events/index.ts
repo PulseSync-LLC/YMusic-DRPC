@@ -19,7 +19,7 @@ import { corsAnywherePort, mainWindow } from '../../index'
 import { getUpdater } from '../modules/updater/updater'
 import checkAndTerminateYandexMusic, {
     checkAndStartYandexMusic,
-} from '../../../utils/processUtils'
+} from '../../../utils/appUtils'
 import Patcher from '../modules/patcher/patch'
 import { store } from '../modules/storage'
 import UnPatcher from '../modules/patcher/unpatch'
@@ -202,7 +202,6 @@ export const handleEvents = (window: BrowserWindow): void => {
         console.log(data)
         switch (Object.keys(data)[0]) {
             case 'appId':
-                console.log(data.appId)
                 updateAppId(data.appId)
                 break
             case 'details':

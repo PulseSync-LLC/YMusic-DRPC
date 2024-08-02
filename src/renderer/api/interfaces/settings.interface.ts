@@ -11,8 +11,12 @@ export interface Tokens {
     token: string
 }
 export interface discordRpc {
+    appId: string
     status: boolean
     enableRpcButtonListen: boolean
+    details: string
+    state: string
+    button: string
     enableGithubButton: boolean
 }
 

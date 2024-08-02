@@ -17,7 +17,7 @@ import createTray from './main/modules/tray'
 import { rpc_connect } from './main/modules/discordRpc'
 import corsAnywhereServer from 'cors-anywhere'
 import getPort from 'get-port'
-
+import config from './config.json'
 import {
     handleDeeplink,
     handleDeeplinkOnApplicationStartup,
@@ -28,11 +28,17 @@ import { getTrackInfo, setTheme } from './main/modules/httpServer'
 import { getUpdater } from './main/modules/updater/updater'
 import { isDev } from './renderer/api/config'
 import { handleAppEvents } from './main/events'
-import checkAndTerminateYandexMusic from '../utils/processUtils'
+import checkAndTerminateYandexMusic, {
+    calculateSHA256FromAsar,
+    checkAndStartYandexMusic,
+    getPathToYandexMusic,
+    isMac
+} from '../utils/appUtils'
 import { exec } from 'child_process'
 import Theme from './renderer/api/interfaces/theme.interface'
 import logger from './main/modules/logger'
 import isAppDev from 'electron-is-dev'
+import asar, {getRawHeader} from "@electron/asar";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -40,7 +46,6 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
 declare const PRELOADER_PRELOAD_WEBPACK_ENTRY: string
 declare const PRELOADER_WEBPACK_ENTRY: string
 
-const isMac = process.platform === 'darwin'
 export let corsAnywherePort: string | number
 export let mainWindow: BrowserWindow
 
@@ -68,7 +73,7 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
 app.setAppUserModelId("pulsesync.app")
 Sentry.init({
     debug: isAppDev,
-    dsn: 'https://6aaeb7f8130ebacaad9f8535d0c77aa8@o4507369806954496.ingest.de.sentry.io/4507369809182800',
+    dsn: config.SENTRY_DSN,
     enableRendererProfiling: true,
     enableTracing: true,
 })
@@ -117,7 +122,7 @@ const createWindow = (): void => {
     // Create the browser window.
     mainWindow = new BrowserWindow({
         show: false,
-        frame: isMac,
+        frame: false,
         backgroundColor: '#16181E',
         width: 940,
         height: 720,
@@ -150,11 +155,11 @@ const createWindow = (): void => {
     })
     if (isAppDev) {
         mainWindow.webContents.openDevTools()
-        Object.defineProperty(app, 'isPackaged', {
-            get() {
-                return true
-            },
-        })
+        // Object.defineProperty(app, 'isPackaged', {
+        //     get() {
+        //         return true
+        //     },
+        // })
     }
 }
 const corsAnywhere = async () => {
@@ -426,39 +431,21 @@ app.whenReady().then(async () => {
     initializeTheme()
 })
 async function prestartCheck() {
+
     const musicDir = app.getPath('music')
     if (!fs.existsSync(path.join(musicDir, 'PulseSyncMusic'))) {
         fs.mkdirSync(path.join(musicDir, 'PulseSyncMusic'))
     }
+    const musicPath = await getPathToYandexMusic()
     const asarCopy = path.join(
-        process.env.LOCALAPPDATA,
-        'Programs',
-        'YandexMusic',
-        'resources',
+        musicPath,
         'app.asar.copy',
     )
     if (
         store.has('settings.autoStartMusic') &&
         store.get('settings.autoStartMusic')
     ) {
-        let appPath = path.join(
-            process.env.LOCALAPPDATA,
-            'Programs',
-            'YandexMusic',
-            'Яндекс Музыка.exe',
-        )
-        appPath = `"${appPath}"`
-
-        const command = `${appPath} --remote-allow-origins=*`
-        await checkAndTerminateYandexMusic()
-        exec(command, error => {
-            if (error) {
-                logger.main.error(
-                    `MusicAutoStart: Ошибка при выполнении команды: ${error}`,
-                )
-                return
-            }
-        })
+        await checkAndStartYandexMusic()
     }
     if (store.has('discordRpc.status') && store.get('discordRpc.status')) {
         rpc_connect()

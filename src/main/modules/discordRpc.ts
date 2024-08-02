@@ -26,7 +26,7 @@ ipcMain.on('discordrpc-setstate', (event, activity: SetActivity) => {
     }
 })
 ipcMain.on('discordrpc-discordRpc', (event, val) => {
-    console.log('discordRpc state: ' + val)
+    logger.discordRpc.info('discordRpc state: ' + val)
     store.set('discordRpc.status', val)
     if (val && !rpcConnected) {
         client.login().catch((e) => {
@@ -56,7 +56,7 @@ client.on('disconnected', () => {
     logger.discordRpc.info('discordRpc state: closed')
 })
 
-client.on('ERROR', () => {
+client.on('error', () => {
     rpcConnected = false
     console.info('discordRpc: error')
 })
@@ -70,10 +70,10 @@ client.on('ready', () => {
 })
 
 function rpc_connect() {
+    console.log(client)
     client.login().catch((e) => {
         logger.discordRpc.error(e)
     })
-    rpcConnected = true
 }
 const getRpcUser = () => {
     return client.user

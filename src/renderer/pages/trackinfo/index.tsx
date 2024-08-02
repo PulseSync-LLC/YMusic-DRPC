@@ -16,9 +16,10 @@ import { useFormik } from 'formik'
 import { MdClose, MdContentCopy } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import toast from '../../api/toast'
+import {replaceParams} from "../../utils/formatRpc";
 
 export default function TrackInfoPage() {
-    const { user, app } = useContext(userContext)
+    const { user, app, setApp } = useContext(userContext)
     const { currentTrack } = useContext(playerContext)
     const [modal, setModal] = useState(false)
     const [modalAnim, setModalAnim] = useState(false)
@@ -43,8 +44,16 @@ export default function TrackInfoPage() {
                 'Максимальная длина 20 символов',
                 val => !val || val.length <= 20,
             ),
-        details: string(),
-        state: string(),
+        details: string().test(
+            'len',
+            'Минимальная длина 2 символа',
+            val => !val || val.length >= 2,
+        ),
+        state: string().test(
+        'len',
+        'Минимальная длина 2 символа',
+        val => !val || val.length >= 2,
+        ),
         button: string(),
     })
     const copyValues = async (value: string) => {
@@ -64,10 +73,10 @@ export default function TrackInfoPage() {
     }
     const formik = useFormik({
         initialValues: {
-            appId: '',
-            details: '',
-            state: '',
-            button: '',
+            appId: app.discordRpc.appId,
+            details: app.discordRpc.details,
+            state: app.discordRpc.state,
+            button: app.discordRpc.button,
         },
         validationSchema: schema,
         onSubmit: values => {
@@ -75,6 +84,13 @@ export default function TrackInfoPage() {
             if (Object.keys(changedValues).length > 0) {
                 window.desktopEvents?.send('update-rpcSettings', changedValues)
                 setPreviousValues(values)
+                setApp({
+                    ...app,
+                    discordRpc: {
+                        ...app.discordRpc,
+                        ...values
+                    },
+                })
             }
         },
     })
@@ -340,13 +356,7 @@ export default function TrackInfoPage() {
                                                                         theme.name
                                                                     }
                                                                 >
-                                                                    {
-                                                                        currentTrack.playerBarTitle
-                                                                    }{' '}
-                                                                    -{' '}
-                                                                    {
-                                                                        currentTrack.artist
-                                                                    }
+                                                                    {app.discordRpc.details.length > 0 ? replaceParams(app.discordRpc.details, currentTrack) : `${currentTrack.playerBarTitle} - ${currentTrack.artist}`}
                                                                 </div>
                                                                 {currentTrack
                                                                     .timecodes
@@ -357,15 +367,7 @@ export default function TrackInfoPage() {
                                                                                 theme.time
                                                                             }
                                                                         >
-                                                                            {
-                                                                                currentTrack
-                                                                                    .timecodes[0]
-                                                                            }{' '}
-                                                                            -{' '}
-                                                                            {
-                                                                                currentTrack
-                                                                                    .timecodes[1]
-                                                                            }
+                                                                            {app.discordRpc.state.length > 0 ? replaceParams(app.discordRpc.state, currentTrack) : `${currentTrack.timecodes[0]} - ${currentTrack.timecodes[1]}`}
                                                                         </div>
                                                                     )}
                                                             </div>
@@ -462,7 +464,7 @@ export default function TrackInfoPage() {
                                                                 theme.contextPreview
                                                             }
                                                         >
-                                                            track live
+                                                            track
                                                         </div>
                                                         - название трека
                                                     </div>
@@ -491,7 +493,7 @@ export default function TrackInfoPage() {
                                                                 theme.contextPreview
                                                             }
                                                         >
-                                                            atrist live
+                                                            atrist
                                                         </div>
                                                         - имя артиста
                                                     </div>
@@ -520,7 +522,7 @@ export default function TrackInfoPage() {
                                                                 theme.contextPreview
                                                             }
                                                         >
-                                                            startTime live
+                                                            startTime
                                                         </div>
                                                         - начальное время
                                                     </div>
@@ -549,7 +551,7 @@ export default function TrackInfoPage() {
                                                                 theme.contextPreview
                                                             }
                                                         >
-                                                            endTime live
+                                                            endTime
                                                         </div>
                                                         - конечное время
                                                     </div>
@@ -559,6 +561,35 @@ export default function TrackInfoPage() {
                                                         onClick={() =>
                                                             copyValues(
                                                                 '{endTime}',
+                                                            )
+                                                        }
+                                                    />
+                                                </button>
+                                                <button
+                                                    className={
+                                                        theme.modalContextButton
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            theme.contextInfo
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                theme.contextPreview
+                                                            }
+                                                        >
+                                                            endTime - startTime
+                                                        </div>
+                                                        - до конца трека
+                                                    </div>
+                                                    <MdContentCopy
+                                                        cursor={'pointer'}
+                                                        size={18}
+                                                        onClick={() =>
+                                                            copyValues(
+                                                                '{endTime - startTime}',
                                                             )
                                                         }
                                                     />
