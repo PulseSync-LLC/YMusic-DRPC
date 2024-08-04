@@ -283,14 +283,14 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
-                        disabled={app.settings.autoStartMusic}
+                        disabled
                         onClick={() => enableFunc('autoStartMusic', true)}
                     >
                         Включить
                     </button>
                     <button
                         className={styles.contextButton}
-                        disabled={!app.settings.autoStartMusic}
+                        disabled
                         onClick={() => enableFunc('autoStartMusic', false)}
                     >
                         Выключить

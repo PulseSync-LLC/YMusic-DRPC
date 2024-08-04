@@ -438,12 +438,15 @@ export async function prestartCheck() {
         musicPath,
         'app.asar.copy',
     )
-    if (
-        store.has('settings.autoStartMusic') &&
-        store.get('settings.autoStartMusic')
-    ) {
-        await checkAndStartYandexMusic()
+    if(!store.has("discordRpc.enableGithubButton")){
+        store.set("discordRpc.enableGithubButton", true)
     }
+    // if (
+    //     store.has('settings.autoStartMusic') &&
+    //     store.get('settings.autoStartMusic')
+    // ) {
+    //     await checkAndStartYandexMusic()
+    // }
     if (store.has('discordRpc.status') && store.get('discordRpc.status')) {
         rpc_connect()
     }

@@ -89,7 +89,9 @@ function _app() {
                 const {data} = res
                 if (data.getMe && data.getMe.id) {
                     setUser(data.getMe)
-                    setLoading(false)
+                    await router.navigate('/trackinfo', {
+                        replace: true,
+                    })
                     return true
                 } else {
                     setLoading(false)
@@ -116,7 +118,10 @@ function _app() {
                 return false
             }
         }
-        else return false
+        else {
+            setLoading(false)
+            return false
+        }
     }
     useEffect(() => {
         const handleMouseButton = (event: MouseEvent) => {
@@ -149,10 +154,6 @@ function _app() {
 
             if (user.id === '-1') {
                 checkAuthorization()
-            } else {
-                router.navigate('/trackinfo', {
-                    replace: true,
-                })
             }
             // auth interval 15 minutes (10 * 60 * 1000)
             const intervalId = setInterval(checkAuthorization, 10 * 60 * 1000)
@@ -236,6 +237,16 @@ function _app() {
                 socket.connect()
             }
             window.desktopEvents?.send('updater-start')
+            if(!user.badges.some(badge => badge.type === "supporter") && app.discordRpc.enableGithubButton) {
+                setApp({
+                    ...app,
+                    discordRpc: {
+                        ...app.discordRpc,
+                        enableGithubButton: false,
+                    },
+                })
+                window.electron.store.set("discordRpc.enableGithubButton", false)
+            }
         } else {
             router.navigate('/', {
                 replace: true,
@@ -346,7 +357,6 @@ function _app() {
                     },
                 }))
             }
-            setLoading(false)
         }
     }, [])
     return (

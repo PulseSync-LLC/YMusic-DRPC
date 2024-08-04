@@ -17,17 +17,21 @@ export default function AuthPage() {
     const navigate = useNavigate()
     const [mdText, setMdText] = useState(null)
     const { user, app } = useContext(userContext)
-    if (mdText === null) {
-        fetch('./static/assets/policy/terms.ru.md')
-            .then(response => response.text())
-            .then(text => setMdText(text))
-    }
     const auth = () => {
         window.open(config.SERVER_URL + 'auth/discord')
         navigate('/auth/callback', {
             replace: true,
         })
     }
+    useEffect(() => {
+        if (mdText === null) {
+            fetch('./static/assets/policy/terms.ru.md')
+                .then(response => response.text())
+                .then(text => {
+                    setMdText(text)
+                })
+        }
+    }, []);
     useEffect(() => {
         if (user.id !== '-1') {
             navigate('/trackinfo', {
