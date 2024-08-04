@@ -273,7 +273,7 @@ function createWindow() {
                     },
                     {
                         label: '🤠 Open in GitHub',
-                        url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
+                        url: `https://github.com/PulseSync-LLC/YMusic-DRPC`,
                     },
                 ],
             })
