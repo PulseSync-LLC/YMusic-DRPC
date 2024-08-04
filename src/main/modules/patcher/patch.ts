@@ -348,6 +348,7 @@ class Patcher {
                                         }
                                         console.log('File updated successfully');
                                         store.set("music.hash", match[1]);
+                                        return true;
                                     });
                                 } else {
                                     console.error('Hash value not found');
@@ -358,13 +359,15 @@ class Patcher {
                             console.error('Error:', error);
                         }
                     }
+                    else {
+                        return true;
+                    }
                 }, 2000)
                 console.log(`Deleting source directory...`);
                 await this.deleteDirectory(destinationDir);
-                return true;
             } else {
                 console.log(`Could not find events.js in ${destinationDir}`);
-                return Promise.resolve();
+                return false;
             }
         } catch (error) {
             console.error(`Error: ${error}`);

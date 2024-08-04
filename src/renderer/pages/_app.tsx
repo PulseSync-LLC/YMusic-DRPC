@@ -80,7 +80,6 @@ function _app() {
             })
         }
         if(token) {
-            setLoading(true)
             try {
                 let res = await apolloClient.query({
                     query: UserMeQuery,

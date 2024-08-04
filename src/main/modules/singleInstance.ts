@@ -3,9 +3,6 @@ import { checkIsDeeplink, navigateToDeeplink } from './handleDeepLink'
 import logger from './logger'
 import httpServer from './httpServer'
 import config from '../../config.json'
-import { store } from './storage'
-import path from 'path'
-import { exec } from 'child_process'
 const isFirstInstance = app.requestSingleInstanceLock()
 
 export const checkForSingleInstance = (): void => {

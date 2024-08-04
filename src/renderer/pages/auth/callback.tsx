@@ -30,7 +30,7 @@ export default function CallbackPage() {
                 setBanned(data.reason)
                 setTimeout(
                     () => window.desktopEvents?.send('electron-exit'),
-                    5000,
+                    10000,
                 )
             })
         }
@@ -50,7 +50,7 @@ export default function CallbackPage() {
                         }
                         {!banned
                             ? 'Ожидание авторизации'
-                            : <p>Вы забанены. По причине: {banned}. <br/> Приложение закроется через 5 секунд</p>}
+                            : <p>Вы забанены. По причине: {banned}. <br/> Приложение закроется через 10 секунд</p>}
                     </div>
                 </div>
             </div>

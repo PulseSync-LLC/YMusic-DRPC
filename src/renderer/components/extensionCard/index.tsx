@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import * as styles from './card.module.scss'
 import Checkbox from '../checkbox'
 import ThemeInterface from '../../api/interfaces/theme.interface'
@@ -17,17 +17,27 @@ const ExtensionCard: React.FC<Props> = ({
     onCheckboxChange,
     children,
 }) => {
+    const [imageSrc, setImageSrc] = useState('static/assets/images/no_themeImage.png');
+
+    const getUserImage = () => {
+        fetch(theme.path + '/' + theme.image)
+            .then((res) => {
+                if (res.ok) {
+                    setImageSrc(res.url);
+                }
+            })
+            .catch(() => {
+                setImageSrc('static/assets/images/no_themeImage.png');
+            });
+    };
+    getUserImage();
     return (
         <div className={styles.card}>
             <div className={styles.cardContainer}>
                 <div className={styles.containerDetail}>
                     <img
                         className={styles.icon}
-                        src={
-                            theme.image
-                                ? theme.path + '\\' + theme.image
-                                : 'https://cdn.discordapp.com/avatars/449211993585614849/6c9a8a2b2733b6ea468756e37ab5f7ff.png?size=4096'
-                        }
+                        src={imageSrc}
                         width="50"
                         height="50"
                         alt="Theme image"

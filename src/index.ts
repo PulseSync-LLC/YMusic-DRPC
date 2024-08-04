@@ -79,10 +79,6 @@ Sentry.init({
 })
 function checkCLIArguments() {
     const args = process.argv.slice(1)
-    new Notification({
-        title: "Start Args",
-        body: JSON.stringify(args),
-    }).show()
     if (args.length > 0 && !isAppDev) {
         console.log(args.includes('--updated'))
         if(args.includes('--updated')) {
@@ -132,7 +128,8 @@ const createWindow = (): void => {
         icon,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-            devTools: isAppDev,
+            // isAppDev
+            devTools: true,
             nodeIntegration: true,
             webSecurity: false,
         },

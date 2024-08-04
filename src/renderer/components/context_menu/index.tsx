@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import * as styles from './context_menu.module.scss'
 import userContext from '../../api/context/user.context'
-import { shell } from 'electron'
-import SettingsInterface from '../../api/interfaces/settings.interface'
 
 import ArrowContext from './../../../../static/assets/icons/arrowContext.svg'
 import playerContext from '../../api/context/player.context'
@@ -51,14 +49,14 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             const res = await r.json()
             if (res.ok) {
                 toast.success('Успешный выход')
-                window.electron.store.delete('token')
+                window.electron.store.delete('tokens.token')
                 setUser(userInitials)
             }
         })
     }
     const githubLink = () => {
         window.open(
-            'https://github.com/PulseSync-Official/YMusic-DRPC/tree/patcher-ts',
+            'https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts',
         )
     }
     const enableFunc = (type: string, status: boolean) => {

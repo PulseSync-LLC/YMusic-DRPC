@@ -54,7 +54,11 @@ export default function TrackInfoPage() {
         'Минимальная длина 2 символа',
         val => !val || val.length >= 2,
         ),
-        button: string(),
+        button: string().test(
+            'len',
+            'Максимальная длина 32 символа',
+            val => !val || val.length <= 32,
+        ),
     })
     const copyValues = async (value: string) => {
         setModalAnim(false)
@@ -102,8 +106,6 @@ export default function TrackInfoPage() {
             formik.handleSubmit()
         }
     }
-    const isSupporter = user.badges.some(badge => badge.type === "supporter");
-    console.log(isSupporter);
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
@@ -284,7 +286,7 @@ export default function TrackInfoPage() {
                                                 ) : null}
                                             </div>
                                             <CheckboxNav
-                                                disabled={!isSupporter}
+                                                disabled={!user.badges.some(badge => badge.type === "supporter")}
                                                 checkType="enableGithubButton"
                                                 description="Активируйте этот параметр, чтобы показать что вы любите разработчиков."
                                             >

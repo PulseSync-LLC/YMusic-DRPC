@@ -40,6 +40,11 @@ export const navigateToDeeplink = (
                       return app.quit()
                     }
                 }
+                else {
+                    return app.quit()
+                }
+            }).catch(() => {
+                return app.quit()
             })
             store.set('tokens.token', token)
             window.webContents.send('authSuccess')

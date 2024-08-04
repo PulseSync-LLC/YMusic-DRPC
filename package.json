@@ -153,6 +153,10 @@
             "icon": "./icons/win/icon.ico",
             "target": "nsis"
         },
+        "mac": {
+            "category": "public.app-category.developer-tools",
+            "icon": "./icons/win/icon.icns"
+        },
         "directories": {
             "output": "release"
         },
