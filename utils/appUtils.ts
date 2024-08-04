@@ -6,10 +6,6 @@ import os from "os";
 import * as crypto from "node:crypto";
 import {EasyAsar} from 'asar-async';
 import {getRawHeader} from "@electron/asar";
-import {app} from "electron";
-import fs from "fs";
-import {store} from "../src/main/modules/storage";
-import {rpc_connect} from "../src/main/modules/discordRpc";
 
 const execPromise = util.promisify(exec)
 
@@ -85,34 +81,7 @@ export async function getPathToYandexMusic() {
         );
     }
 }
-export async function prestartCheck() {
 
-    const musicDir = app.getPath('music')
-    if (!fs.existsSync(path.join(musicDir, 'PulseSyncMusic'))) {
-        fs.mkdirSync(path.join(musicDir, 'PulseSyncMusic'))
-    }
-    const musicPath = await getPathToYandexMusic()
-    const asarCopy = path.join(
-        musicPath,
-        'app.asar.copy',
-    )
-    if (
-        store.has('settings.autoStartMusic') &&
-        store.get('settings.autoStartMusic')
-    ) {
-        await checkAndStartYandexMusic()
-    }
-    if (store.has('discordRpc.status') && store.get('discordRpc.status')) {
-        rpc_connect()
-    }
-    if (store.has('settings.patched') && store.get('settings.patched')) {
-        if (!fs.existsSync(asarCopy)) {
-            store.set('settings.patched', false)
-        }
-    } else if (fs.existsSync(asarCopy)) {
-        store.set('settings.patched', true)
-    }
-}
 export const isMac = () => {
     return os.platform() === 'darwin';
 }
