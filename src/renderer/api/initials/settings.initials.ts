@@ -13,13 +13,13 @@ const settingsInitials: SettingsInterface = {
         token: '',
     },
     discordRpc: {
-        appId: "",
+        appId: '',
         enableRpcButtonListen: false,
         enableGithubButton: true,
         status: false,
-        details: "",
-        state: "",
-        button: "",
+        details: '',
+        state: '',
+        button: '',
     },
 }
 

@@ -1,8 +1,7 @@
 import React from 'react'
 import * as styles from './preloader.module.scss'
 
-const Preloader: React.FC = ({
-}) => {
+const Preloader: React.FC = ({}) => {
     return (
         <div className={styles.preloader}>
             <div className={styles.container}>

@@ -42,15 +42,20 @@ export default function CallbackPage() {
                 <div>
                     <div className={styles.container}>
                         {!banned && <DiscordAuth />}
-                        {banned &&
+                        {banned && (
                             <div className={styles.animBan}>
                                 <HandBlock className={styles.svg1} />
                                 <UserBlock className={styles.svg2} />
                             </div>
-                        }
-                        {!banned
-                            ? 'Ожидание авторизации'
-                            : <p>Вы забанены. По причине: {banned}. <br/> Приложение закроется через 10 секунд</p>}
+                        )}
+                        {!banned ? (
+                            'Ожидание авторизации'
+                        ) : (
+                            <p>
+                                Вы забанены. По причине: {banned}. <br />{' '}
+                                Приложение закроется через 10 секунд
+                            </p>
+                        )}
                     </div>
                 </div>
             </div>

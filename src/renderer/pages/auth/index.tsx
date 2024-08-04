@@ -31,7 +31,7 @@ export default function AuthPage() {
                     setMdText(text)
                 })
         }
-    }, []);
+    }, [])
     useEffect(() => {
         if (user.id !== '-1') {
             navigate('/trackinfo', {

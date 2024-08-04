@@ -129,8 +129,12 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 />
                                 <div className={styles.patch_detail}>
                                     <div className={styles.alert_info}>
-                                        <div className={styles.alert_title}>Отсутствует патч!</div>
-                                        <div className={styles.alert_warn}>Убедитесь что Яндекс Музыка закрыта!</div>
+                                        <div className={styles.alert_title}>
+                                            Отсутствует патч!
+                                        </div>
+                                        <div className={styles.alert_warn}>
+                                            Убедитесь что Яндекс Музыка закрыта!
+                                        </div>
                                     </div>
                                     <button
                                         className={styles.patch_button}
@@ -146,7 +150,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                             })
                                         }}
                                     >
-                                        <MdEngineering size={20} />Запатчить
+                                        <MdEngineering size={20} />
+                                        Запатчить
                                     </button>
                                 </div>
                             </div>

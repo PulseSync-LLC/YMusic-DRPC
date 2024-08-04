@@ -30,7 +30,7 @@ import config from '../api/config'
 import { AppInfoInterface } from '../api/interfaces/appinfo.interface'
 
 import Preloader from '../components/preloader'
-import {replaceParams, timeDifference} from "../utils/formatRpc";
+import { replaceParams, timeDifference } from '../utils/formatRpc'
 
 function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
@@ -79,14 +79,14 @@ function _app() {
                 body: 'Произошла ошибка при авторизации в программе',
             })
         }
-        if(token) {
+        if (token) {
             try {
                 let res = await apolloClient.query({
                     query: UserMeQuery,
                     fetchPolicy: 'no-cache',
                 })
 
-                const {data} = res
+                const { data } = res
                 if (data.getMe && data.getMe.id) {
                     setUser(data.getMe)
                     await router.navigate('/trackinfo', {
@@ -117,8 +117,7 @@ function _app() {
                 setUser(userInitials)
                 return false
             }
-        }
-        else {
+        } else {
             setLoading(false)
             return false
         }
@@ -162,10 +161,12 @@ function _app() {
         }
     }, [])
     useEffect(() => {
-        if(user.id !== '-1') {
+        if (user.id !== '-1') {
             const fetchAppInfo = async () => {
                 try {
-                    const res = await fetch(`${config.SERVER_URL}api/v1/app/info`)
+                    const res = await fetch(
+                        `${config.SERVER_URL}api/v1/app/info`,
+                    )
                     const data = await res.json()
                     if (data.ok && Array.isArray(data.appInfo)) {
                         const sortedAppInfos = data.appInfo.sort(
@@ -237,7 +238,10 @@ function _app() {
                 socket.connect()
             }
             window.desktopEvents?.send('updater-start')
-            if(!user.badges.some(badge => badge.type === "supporter") && app.discordRpc.enableGithubButton) {
+            if (
+                !user.badges.some(badge => badge.type === 'supporter') &&
+                app.discordRpc.enableGithubButton
+            ) {
                 setApp({
                     ...app,
                     discordRpc: {
@@ -245,7 +249,10 @@ function _app() {
                         enableGithubButton: false,
                     },
                 })
-                window.electron.store.set("discordRpc.enableGithubButton", false)
+                window.electron.store.set(
+                    'discordRpc.enableGithubButton',
+                    false,
+                )
             }
         } else {
             router.navigate('/', {
@@ -382,7 +389,11 @@ function _app() {
                 <Player>
                     <SkeletonTheme baseColor="#1c1c22" highlightColor="#333">
                         <CssVarsProvider>
-                            {loading ? <Preloader /> : <RouterProvider router={router} />}
+                            {loading ? (
+                                <Preloader />
+                            ) : (
+                                <RouterProvider router={router} />
+                            )}
                         </CssVarsProvider>
                     </SkeletonTheme>
                 </Player>
@@ -396,7 +407,7 @@ const Player: React.FC<any> = ({ children }) => {
 
     useEffect(() => {
         if (user.id !== '-1') {
-            ; (async () => {
+            ;(async () => {
                 if (typeof window !== 'undefined') {
                     if (app.discordRpc.status) {
                         window.desktopEvents?.on('trackinfo', (event, data) => {
@@ -435,68 +446,71 @@ const Player: React.FC<any> = ({ children }) => {
         console.log('User: ', user)
         console.log('Track: ', track)
         if (app.discordRpc.status && user.id !== '-1') {
-                const timeRange =
-                    track.timecodes.length === 2
-                        ? `${track.timecodes[0]} - ${track.timecodes[1]}`
-                        : '';
+            const timeRange =
+                track.timecodes.length === 2
+                    ? `${track.timecodes[0]} - ${track.timecodes[1]}`
+                    : ''
 
-                let details;
-                if (track.artist.length > 0) {
-                    details = `${track.playerBarTitle} - ${track.artist}`;
-                } else {
-                    details = track.playerBarTitle;
-                }
-
-                const activity: any = {
-                    type: 2,
-                    largeImageKey: track.requestImgTrack[1],
-                    smallImageKey: "https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png",
-                    smallImageText: 'Yandex Music'
-                };
-
-                if (app.discordRpc.state.length > 0) {
-                    activity.state = replaceParams(app.discordRpc.state, track);
-                } else if (timeRange) {
-                    activity.state = timeRange;
-                }
-
-                if (app.discordRpc.details.length > 0) {
-                    activity.details = replaceParams(app.discordRpc.details, track);
-                } else if (details) {
-                    activity.details = details;
-                }
-
-                activity.buttons = [];
-                if (app.discordRpc.enableRpcButtonListen && track.linkTitle) {
-                    activity.buttons.push({
-                        label: app.discordRpc.button ? app.discordRpc.button : '✌️ Open in YandexMusic',
-                        url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`
-                    });
-                }
-
-                if (app.discordRpc.enableGithubButton) {
-                    activity.buttons.push({
-                        label: '🤠 Open in GitHub',
-                        url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`
-                    });
-                }
-
-                if (activity.buttons.length === 0) {
-                    delete activity.buttons;
-                }
-
-                if (!track.artist && !timeRange) {
-                    track.artist = 'Нейромузыка';
-                    setTrack(prevTrack => ({
-                        ...prevTrack,
-                        artist: 'Нейромузыка',
-                    }));
-                    activity.details = `${track.playerBarTitle} - ${track.artist}`;
-                }
-
-                window.discordRpc.setActivity(activity);
+            let details
+            if (track.artist.length > 0) {
+                details = `${track.playerBarTitle} - ${track.artist}`
+            } else {
+                details = track.playerBarTitle
             }
-    }, [app.settings, user, track, app.discordRpc]);
+
+            const activity: any = {
+                type: 2,
+                largeImageKey: track.requestImgTrack[1],
+                smallImageKey:
+                    'https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png',
+                smallImageText: 'Yandex Music',
+            }
+
+            if (app.discordRpc.state.length > 0) {
+                activity.state = replaceParams(app.discordRpc.state, track)
+            } else if (timeRange) {
+                activity.state = timeRange
+            }
+
+            if (app.discordRpc.details.length > 0) {
+                activity.details = replaceParams(app.discordRpc.details, track)
+            } else if (details) {
+                activity.details = details
+            }
+
+            activity.buttons = []
+            if (app.discordRpc.enableRpcButtonListen && track.linkTitle) {
+                activity.buttons.push({
+                    label: app.discordRpc.button
+                        ? app.discordRpc.button
+                        : '✌️ Open in YandexMusic',
+                    url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
+                })
+            }
+
+            if (app.discordRpc.enableGithubButton) {
+                activity.buttons.push({
+                    label: '🤠 Open in GitHub',
+                    url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`,
+                })
+            }
+
+            if (activity.buttons.length === 0) {
+                delete activity.buttons
+            }
+
+            if (!track.artist && !timeRange) {
+                track.artist = 'Нейромузыка'
+                setTrack(prevTrack => ({
+                    ...prevTrack,
+                    artist: 'Нейромузыка',
+                }))
+                activity.details = `${track.playerBarTitle} - ${track.artist}`
+            }
+
+            window.discordRpc.setActivity(activity)
+        }
+    }, [app.settings, user, track, app.discordRpc])
     return (
         <PlayerContext.Provider
             value={{

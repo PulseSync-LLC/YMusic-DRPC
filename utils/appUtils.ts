@@ -2,10 +2,10 @@ import { psList } from '@heyikang/ps-list'
 import { exec } from 'child_process'
 import path from 'path'
 import util from 'util'
-import os from "os";
-import * as crypto from "node:crypto";
-import {EasyAsar} from 'asar-async';
-import {getRawHeader} from "@electron/asar";
+import os from 'os'
+import * as crypto from 'node:crypto'
+import { EasyAsar } from 'asar-async'
+import { getRawHeader } from '@electron/asar'
 
 const execPromise = util.promisify(exec)
 
@@ -58,8 +58,12 @@ async function checkAndTerminateYandexMusic() {
 
 export async function checkAndStartYandexMusic() {
     const musicPath = await getPathToYandexMusic()
-    const appPath = isMac() ? path.join(musicPath, '../../') : `"${path.join(musicPath, '../', 'Яндекс Музыка.exe')}"`
-    const command = isMac() ? `open -a "${appPath}" --args --remote-allow-origins=*` : `${appPath} --remote-allow-origins=*`
+    const appPath = isMac()
+        ? path.join(musicPath, '../../')
+        : `"${path.join(musicPath, '../', 'Яндекс Музыка.exe')}"`
+    const command = isMac()
+        ? `open -a "${appPath}" --args --remote-allow-origins=*`
+        : `${appPath} --remote-allow-origins=*`
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -71,22 +75,32 @@ export async function checkAndStartYandexMusic() {
 
 export async function getPathToYandexMusic() {
     if (isMac()) {
-        return path.join('/Applications', 'Яндекс Музыка.app', 'Contents', 'Resources');
+        return path.join(
+            '/Applications',
+            'Яндекс Музыка.app',
+            'Contents',
+            'Resources',
+        )
     } else {
         return path.join(
             process.env.LOCALAPPDATA,
             'Programs',
             'YandexMusic',
-            "resources"
-        );
+            'resources',
+        )
     }
 }
 
 export const isMac = () => {
-    return os.platform() === 'darwin';
+    return os.platform() === 'darwin'
 }
 
-export async function calculateSHA256FromAsar(asarPath: string): Promise<string> {
-    return crypto.createHash('sha256').update(getRawHeader(asarPath).headerString).digest('hex')
+export async function calculateSHA256FromAsar(
+    asarPath: string,
+): Promise<string> {
+    return crypto
+        .createHash('sha256')
+        .update(getRawHeader(asarPath).headerString)
+        .digest('hex')
 }
 export default checkAndTerminateYandexMusic

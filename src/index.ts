@@ -2,7 +2,8 @@ import {
     app,
     BrowserWindow,
     globalShortcut,
-    ipcMain, Notification,
+    ipcMain,
+    Notification,
     protocol,
     session,
     shell,
@@ -32,13 +33,13 @@ import checkAndTerminateYandexMusic, {
     calculateSHA256FromAsar,
     checkAndStartYandexMusic,
     getPathToYandexMusic,
-    isMac
+    isMac,
 } from '../utils/appUtils'
 import { exec } from 'child_process'
 import Theme from './renderer/api/interfaces/theme.interface'
 import logger from './main/modules/logger'
 import isAppDev from 'electron-is-dev'
-import asar, {getRawHeader} from "@electron/asar";
+import asar, { getRawHeader } from '@electron/asar'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -70,7 +71,7 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
     width: 40,
     height: 40,
 })
-app.setAppUserModelId("pulsesync.app")
+app.setAppUserModelId('pulsesync.app')
 Sentry.init({
     debug: isAppDev,
     dsn: config.SENTRY_DSN,
@@ -80,13 +81,13 @@ Sentry.init({
 function checkCLIArguments() {
     const args = process.argv.slice(1)
     if (args.length > 0 && !isAppDev) {
-        if(args.includes('pulsesync://')) return;
-        if(args.includes('--updated')) {
+        if (args.includes('pulsesync://')) return
+        if (args.includes('--updated')) {
             new Notification({
-                title: "Обновление завершено",
-                body: "Посмотреть список изменений можно в приложении",
+                title: 'Обновление завершено',
+                body: 'Посмотреть список изменений можно в приложении',
             }).show()
-            return;
+            return
         }
         return app.quit()
     }
@@ -428,18 +429,14 @@ app.whenReady().then(async () => {
     initializeTheme()
 })
 export async function prestartCheck() {
-
     const musicDir = app.getPath('music')
     if (!fs.existsSync(path.join(musicDir, 'PulseSyncMusic'))) {
         fs.mkdirSync(path.join(musicDir, 'PulseSyncMusic'))
     }
     const musicPath = await getPathToYandexMusic()
-    const asarCopy = path.join(
-        musicPath,
-        'app.asar.copy',
-    )
-    if(!store.has("discordRpc.enableGithubButton")){
-        store.set("discordRpc.enableGithubButton", true)
+    const asarCopy = path.join(musicPath, 'app.asar.copy')
+    if (!store.has('discordRpc.enableGithubButton')) {
+        store.set('discordRpc.enableGithubButton', true)
     }
     // if (
     //     store.has('settings.autoStartMusic') &&

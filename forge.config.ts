@@ -12,7 +12,7 @@ import { mainConfig } from './webpack.main.config'
 import { rendererConfig } from './webpack.renderer.config'
 import path from 'path'
 import fs from 'fs-extra'
-import {isMac} from "./utils/appUtils";
+import { isMac } from './utils/appUtils'
 
 const forge_config: ForgeConfig = {
     packagerConfig: {
@@ -81,7 +81,7 @@ const forge_config: ForgeConfig = {
             console.log(
                 `build app ${platform}-${arch} with electron ${electronVersion}`,
             )
-            if(!isMac()) {
+            if (!isMac()) {
                 const outDir = path.join(buildPath, '..', '..', 'modules')
                 const sourceDir = path.join(__dirname, 'modules')
                 await fs.ensureDir(outDir)
