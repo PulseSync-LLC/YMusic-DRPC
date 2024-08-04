@@ -3,6 +3,7 @@ import { checkIsDeeplink, navigateToDeeplink } from './handleDeepLink'
 import logger from './logger'
 import httpServer from './httpServer'
 import config from '../../config.json'
+import {prestartCheck} from "../../../utils/appUtils";
 const isFirstInstance = app.requestSingleInstanceLock()
 
 export const checkForSingleInstance = (): void => {
@@ -29,6 +30,7 @@ export const checkForSingleInstance = (): void => {
                 }
             },
         )
+        prestartCheck()
         httpServer.listen(config.PORT, () => {
             console.log(`Server running at http://localhost:${config.PORT}/`)
         })

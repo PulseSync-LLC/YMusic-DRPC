@@ -80,14 +80,15 @@ Sentry.init({
 function checkCLIArguments() {
     const args = process.argv.slice(1)
     if (args.length > 0 && !isAppDev) {
-        console.log(args.includes('--updated'))
+        if(args.includes('pulsesync://')) return;
         if(args.includes('--updated')) {
             new Notification({
                 title: "Обновление завершено",
                 body: "Посмотреть список изменений можно в приложении",
             }).show()
+            return;
         }
-        else app.quit()
+        return app.quit()
     }
 }
 const createWindow = (): void => {
@@ -225,7 +226,6 @@ protocol.registerSchemesAsPrivileged([
 
 app.on('ready', async () => {
     checkCLIArguments()
-    await prestartCheck()
     await corsAnywhere()
     createWindow() // Все что связано с mainWindow должно устанавливаться после этого метода
     checkForSingleInstance()
@@ -427,34 +427,6 @@ app.whenReady().then(async () => {
     }
     initializeTheme()
 })
-async function prestartCheck() {
-
-    const musicDir = app.getPath('music')
-    if (!fs.existsSync(path.join(musicDir, 'PulseSyncMusic'))) {
-        fs.mkdirSync(path.join(musicDir, 'PulseSyncMusic'))
-    }
-    const musicPath = await getPathToYandexMusic()
-    const asarCopy = path.join(
-        musicPath,
-        'app.asar.copy',
-    )
-    if (
-        store.has('settings.autoStartMusic') &&
-        store.get('settings.autoStartMusic')
-    ) {
-        await checkAndStartYandexMusic()
-    }
-    if (store.has('discordRpc.status') && store.get('discordRpc.status')) {
-        rpc_connect()
-    }
-    if (store.has('settings.patched') && store.get('settings.patched')) {
-        if (!fs.existsSync(asarCopy)) {
-            store.set('settings.patched', false)
-        }
-    } else if (fs.existsSync(asarCopy)) {
-        store.set('settings.patched', true)
-    }
-}
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         ipcMain.emit('discordrpc-clearstate')
