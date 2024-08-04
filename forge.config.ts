@@ -30,7 +30,7 @@ const forge_config: ForgeConfig = {
         {
             name: '@electron-forge/maker-zip',
             config: (arch: any) => ({
-                macUpdateManifestBaseUrl: `${config.UPDATE_URL}/dev_build/darwin/${arch}`,
+                macUpdateManifestBaseUrl: `${config.UPDATE_URL}/beta_build/darwin/${arch}`,
             }),
         },
         new MakerDMG({}),
