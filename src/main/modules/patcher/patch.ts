@@ -81,7 +81,7 @@ class Patcher {
         });
     }
 
-    static deleteDirectory(directoryPath: string): Promise<void> {
+    static deleteDirectory(directoryPath: string): Promise<boolean> {
         return new Promise((resolve, reject) => {
             const deleteCommand = isMac()
                 ? `rm -rf "${directoryPath}"`
@@ -95,7 +95,7 @@ class Patcher {
                 } else {
                     console.log(deleteStdout);
                     console.log(`Source directory deleted`);
-                    resolve();
+                    resolve(true);
                 }
             });
         });
@@ -359,12 +359,12 @@ class Patcher {
                             console.error('Error:', error);
                         }
                     }
-                    else {
-                        return true;
-                    }
                 }, 2000)
                 console.log(`Deleting source directory...`);
-                await this.deleteDirectory(destinationDir);
+                return new Promise((resolve, reject) => {
+                    this.deleteDirectory(destinationDir);
+                    resolve(true);
+                })
             } else {
                 console.log(`Could not find events.js in ${destinationDir}`);
                 return false;

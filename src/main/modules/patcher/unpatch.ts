@@ -62,32 +62,34 @@ class UnPatcher {
         this.deleteFiles([appAsarPath]).then(() => {
             this.replaceFile(appAsarPath);
         });
-        const appPath = await getPathToYandexMusic();
-        const InfoPlist = path.join(appPath, '../', 'Info.plist')
-        fs.readFile(InfoPlist, 'utf8', (err, data) => {
-            if (err) {
-                console.error('Error reading file:', err);
-                return;
-            }
-            const hashRegex = /<key>hash<\/key>\s*<string>([^<]+)<\/string>/;
-            const match = data.match(hashRegex);
+        if(isMac()) {
+            const appPath = await getPathToYandexMusic();
+            const InfoPlist = path.join(appPath, '../', 'Info.plist')
+            fs.readFile(InfoPlist, 'utf8', (err, data) => {
+                if (err) {
+                    console.error('Error reading file:', err);
+                    return;
+                }
+                const hashRegex = /<key>hash<\/key>\s*<string>([^<]+)<\/string>/;
+                const match = data.match(hashRegex);
 
-            if (match) {
-                console.log('Old Hash:', match[1]);
+                if (match) {
+                    console.log('Old Hash:', match[1]);
 
-                const updatedData = data.replace(hashRegex, `<key>hash<\/key>\n<string>${store.get("music.hash")}<\/string>`);
+                    const updatedData = data.replace(hashRegex, `<key>hash<\/key>\n<string>${store.get("music.hash")}<\/string>`);
 
-                fs.writeFile(InfoPlist, updatedData, 'utf8', (err) => {
-                    if (err) {
-                        console.error('Error writing file:', err);
-                        return;
-                    }
-                    console.log('File updated successfully');
-                });
-            } else {
-                console.error('Hash value not found');
-            }
-        });
+                    fs.writeFile(InfoPlist, updatedData, 'utf8', (err) => {
+                        if (err) {
+                            console.error('Error writing file:', err);
+                            return;
+                        }
+                        console.log('File updated successfully');
+                    });
+                } else {
+                    console.error('Hash value not found');
+                }
+            });
+        }
     }
 }
 
