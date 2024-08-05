@@ -6,7 +6,7 @@ import CheckboxNav from '../../components/checkbox'
 import * as styles from '../../../../static/styles/page/indexBP20.module.scss'
 import * as theme from './trackinfo.module.scss'
 
-import React, { useContext, useState } from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import userContext from '../../api/context/user.context'
 import trackInitials from '../../api/initials/track.initials'
 import Skeleton from 'react-loading-skeleton'
@@ -86,6 +86,15 @@ export default function TrackInfoPage() {
         }
         return changedValues
     }
+    useEffect(() => {
+        setPreviousValues({
+            ...(previousValues as any),
+           appId: app.discordRpc.appId,
+           details: app.discordRpc.details,
+           state: app.discordRpc.state,
+           button: app.discordRpc.button,
+        })
+    }, [])
     const formik = useFormik({
         initialValues: {
             appId: app.discordRpc.appId,

@@ -1,7 +1,6 @@
 import {
     app,
     BrowserWindow,
-    globalShortcut,
     ipcMain,
     Notification,
     protocol,
@@ -26,20 +25,13 @@ import {
 import { checkForSingleInstance } from './main/modules/singleInstance'
 import * as Sentry from '@sentry/electron/main'
 import { getTrackInfo, setTheme } from './main/modules/httpServer'
-import { getUpdater } from './main/modules/updater/updater'
-import { isDev } from './renderer/api/config'
 import { handleAppEvents } from './main/events'
-import checkAndTerminateYandexMusic, {
-    calculateSHA256FromAsar,
-    checkAndStartYandexMusic,
+import {
     getPathToYandexMusic,
-    isMac,
 } from '../utils/appUtils'
-import { exec } from 'child_process'
 import Theme from './renderer/api/interfaces/theme.interface'
 import logger from './main/modules/logger'
 import isAppDev from 'electron-is-dev'
-import asar, { getRawHeader } from '@electron/asar'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string

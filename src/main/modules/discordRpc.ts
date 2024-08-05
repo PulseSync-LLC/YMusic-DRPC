@@ -5,23 +5,18 @@ import { store } from './storage'
 import logger from './logger'
 import config from '../../config.json'
 
-const clientId = config.CLIENT_ID ? config.CLIENT_ID : store.get("discordRpc.appId")
+let clientId
+let client: Client
 
-const client = new Client({
-    clientId,
-    transport: {
-        type: 'ipc',
-    },
-})
-
+let changeId = false
 let rpcConnected = false
 
 ipcMain.on('discordrpc-setstate', (event, activity: SetActivity) => {
-    if (rpcConnected) {
+    if (rpcConnected && client.isConnected) {
         client.user?.setActivity(activity).catch((e) => {
             logger.discordRpc.error(e)
         })
-    } else {
+    } else if(!changeId){
         rpc_connect()
     }
 })
@@ -29,9 +24,7 @@ ipcMain.on('discordrpc-discordRpc', (event, val) => {
     logger.discordRpc.info('discordRpc state: ' + val)
     store.set('discordRpc.status', val)
     if (val && !rpcConnected) {
-        client.login().catch((e) => {
-            logger.discordRpc.error(e)
-        })
+        rpc_connect()
     } else {
         client.destroy().catch((e) => {
             logger.discordRpc.error(e)
@@ -41,41 +34,51 @@ ipcMain.on('discordrpc-discordRpc', (event, val) => {
 })
 function updateAppId(newAppId: string) {
     if(newAppId === config.CLIENT_ID) return;
-    client.clientId = newAppId.length > 0 ? newAppId : config.CLIENT_ID.toString();
+    changeId = true
     store.set('discordRpc.appId', newAppId)
     client.destroy().then(() => {
-        client.login().catch((e) => {
-            logger.discordRpc.error(e);
-        });
+        rpc_connect()
     }).catch((e) => {
         logger.discordRpc.error(e);
     });
 }
-client.on('disconnected', () => {
-    rpcConnected = false
-    logger.discordRpc.info('discordRpc state: closed')
-})
-
-client.on('error', () => {
-    rpcConnected = false
-    console.info('discordRpc: error')
-})
 
 ipcMain.on('discordrpc-clearstate', () => {
     if (rpcConnected) client.user?.clearActivity()
 })
-client.on('ready', () => {
-    rpcConnected = true
-    logger.discordRpc.info('discordRpc state: connected')
-})
 
 function rpc_connect() {
-    console.log(client)
+    const customId = store.get("discordRpc.appId")
+    clientId = customId.length > 0 ? customId : config.CLIENT_ID
+    client = new Client({
+        clientId,
+        transport: {
+            type: 'ipc',
+        },
+    })
     client.login().catch((e) => {
         logger.discordRpc.error(e)
     })
+    client.on('ready', () => {
+        if(changeId) changeId = false
+        rpcConnected = true
+        logger.discordRpc.info('discordRpc state: connected')
+    })
+    client.on('disconnected', () => {
+        rpcConnected = false
+        logger.discordRpc.info('discordRpc state: disconnected')
+    })
+
+    client.on('error', () => {
+        rpcConnected = false
+        console.info('discordRpc state: error')
+    })
+    client.on('close', () => {
+        rpcConnected = false
+        console.info('discordRpc state: closed')
+    })
 }
-const getRpcUser = () => {
-    return client.user
+const getRpcApp = () => {
+    return client.application
 }
-export { rpc_connect, updateAppId, getRpcUser}
+export { rpc_connect, updateAppId, getRpcApp}
