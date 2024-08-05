@@ -53,12 +53,13 @@ export const handleEvents = (window: BrowserWindow): void => {
         await checkAndTerminateYandexMusic()
         setTimeout(async () => {
             await Patcher.patchRum().then(async () => {
-                console.log('Все гуд')
                 store.set('settings.patched', true)
+                setTimeout(async () => {
+                    await checkAndStartYandexMusic()
+                }, 2000)
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     patch: true,
                 })
-                await checkAndStartYandexMusic()
             })
         }, 2000)
     })
@@ -70,10 +71,12 @@ export const handleEvents = (window: BrowserWindow): void => {
             setTimeout(async () => {
                 Patcher.patchRum().then(async () => {
                     store.set('settings.patched', true)
+                    setTimeout(async () => {
+                        await checkAndStartYandexMusic()
+                    }, 2000)
                     mainWindow.webContents.send('UPDATE_APP_DATA', {
                         repatch: true,
                     })
-                    await checkAndStartYandexMusic()
                 })
             }, 3000)
         }, 2000)
