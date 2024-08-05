@@ -29,7 +29,6 @@ export default function TrackInfoPage() {
         state: '',
         button: '',
     })
-    const navigate = useNavigate()
     const schema = object().shape({
         appId: string()
             .nullable()

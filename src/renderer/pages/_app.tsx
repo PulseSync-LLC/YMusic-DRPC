@@ -333,6 +333,7 @@ function _app() {
                     'discordRpc.details',
                     'discordRpc.state',
                     'discordRpc.button',
+                    'discordRpc.appId',
                 ]
 
                 const config = { ...settingsInitials } as any

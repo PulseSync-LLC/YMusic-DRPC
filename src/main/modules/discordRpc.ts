@@ -5,7 +5,7 @@ import { store } from './storage'
 import logger from './logger'
 import config from '../../config.json'
 
-const clientId = config.CLIENT_ID ? config.CLIENT_ID : store.get("discordRpc.сlient_id")
+const clientId = config.CLIENT_ID ? config.CLIENT_ID : store.get("discordRpc.appId")
 
 const client = new Client({
     clientId,
@@ -42,7 +42,7 @@ ipcMain.on('discordrpc-discordRpc', (event, val) => {
 function updateAppId(newAppId: string) {
     if(newAppId === config.CLIENT_ID) return;
     client.clientId = newAppId.length > 0 ? newAppId : config.CLIENT_ID.toString();
-    store.set('discordRpc.сlient_id', newAppId)
+    store.set('discordRpc.appId', newAppId)
     client.destroy().then(() => {
         client.login().catch((e) => {
             logger.discordRpc.error(e);
