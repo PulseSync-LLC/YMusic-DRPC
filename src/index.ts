@@ -429,6 +429,9 @@ export async function prestartCheck() {
     if (!store.has('discordRpc.enableGithubButton')) {
         store.set('discordRpc.enableGithubButton', true)
     }
+    if (!store.has('discordRpc.appId')) {
+        store.set('discordRpc.appId', '')
+    }
     // if (
     //     store.has('settings.autoStartMusic') &&
     //     store.get('settings.autoStartMusic')
