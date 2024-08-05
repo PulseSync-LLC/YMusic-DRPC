@@ -16,7 +16,7 @@ class UnPatcher {
         );
 
         deleteCommands.forEach(command => {
-            exec(command, (error, stdout, stderr) => {
+            exec(command, async (error, stdout, stderr) => {
                 console.log(`Executing command: ${command}`);
                 if (error) {
                     console.error(`Ошибка при удалении файла: ${error}`);
@@ -27,6 +27,7 @@ class UnPatcher {
                     return;
                 }
                 console.log(`Файл успешно удален`);
+                this.replaceFile(await this.getAppAsarPath());
             });
         });
     }
@@ -59,9 +60,7 @@ class UnPatcher {
 
     static async unpatch() {
         const appAsarPath = await this.getAppAsarPath();
-        this.deleteFiles([appAsarPath]).then(() => {
-            this.replaceFile(appAsarPath);
-        });
+        await this.deleteFiles([appAsarPath]);
         if(isMac()) {
             const appPath = await getPathToYandexMusic();
             const InfoPlist = path.join(appPath, '../', 'Info.plist')

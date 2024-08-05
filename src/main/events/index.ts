@@ -56,7 +56,7 @@ export const handleEvents = (window: BrowserWindow): void => {
                 store.set('settings.patched', true)
                 setTimeout(async () => {
                     await checkAndStartYandexMusic()
-                }, 2000)
+                }, 3000)
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     patch: true,
                 })
@@ -73,7 +73,7 @@ export const handleEvents = (window: BrowserWindow): void => {
                     store.set('settings.patched', true)
                     setTimeout(async () => {
                         await checkAndStartYandexMusic()
-                    }, 2000)
+                    }, 3000)
                     mainWindow.webContents.send('UPDATE_APP_DATA', {
                         repatch: true,
                     })
@@ -89,7 +89,9 @@ export const handleEvents = (window: BrowserWindow): void => {
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     depatch: true,
                 })
-                await checkAndStartYandexMusic()
+                setTimeout(async () => {
+                    await checkAndStartYandexMusic()
+                }, 2000)
             })
         }, 2000)
     })
