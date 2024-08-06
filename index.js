@@ -272,7 +272,7 @@ function createWindow() {
                         url: `yandexmusic://album/${encodeURIComponent(linkTitle)}`,
                     },
                     {
-                        label: '🤠 Open in GitHub',
+                        label: '🤠 PulseSync Project',
                         url: `https://github.com/PulseSync-LLC/YMusic-DRPC`,
                     },
                 ],
@@ -287,8 +287,8 @@ function createWindow() {
                 smallImageText: 'Yandex Music',
                 buttons: [
                     {
-                        label: '🤠 Open in GitHub',
-                        url: `https://github.com/PulseSync-Official/YMusic-DRPC`,
+                        label: '🤠 PulseSync Project',
+                        url: `https://github.com/PulseSync-LLC/YMusic-DRPC`,
                     },
                 ],
             })
