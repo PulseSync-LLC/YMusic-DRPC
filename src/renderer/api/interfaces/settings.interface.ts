@@ -5,7 +5,9 @@ export interface Settings {
     autoStartMusic: boolean
     autoStartApp: boolean
 }
-
+export interface Info {
+    version: string
+}
 export interface Tokens {
     ya_token: string
     token: string
@@ -24,4 +26,5 @@ export default interface SettingsInterface {
     settings: Settings
     discordRpc: discordRpc
     tokens: Tokens
+    info: Info
 }

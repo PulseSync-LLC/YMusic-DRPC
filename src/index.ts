@@ -41,11 +41,11 @@ declare const PRELOADER_WEBPACK_ENTRY: string
 
 export let corsAnywherePort: string | number
 export let mainWindow: BrowserWindow
+export let updated = false
 
 let preloaderWindow: BrowserWindow
 let availableThemes: Theme[] = []
 let selectedTheme: string
-
 const defaultTheme = {
     name: 'Default',
     image: 'url',
@@ -79,6 +79,7 @@ function checkCLIArguments() {
                 title: 'Обновление завершено',
                 body: 'Посмотреть список изменений можно в приложении',
             }).show()
+            updated = true
             return
         }
         return app.quit()
@@ -145,11 +146,11 @@ const createWindow = (): void => {
     })
     if (isAppDev) {
         mainWindow.webContents.openDevTools()
-        // Object.defineProperty(app, 'isPackaged', {
-        //     get() {
-        //         return true
-        //     },
-        // })
+        Object.defineProperty(app, 'isPackaged', {
+            get() {
+                return true
+            },
+        })
     }
 }
 const corsAnywhere = async () => {
@@ -217,9 +218,9 @@ protocol.registerSchemesAsPrivileged([
 ])
 
 app.on('ready', async () => {
-    checkCLIArguments()
     await corsAnywhere()
     createWindow() // Все что связано с mainWindow должно устанавливаться после этого метода
+    checkCLIArguments()
     checkForSingleInstance()
     handleAppEvents(mainWindow)
     handleDeeplinkOnApplicationStartup()

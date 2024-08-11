@@ -8,6 +8,9 @@ const settingsInitials: SettingsInterface = {
         autoStartMusic: false,
         autoStartApp: false,
     },
+    info: {
+        version: '',
+    },
     tokens: {
         ya_token: '',
         token: '',

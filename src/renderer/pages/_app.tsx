@@ -30,7 +30,7 @@ import config from '../api/config'
 import { AppInfoInterface } from '../api/interfaces/appinfo.interface'
 
 import Preloader from '../components/preloader'
-import { replaceParams, timeDifference } from '../utils/formatRpc'
+import { replaceParams } from '../utils/formatRpc'
 
 function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
@@ -92,6 +92,7 @@ function _app() {
                     await router.navigate('/trackinfo', {
                         replace: true,
                     })
+                    window.desktopEvents?.send('authStatus', true)
                     return true
                 } else {
                     setLoading(false)
@@ -102,6 +103,7 @@ function _app() {
                     })
                     setUser(userInitials)
                     sendErrorAuthNotify()
+                    window.desktopEvents?.send('authStatus', false)
                     return false
                 }
             } catch (e) {
@@ -115,6 +117,7 @@ function _app() {
                     replace: true,
                 })
                 setUser(userInitials)
+                window.desktopEvents?.send('authStatus', false)
                 return false
             }
         } else {
@@ -160,29 +163,6 @@ function _app() {
             return () => clearInterval(intervalId)
         }
     }, [])
-    useEffect(() => {
-        if (user.id !== '-1') {
-            const fetchAppInfo = async () => {
-                try {
-                    const res = await fetch(
-                        `${config.SERVER_URL}api/v1/app/info`,
-                    )
-                    const data = await res.json()
-                    if (data.ok && Array.isArray(data.appInfo)) {
-                        const sortedAppInfos = data.appInfo.sort(
-                            (a: any, b: any) => b.id - a.id,
-                        )
-                        setAppInfo(sortedAppInfos)
-                    } else {
-                        console.error('Invalid response format:', data)
-                    }
-                } catch (error) {
-                    console.error('Failed to fetch app info:', error)
-                }
-            }
-            fetchAppInfo()
-        }
-    }, [user.id])
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const ya_token = window.electron.store.get('tokens.ya_token')
@@ -272,6 +252,17 @@ function _app() {
                     },
                 }))
             })
+            window.desktopEvents
+                ?.invoke('getVersion')
+                .then((version: string) => {
+                    setApp(prevSettings => ({
+                        ...prevSettings,
+                        info: {
+                            ...prevSettings.info,
+                            version: version,
+                        },
+                    }))
+                })
             window.desktopEvents?.on('check-update', (event, data) => {
                 let toastId: string
                 toastId = hotToast.loading('Проверка обновлений', {
@@ -318,6 +309,24 @@ function _app() {
                     })
                 }
             })
+            const fetchAppInfo = async () => {
+                try {
+                    const res = await fetch(
+                        `https://api.pulsesync.dev/api/v1/app/info`,
+                    )
+                    const data = await res.json()
+                    if (data.ok && Array.isArray(data.appInfo)) {
+                        const sortedAppInfos = data.appInfo.sort(
+                            (a: any, b: any) => b.id - a.id,
+                        )
+                        setAppInfo(sortedAppInfos)
+                    } else {
+                        console.error('Invalid response format:', data)
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch app info:', error)
+                }
+            }
             const fetchSettings = async () => {
                 const keys = [
                     'settings.autoStartInTray',
@@ -355,6 +364,7 @@ function _app() {
             }
 
             fetchSettings()
+            fetchAppInfo()
             const token = window.electron.store.get('tokens.ya_token')
             if (token) {
                 setApp(prevSettings => ({
@@ -491,7 +501,7 @@ const Player: React.FC<any> = ({ children }) => {
 
             if (app.discordRpc.enableGithubButton) {
                 activity.buttons.push({
-                    label: '🤠 Open in GitHub',
+                    label: '🤠 PulseSync Project',
                     url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`,
                 })
             }

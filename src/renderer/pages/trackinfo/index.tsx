@@ -467,8 +467,7 @@ export default function TrackInfoPage() {
                                                             )
                                                         }}
                                                     >
-                                                        Слушать трек на Яндекс
-                                                        Музыке
+                                                        {app.discordRpc.button.length > 0 ? app.discordRpc.button : "Слушать трек на Яндекс Музыке"}
                                                     </div>
                                                     <div
                                                         className={theme.button}
@@ -478,7 +477,7 @@ export default function TrackInfoPage() {
                                                             )
                                                         }}
                                                     >
-                                                        Open in Github
+                                                        PulseSync Project
                                                     </div>
                                                 </div>
                                             </div>

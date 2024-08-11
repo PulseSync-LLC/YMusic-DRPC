@@ -19,7 +19,6 @@ interface ContextMenuProps {
 const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
     const { app, yaClient, setApp, setUser, setUpdate } =
         useContext(userContext)
-    const [version, setVersion] = useState(null)
     const { currentTrack } = useContext(playerContext)
     const handleOpenModal = () => {
         if (modalRef.current) {
@@ -177,15 +176,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
 
         window.desktopEvents?.on('UPDATE_APP_DATA', handleUpdateAppData)
     }
-    useEffect(() => {
-        if (typeof window !== 'undefined' && window.desktopEvents) {
-            window.desktopEvents
-                ?.invoke('getVersion')
-                .then((version: string | undefined) => {
-                    setVersion(version)
-                })
-        }
-    }, [])
     return (
         <div className={styles.patchMenu}>
             <button
@@ -314,7 +304,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                         className={styles.contextButton}
                         onClick={handleOpenModal}
                     >
-                        Beta v{version}
+                        Beta v{app.info.version}
                     </div>
                     <button
                         className={styles.contextButton}

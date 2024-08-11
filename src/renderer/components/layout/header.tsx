@@ -21,8 +21,7 @@ interface p {
 
 const Header: React.FC<p> = ({ goBack }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [version, setVersion] = useState(null)
-    const { user, appInfo } = useContext(userContext)
+    const { user, appInfo, app } = useContext(userContext)
     const [modal, setModal] = useState(false)
     const openModal = () => setModal(true)
     const closeModal = () => setModal(false)
@@ -36,10 +35,11 @@ const Header: React.FC<p> = ({ goBack }) => {
     useEffect(() => {
         if (typeof window !== 'undefined' && window.desktopEvents) {
             window.desktopEvents
-                ?.invoke('getVersion')
-                .then((version: string | undefined) => {
-                    console.log(version)
-                    setVersion(version)
+                ?.invoke('needModalUpdate')
+                .then((value) => {
+                    if(value) {
+                        openModal()
+                    }
                 })
         }
     }, [])
@@ -70,7 +70,7 @@ const Header: React.FC<p> = ({ goBack }) => {
             >
                 <div className={styles.updateModal}>
                     {memoizedAppInfo
-                        .filter(info => info.version <= version)
+                        .filter(info => info.version <= app.info.version)
                         .map(info => (
                             <div key={info.id}>
                                 <div className={styles.version_info}>
