@@ -140,7 +140,9 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 )
             })
             .catch(e => {
-                console.log(e)
+                window.desktopEvents?.send('renderer-log', {
+                    info: 'Download track failed: ' + e,
+                })
                 toast.error('Не удалось получить ссылку для трека')
             })
 
@@ -158,7 +160,6 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
         })
         const handleUpdateAppData = (event: any, data: any) => {
             for (const [key, value] of Object.entries(data)) {
-                console.log(key)
                 switch (key) {
                     case 'repatch':
                         toast.success('Успешный репатч', { id: toastId })

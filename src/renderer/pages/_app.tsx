@@ -121,6 +121,7 @@ function _app() {
                 return false
             }
         } else {
+            window.desktopEvents?.send('authStatus', false)
             setLoading(false)
             return false
         }
@@ -144,14 +145,7 @@ function _app() {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const checkAuthorization = async () => {
-                try {
-                    const isAuthorized = await authorize()
-                    if (isAuthorized) {
-                        console.error('User is authorized.')
-                    }
-                } catch (error) {
-                    console.error('Authorization error:', error)
-                }
+                await authorize()
             }
 
             if (user.id === '-1') {
@@ -312,7 +306,7 @@ function _app() {
             const fetchAppInfo = async () => {
                 try {
                     const res = await fetch(
-                        `https://api.pulsesync.dev/api/v1/app/info`,
+                        `${config.SERVER_URL}api/v1/app/info`,
                     )
                     const data = await res.json()
                     if (data.ok && Array.isArray(data.appInfo)) {
@@ -451,11 +445,6 @@ const Player: React.FC<any> = ({ children }) => {
         }
     }, [user.id, app.discordRpc.status])
     useEffect(() => {
-        console.log('useEffect triggered')
-        console.log('Settings: ', app.settings)
-        console.log('RpcSettings: ', app.discordRpc)
-        console.log('User: ', user)
-        console.log('Track: ', track)
         if (app.discordRpc.status && user.id !== '-1') {
             const timeRange =
                 track.timecodes.length === 2
@@ -494,14 +483,14 @@ const Player: React.FC<any> = ({ children }) => {
                 activity.buttons.push({
                     label: app.discordRpc.button
                         ? app.discordRpc.button
-                        : '✌️ Open in YandexMusic',
+                        : '✌️ Open in Yandex Music',
                     url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
                 })
             }
 
             if (app.discordRpc.enableGithubButton) {
                 activity.buttons.push({
-                    label: '🤠 PulseSync Project',
+                    label: '♡ PulseSync Project',
                     url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`,
                 })
             }

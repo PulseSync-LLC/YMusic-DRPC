@@ -28,8 +28,8 @@
 .ReactModal__Overlay--before-close {
     opacity: 0;
 }
-
 .modal-content {
+    outline: none !important;
     max-width: 500px;
     transform: translateY(-50px);
     transition:

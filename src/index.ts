@@ -26,9 +26,7 @@ import { checkForSingleInstance } from './main/modules/singleInstance'
 import * as Sentry from '@sentry/electron/main'
 import { getTrackInfo, setTheme } from './main/modules/httpServer'
 import { handleAppEvents } from './main/events'
-import {
-    getPathToYandexMusic,
-} from '../utils/appUtils'
+import { getPathToYandexMusic } from '../utils/appUtils'
 import Theme from './renderer/api/interfaces/theme.interface'
 import logger from './main/modules/logger'
 import isAppDev from 'electron-is-dev'
@@ -73,7 +71,9 @@ Sentry.init({
 function checkCLIArguments() {
     const args = process.argv.slice(1)
     if (args.length > 0 && !isAppDev) {
-        if (args.includes('pulsesync://')) return
+        if (args.some(arg => arg.startsWith('pulsesync://'))) {
+            return
+        }
         if (args.includes('--updated')) {
             new Notification({
                 title: 'Обновление завершено',
@@ -219,8 +219,8 @@ protocol.registerSchemesAsPrivileged([
 
 app.on('ready', async () => {
     await corsAnywhere()
-    createWindow() // Все что связано с mainWindow должно устанавливаться после этого метода
     checkCLIArguments()
+    createWindow() // Все что связано с mainWindow должно устанавливаться после этого метода
     checkForSingleInstance()
     handleAppEvents(mainWindow)
     handleDeeplinkOnApplicationStartup()
@@ -388,8 +388,7 @@ const getFolderSize = async (folderPath: any) => {
 }
 ipcMain.handle('getThemes', async () => {
     try {
-        const themes = await loadThemes()
-        return themes
+        return await loadThemes()
     } catch (error) {
         logger.main.error('Themes: Error loading themes:', error)
         throw error
@@ -422,10 +421,19 @@ app.whenReady().then(async () => {
 })
 export async function prestartCheck() {
     const musicDir = app.getPath('music')
+    const musicPath = await getPathToYandexMusic()
+    if (!fs.existsSync(musicPath)) {
+        new Notification({
+            title: 'Яндекс Музыка не найдена 😡',
+            body: 'Пожалуйста, откройте приложение после установки музыки',
+        }).show()
+        return setTimeout(async () => {
+            app.quit()
+        }, 1000)
+    }
     if (!fs.existsSync(path.join(musicDir, 'PulseSyncMusic'))) {
         fs.mkdirSync(path.join(musicDir, 'PulseSyncMusic'))
     }
-    const musicPath = await getPathToYandexMusic()
     const asarCopy = path.join(musicPath, 'app.asar.copy')
     if (!store.has('discordRpc.enableGithubButton')) {
         store.set('discordRpc.enableGithubButton', true)

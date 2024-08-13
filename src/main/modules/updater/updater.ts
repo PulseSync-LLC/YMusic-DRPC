@@ -42,7 +42,6 @@ class Updater {
             this.logger.updater.log('Checking for update')
         })
         autoUpdater.on('download-progress', (info: ProgressInfo) => {
-            console.log(info)
             mainWindow.setProgressBar(info.percent / 100)
             mainWindow.webContents.send(
                 'download-update-progress',
@@ -139,7 +138,6 @@ class Updater {
     }
 
     async check(): Promise<UpdateStatus>{
-        console.log(this.updateStatus)
         if (this.updateStatus !== UpdateStatus.IDLE) {
             this.logger.updater.log(
                 'New update is processing',
@@ -159,7 +157,6 @@ class Updater {
                 this.logger.updater.log('No update found')
                 return null
             }
-            console.log(updateResult)
             this.updateApplier(updateResult)
         } catch (error) {
             this.logger.updater.error('Update check error', error)

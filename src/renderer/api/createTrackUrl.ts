@@ -52,7 +52,6 @@ async function getDownloadInfo(
 }
 
 function createTrackURL(info: any) {
-    console.log(info)
     // тут мы можем увидеть традиционный хеш
     const trackUrl = `XGRlBW9FXlekgbPrRHuSiA${info.path.substr(1)}${info.s}`
     const hashedUrl = createHash('md5').update(trackUrl).digest('hex')

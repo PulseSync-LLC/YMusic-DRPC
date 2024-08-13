@@ -16,7 +16,6 @@ export default function ThemePage() {
     )
 
     useEffect(() => {
-        console.log('useEffect called')
         if (typeof window !== 'undefined' && window.desktopEvents) {
             console.log('Fetching themes')
             window.desktopEvents

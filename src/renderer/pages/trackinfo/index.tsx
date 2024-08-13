@@ -6,7 +6,7 @@ import CheckboxNav from '../../components/checkbox'
 import * as styles from '../../../../static/styles/page/indexBP20.module.scss'
 import * as theme from './trackinfo.module.scss'
 
-import React, {useContext, useEffect, useState} from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import userContext from '../../api/context/user.context'
 import trackInitials from '../../api/initials/track.initials'
 import Skeleton from 'react-loading-skeleton'
@@ -89,10 +89,10 @@ export default function TrackInfoPage() {
     useEffect(() => {
         setPreviousValues({
             ...(previousValues as any),
-           appId: app.discordRpc.appId,
-           details: app.discordRpc.details,
-           state: app.discordRpc.state,
-           button: app.discordRpc.button,
+            appId: app.discordRpc.appId,
+            details: app.discordRpc.details,
+            state: app.discordRpc.state,
+            button: app.discordRpc.button,
         })
     }, [])
     const formik = useFormik({
@@ -265,8 +265,8 @@ export default function TrackInfoPage() {
                                                     theme.openModalButton
                                                 }
                                                 onClick={() => {
-                                                    setModalAnim(true),
-                                                        setModal(true)
+                                                    setModalAnim(true)
+                                                    setModal(true)
                                                 }}
                                             >
                                                 Посмотреть все параметры полей.
@@ -319,7 +319,8 @@ export default function TrackInfoPage() {
                                                 checkType="enableGithubButton"
                                                 description="Активируйте этот параметр, чтобы показать что вы любите разработчиков."
                                             >
-                                                Включить кнопку (Open in Github)
+                                                Включить кнопку (PulseSync
+                                                Project)
                                             </CheckboxNav>
                                         </div>
                                     </div>
@@ -467,7 +468,11 @@ export default function TrackInfoPage() {
                                                             )
                                                         }}
                                                     >
-                                                        {app.discordRpc.button.length > 0 ? app.discordRpc.button : "Слушать трек на Яндекс Музыке"}
+                                                        {app.discordRpc.button
+                                                            .length > 0
+                                                            ? app.discordRpc
+                                                                  .button
+                                                            : '✌️ Open in Yandex Music'}
                                                     </div>
                                                     <div
                                                         className={theme.button}
@@ -477,7 +482,7 @@ export default function TrackInfoPage() {
                                                             )
                                                         }}
                                                     >
-                                                        PulseSync Project
+                                                        ♡ PulseSync Project
                                                     </div>
                                                 </div>
                                             </div>
@@ -495,11 +500,11 @@ export default function TrackInfoPage() {
                                         <div
                                             className={theme.modalCloseZone}
                                             onClick={() => {
-                                                setModalAnim(false),
-                                                    setTimeout(
-                                                        () => setModal(false),
-                                                        200,
-                                                    )
+                                                setModalAnim(false)
+                                                setTimeout(
+                                                    () => setModal(false),
+                                                    200,
+                                                )
                                             }}
                                         ></div>
                                         <div className={theme.modal}>

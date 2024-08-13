@@ -14,6 +14,7 @@ import { marked } from 'marked'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import remarkBreaks from 'remark-breaks'
+import * as modalStyles from '../modal/modal.modules.scss'
 
 interface p {
     goBack?: boolean
@@ -34,13 +35,11 @@ const Header: React.FC<p> = ({ goBack }) => {
     }
     useEffect(() => {
         if (typeof window !== 'undefined' && window.desktopEvents) {
-            window.desktopEvents
-                ?.invoke('needModalUpdate')
-                .then((value) => {
-                    if(value) {
-                        openModal()
-                    }
-                })
+            window.desktopEvents?.invoke('needModalUpdate').then(value => {
+                if (value) {
+                    openModal()
+                }
+            })
         }
     }, [])
 
@@ -68,12 +67,12 @@ const Header: React.FC<p> = ({ goBack }) => {
                 isOpen={modal}
                 reqClose={closeModal}
             >
-                <div className={styles.updateModal}>
+                <div className={modalStyles.updateModal}>
                     {memoizedAppInfo
                         .filter(info => info.version <= app.info.version)
                         .map(info => (
                             <div key={info.id}>
-                                <div className={styles.version_info}>
+                                <div className={modalStyles.version_info}>
                                     <h3>{info.version}</h3>
                                     <span>{formatDate(info.createdAt)}</span>
                                 </div>

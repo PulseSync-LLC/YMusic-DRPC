@@ -15,7 +15,7 @@ import fs from 'fs'
 import * as si from 'systeminformation'
 import os from 'os'
 import { v4 } from 'uuid'
-import {corsAnywherePort, mainWindow, updated} from '../../index'
+import { corsAnywherePort, mainWindow, updated } from '../../index'
 import { getUpdater } from '../modules/updater/updater'
 import checkAndTerminateYandexMusic, {
     checkAndStartYandexMusic,
@@ -27,6 +27,7 @@ import { UpdateStatus } from '../modules/updater/constants/updateStatus'
 import { updateAppId } from '../modules/discordRpc'
 
 const updater = getUpdater()
+let reqModal = 0
 export let authorized = false
 export const handleEvents = (window: BrowserWindow): void => {
     ipcMain.on('update-install', () => {
@@ -229,10 +230,27 @@ export const handleEvents = (window: BrowserWindow): void => {
         // TODO: add c++ module for crash reporter
     })
     ipcMain.handle('needModalUpdate', async event => {
-        return updated
+        if (reqModal <= 0) {
+            reqModal++
+            return updated
+        } else return false
     })
     ipcMain.on('authStatus', async (event, data) => {
+        console.log('authStatus', data)
         authorized = data
+    })
+    ipcMain.on('renderer-log', async (event, data) => {
+        switch (Object.keys(data)[0]) {
+            case 'info':
+                logger.renderer.info(data.text)
+                break
+            case 'error':
+                logger.renderer.error(data.text)
+                break
+            case 'log':
+                logger.renderer.log(data.text)
+                break
+        }
     })
 }
 export const handleAppEvents = (window: BrowserWindow): void => {

@@ -3,6 +3,9 @@ import { getNativeImg } from '../utils'
 import { Track } from 'yandex-music-client'
 import { truncate } from '../../renderer/utils/track'
 import { mainWindow } from '../../index'
+import {getUpdater} from "./updater/updater";
+import {checkOrFindUpdate} from "../events";
+import path from "path";
 
 let tray: Tray
 let menu: Menu
@@ -13,7 +16,6 @@ const ICON_EXT = '@2x.png'
 //     icon: null,
 //     click: () => mainWindow.webContents.send('player-pause'),
 // }
-
 function createTray() {
     const icon = getNativeImg('appicon', '.png', 'icon').resize({
         width: 16,
@@ -31,6 +33,32 @@ function createTray() {
                 await shell.openExternal('https://discord.gg/qy42uGTzRy')
             },
         }),
+    )
+    menu.append(
+        new MenuItem({
+            label: 'Директория аддонов',
+            click: async () => {
+                const themesFolderPath = path.join(
+                    app.getPath('appData'),
+                    'PulseSync',
+                    'themes',
+                )
+                await shell.openPath(themesFolderPath)
+            },
+        }),
+    )
+    menu.append(
+        new MenuItem({
+            label: 'Проверить обновления',
+            click: async () => {
+                await checkOrFindUpdate()
+            },
+        }),
+    )
+    menu.append(
+        new MenuItem({
+            type: 'separator',
+        })
     )
     menu.append(
         new MenuItem({

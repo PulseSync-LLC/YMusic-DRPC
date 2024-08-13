@@ -92,7 +92,6 @@ export async function getPathToYandexMusic() {
 }
 
 export const isMac = () => {
-    console.log(os.platform() === 'darwin')
     return os.platform() === 'darwin'
 }
 
