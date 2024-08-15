@@ -30,6 +30,9 @@
 
     /* In panels */
     --panelsColor: #292c36;
+
+    /* Animation */
+    --transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
 }
 
 * {
@@ -43,6 +46,10 @@
 .discordLogin_svg__noStroke,
 .discordAuth_svg__noStroke {
     stroke: none;
+}
+
+textarea {
+    resize: none;
 }
 
 a {
@@ -76,6 +83,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+form {
+    width: -webkit-fill-available;
 }
 
 :focus-visible {

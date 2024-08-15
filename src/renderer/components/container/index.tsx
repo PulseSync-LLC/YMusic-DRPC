@@ -3,15 +3,17 @@ import * as styles from './container.module.scss'
 
 interface p {
     titleName: string
+    description?: string
     className?: string
     imageName?: string
     buttonName?: string
     onClick?: () => void
-    children: any
+    children?: any
 }
 
 const Container: React.FC<p> = ({
     titleName,
+    description,
     className,
     imageName,
     children,
@@ -23,17 +25,22 @@ const Container: React.FC<p> = ({
             <div
                 className={`${styles.container} ${className ? className : ''}`}
             >
-                <div className={styles.title_container}>
+                <div className={styles.mainContainer}>
                     <div className={styles.left}>
-                        <img
-                            src={`static/assets/container_icons/${imageName}.svg`}
-                            alt={imageName}
-                        />
-                        <div className={styles.title}>{titleName}</div>
+                        <div className={styles.imageContainer}>
+                            <img
+                                src={`static/assets/container_icons/${imageName}.svg`}
+                                alt={imageName}
+                            />
+                        </div>
+                        <div className={styles.detailPage}>
+                            <div className={styles.title}>{titleName}</div>
+                            <div className={styles.description}>{description}</div>
+                        </div>
                     </div>
                     {onClick && <button onClick={onClick}>{buttonName}</button>}
+                    {children}
                 </div>
-                {children}
             </div>
         </>
     )

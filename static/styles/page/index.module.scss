@@ -8,6 +8,19 @@
     background: var(--Main);
 }
 
+.container30x15 {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 15px 30px;
+    gap: 15px;
+
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    overflow: scroll;
+    position: relative;
+}
+
 .container {
     display: flex;
     flex-direction: column;
@@ -21,14 +34,25 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        padding: 20px 40px 0 40px;
-        gap: 20px;
 
         width: -webkit-fill-available;
         height: -webkit-fill-available;
 
         background: var(--MainBG);
         border-radius: 20px 20px 0px 0px;
+        position: relative;
+
+        &::after {
+            height: 15px;
+            position: absolute;
+            content: "";
+            bottom: 0;
+            right: 0;
+            left: 0;
+            background: linear-gradient(360deg, #1E2027 0%, rgba(30, 32, 39, 0) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
 
         .container_witch_text {
             display: flex;

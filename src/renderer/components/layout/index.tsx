@@ -5,12 +5,12 @@ import Header from './header'
 import ButtonNav from '../button_nav'
 import Discord from './../../../../static/assets/icons/discord.svg'
 import {
+    MdBugReport,
     MdConnectWithoutContact,
     MdDownload,
     MdEngineering,
     MdExtension,
     MdStoreMallDirectory,
-    MdWarning,
 } from 'react-icons/md'
 import { NavLink } from 'react-router-dom'
 import userContext from '../../api/context/user.context'
@@ -106,6 +106,20 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 <MdConnectWithoutContact size={24} />
                             </ButtonNav>
                         </div>
+                        <NavLink
+                                to="/bugreport"
+                                className={({ isActive, isPending }) =>
+                                    isPending
+                                        ? 'pending'
+                                        : isActive
+                                          ? 'active'
+                                          : ''
+                                }
+                            >
+                                <ButtonNav>
+                                    <MdBugReport size={24} />
+                                </ButtonNav>
+                            </NavLink>
                         {updateAvailable && (
                             <button
                                 onClick={() => {

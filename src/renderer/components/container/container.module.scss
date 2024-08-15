@@ -4,17 +4,37 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    padding: 10px 10px 0px;
+    gap: 10px;
 
     width: -webkit-fill-available;
-    height: -webkit-fill-available;
+    position: relative;
 
-    .title_container {
+    &::after {
+        height: 15px;
+        position: absolute;
+        content: "";
+        bottom: -15px;
+        right: 0;
+        left: 0;
+        background: linear-gradient(180deg, #1E2027 0%, rgba(30, 32, 39, 0) 100%);
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .mainContainer {
         display: flex;
         flex-direction: row;
-        align-items: center;
-        width: -webkit-fill-available;
         justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        gap: 1px;
+
+        background: #292C36;
+        border: 1px solid #363944;
+        border-radius: 16px;
+
+        width: -webkit-fill-available;
 
         .left {
             display: flex;
@@ -22,40 +42,57 @@
             align-items: center;
             width: -webkit-fill-available;
             gap: 15px;
+
+            .imageContainer {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                padding: 7px;
+                gap: 10px;
+
+                background: #1E2027;
+                border: 1px solid #363944;
+                border-radius: 8px;
+            }
+
+            .detailPage {
+                .title {
+                    font-weight: 900;
+                    font-size: 20px;
+
+                    color: #FFFFFF;
+                }
+
+                .description {
+                    font-weight: 400;
+                    font-size: 11px;
+
+                    color: #BBC3DE;
+                }
+            }
+
         }
 
         button {
+            transition: var(--transition);
             display: flex;
             flex-direction: row;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 7px 19px;
+            padding: 9px 25px;
             gap: 10px;
-
-            background: #3468f2;
-            border: 0;
-            border-radius: 4px;
-
+            background: #3E424C;
+            border-radius: 58px;
+            font-family: "Nunito Sans";
+            font-style: normal;
             font-weight: 700;
             font-size: 14px;
-            line-height: 140%;
+            color: #FFFFFF;
+            border: none;
+            align-items: center;
             min-width: fit-content;
-            cursor: pointer;
-
-            color: white;
 
             &:hover {
                 background: #3261e2;
             }
-        }
-
-        .title {
-            font-weight: 900;
-            font-size: 25px;
-
-            text-transform: uppercase;
-
-            color: white;
         }
     }
 }

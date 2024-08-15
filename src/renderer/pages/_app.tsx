@@ -2,9 +2,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import UserMeQuery from '../api/queries/user/getMe.query'
 
+import AuthPage from './auth'
+import CallbackPage from './auth/callback'
 import TrackInfoPage from './trackinfo'
 import ExtensionPage from './extension'
 import JointPage from './joint'
+import BugReportPage from './bugreport'
 
 import hotToast, { Toaster } from 'react-hot-toast'
 import { CssVarsProvider } from '@mui/joy'
@@ -22,8 +25,6 @@ import PlayerContext from '../api/context/player.context'
 import apolloClient from '../api/apolloClient'
 import SettingsInterface from '../api/interfaces/settings.interface'
 import settingsInitials from '../api/initials/settings.initials'
-import AuthPage from './auth'
-import CallbackPage from './auth/callback'
 import getUserToken from '../api/getUserToken'
 import { YandexMusicClient } from 'yandex-music-client'
 import config from '../api/config'
@@ -68,6 +69,10 @@ function _app() {
         {
             path: '/joint',
             element: <JointPage />,
+        },
+        {
+            path: '/bugreport',
+            element: <BugReportPage />,
         },
     ])
     const authorize = async () => {

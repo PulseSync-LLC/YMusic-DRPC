@@ -53,6 +53,7 @@
         left: 0;
         background: #16181ed9;
         backdrop-filter: blur(19px);
+        z-index: 99;
 
         .modalCloseZone {
             position: absolute;
