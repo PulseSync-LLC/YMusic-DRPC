@@ -60,7 +60,7 @@
 
 **Perform further actions in the project directory: `C:\Users \<Your Name>\AppData\Local\Programs\YMusic-DRPC`**
 
-5. **Install Yarn and Electron:**
+5. **Install Yarn, Electron and asar:**
    - Install Yarn, Electron and @electron-forge/cli using the console:
     ```bash
     cd %localappdata%\Programs\YMusic-DRPC
@@ -68,6 +68,7 @@
     npm i -g electron
     npm i -g @electron-forge/cli
     npm i --save-dev @electron-forge/cli
+    npm i -g asar
      
     ```
    - Verify Yarn and Electron installations by running:

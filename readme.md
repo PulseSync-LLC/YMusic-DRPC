@@ -62,7 +62,7 @@
 
 **Дальнейшие действия выполняйте в директории проекта: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YMusic-DRPC`**
 
-5. **Установите Yarn и Electron:**
+5. **Установите Yarn, Electron и asar:**
    - Установите Yarn, Electron и @electron-forge/cli с помощью консоли:
     ```bash
     cd %localappdata%\Programs\YMusic-DRPC
@@ -70,6 +70,7 @@
     npm i -g electron
     npm i -g @electron-forge/cli
     npm i --save-dev @electron-forge/cli
+    npm i -g asar
      
     ```
    - Убедитесь, что Yarn и Electron установлен, запустив:
