@@ -77,8 +77,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                          ? 'active'
-                                          : ''
+                                            ? 'active'
+                                            : ''
                                 }
                             >
                                 <ButtonNav>
@@ -91,8 +91,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                          ? 'active'
-                                          : ''
+                                            ? 'active'
+                                            : ''
                                 }
                             >
                                 <ButtonNav>
@@ -106,31 +106,33 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 <MdConnectWithoutContact size={24} />
                             </ButtonNav>
                         </div>
-                        <NavLink
+                        <div className={styles.navigation_buttons}>
+                            <NavLink
                                 to="/bugreport"
                                 className={({ isActive, isPending }) =>
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                          ? 'active'
-                                          : ''
+                                            ? 'active'
+                                            : ''
                                 }
                             >
                                 <ButtonNav>
                                     <MdBugReport size={24} />
                                 </ButtonNav>
                             </NavLink>
-                        {updateAvailable && (
-                            <button
-                                onClick={() => {
-                                    setUpdate(false)
-                                    window.desktopEvents?.send('update-install')
-                                }}
-                                className={styles.update_download}
-                            >
-                                <MdDownload size={24} />
-                            </button>
-                        )}
+                            {updateAvailable && (
+                                <button
+                                    onClick={() => {
+                                        setUpdate(false)
+                                        window.desktopEvents?.send('update-install')
+                                    }}
+                                    className={styles.update_download}
+                                >
+                                    <MdDownload size={24} />
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {!app.settings.patched && (

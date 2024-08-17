@@ -11,6 +11,49 @@
     overflow: auto;
     position: relative;
 
+    .switchProblem {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 0px;
+        gap: 10px;
+
+        .switchButton {
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 10px;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            outline: 1px solid transparent;
+            color: #8F94A8;
+            border: 0;
+            font-family: "Nunito Sans";
+            font-style: normal;
+            font-weight: 700;
+            font-size: 14px;
+            line-height: 140%;
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.3);
+                outline: 1px solid #5c616d;
+            }
+        }
+
+        .switchButtonActive {
+            background: #16181E;
+            outline: 1px solid #3E424C;
+            color: #FFFFFF;
+
+            &:hover {
+                background: #16181E;
+            }
+        }
+    }
+
     .optionalContainer {
         display: flex;
         flex-direction: column;
@@ -47,6 +90,7 @@
 
             .styledInput {
                 display: flex;
+                position: relative;
                 flex-direction: row;
                 align-items: center;
                 padding: 14px 23px;
@@ -61,6 +105,7 @@
                 font-weight: 400;
                 font-size: 14px;
                 line-height: 140%;
+                overflow: auto;
 
                 color: #abafbf;
 
@@ -68,6 +113,95 @@
                     color: white;
                     background: #1a1d24;
                     border-color: #5a5e6b;
+                }
+
+                .uploadedImage {
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+
+                    position: relative;
+                    width: 110px;
+                    height: 110px;
+                    min-width: 110px;
+
+                    background: #16181E;
+                    outline: 1px solid #3E424C;
+                    border-radius: 6px;
+
+                    &:hover {
+                        outline: 1px solid #3468F2;
+
+                        &>button {
+                            opacity: 1;
+                        }
+                    }
+
+                    &>button {
+                        transition: var(--transition);
+                        opacity: 0;
+                        cursor: pointer;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        padding: 3px;
+
+                        position: absolute;
+                        right: -5px;
+                        top: -5px;
+
+                        border: 0;
+                        color: #E54747;
+                        background: #1E2027;
+                        outline: 1px solid #363944;
+                        border-radius: 6px;
+
+                        &:hover {
+                            background: #2F1A1A;
+                            outline: 1px solid #BD4040;
+                        }
+                    }
+
+                    &>img {
+                        display: block;
+                        object-fit: cover;
+                        border-radius: 6px;
+                        height: 100%;
+                        width: 100%;
+                    }
+                }
+
+                .uploadButton {
+                    transition: var(--transition);
+                    opacity: 0;
+                    color: white;
+
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    border: 0;
+
+                    width: 110px;
+                    height: 110px;
+                    min-width: 110px;
+
+                    background: #1E2027;
+                    outline: 1px solid #363944;
+                    border-radius: 6px;
+                }
+
+                &:hover {
+                    .uploadButton {
+                        cursor: pointer;
+                        opacity: 1;
+
+                        &:hover {
+                            background: #3468F2;
+                            outline: 1px solid #2353d8;
+                        }
+                    }
                 }
             }
         }
@@ -103,6 +237,130 @@
             &:hover {
                 background: #3261e2;
             }
+        }
+    }
+}
+
+
+.fullScreenOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(22, 24, 30, 0.94);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    overflow: hidden;
+
+    .fullScreenImageContainer {
+        position: relative;
+        width: 100%;
+        height: 90vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+
+        .fullScreenImage {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 6px;
+            outline: 1px solid #363944;
+            // cursor: grabbing;
+            object-fit: contain;
+
+            // user-select: none;
+            // -webkit-user-drag: none;
+            // pointer-events: none;
+        }
+
+        .closeButton,
+        .prevButton,
+        .nextButton {
+            position: absolute;
+            background: #16181E;
+            border: 1px solid #363944;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            &:hover {
+                color: #ccc;
+            }
+        }
+
+        .closeButton {
+            top: 10px;
+            right: 10px;
+            padding: 12px 12px;
+        }
+
+        .hotKey {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 0px;
+            gap: 10px;
+
+            position: absolute;
+            width: 310px;
+            height: 106px;
+            left: 10px;
+            bottom: 52px;
+
+            .hotKeyInfo {
+                background: #16181E;
+                border: 1px solid #363944;
+                border-radius: 8px;
+                cursor: pointer;
+                padding: 12px 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                font-family: 'Nunito Sans';
+                font-style: normal;
+                font-weight: 700;
+                font-size: 17px;
+                line-height: 140%;
+                gap: 10px;
+                text-transform: uppercase;
+                
+                color: #3E424C;
+
+                .hotKeyMainInfo {
+                    color: white;
+                }
+            }
+        }
+
+        .countSelect {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            color: white;
+            transform: translateX(-50%);
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .prevButton {
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .nextButton {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
         }
     }
 }
