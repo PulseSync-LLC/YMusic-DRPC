@@ -13,6 +13,7 @@ export default function BugReportPage() {
     const [dragging, setDragging] = useState(false);
     const [startDrag, setStartDrag] = useState({ x: 0, y: 0 });
     const [mouseDown, setMouseDown] = useState(false);
+    const [showHotKeyInfo, setShowHotKeyInfo] = useState(false);
     const imageRef = useRef<HTMLImageElement | null>(null);
 
     const images = [
@@ -24,6 +25,7 @@ export default function BugReportPage() {
         setSelectedImage(src);
         setScale(1);
         setPosition({ x: 0, y: 0 });
+        showHotKey();
     };
 
     const handleClose = () => {
@@ -48,7 +50,6 @@ export default function BugReportPage() {
 
     const handleWheel = (e: React.WheelEvent) => {
         if (e.ctrlKey) {
-            e.preventDefault();
             const newScale = Math.max(0.5, Math.min(5, scale + e.deltaY * -0.01));
             setScale(newScale);
             setPosition({ x: 0, y: 0 });
@@ -57,7 +58,6 @@ export default function BugReportPage() {
 
     const handleMouseDown = (e: React.MouseEvent) => {
         if (e.button === 1) { // Проверка, что нажата средняя кнопка мыши (колёсико)
-            e.preventDefault();
             setMouseDown(true);
             setDragging(true);
             setStartDrag({ x: e.clientX - position.x, y: e.clientY - position.y });
@@ -90,10 +90,16 @@ export default function BugReportPage() {
         setMouseDown(false);
     };
 
+    const showHotKey = () => {
+        setShowHotKeyInfo(true);
+        setTimeout(() => {
+            setShowHotKeyInfo(false);
+        }, 6000);
+    };
+
     useEffect(() => {
         const handleWheelEvent = (e: WheelEvent) => {
             if (e.ctrlKey) {
-                e.preventDefault();
                 const newScale = Math.max(0.5, Math.min(5, scale + e.deltaY * -0.01));
                 setScale(newScale);
             }
@@ -252,10 +258,12 @@ export default function BugReportPage() {
                                             <button className={theme.closeButton} onClick={handleClose}>
                                                 <MdClose size={24} />
                                             </button>
-                                            <div className={theme.hotKey}>
-                                                <div className={theme.hotKeyInfo}><div className={theme.hotKeyMainInfo}>Scale</div>/<div>CTRL + MOUSE 3</div></div>
-                                                <div className={theme.hotKeyInfo}><div className={theme.hotKeyMainInfo}>dragging</div>/<div>MOUSE 3</div></div>
-                                            </div>
+                                            {showHotKeyInfo && (
+                                                <div className={theme.hotKey}>
+                                                    <div className={theme.hotKeyInfo}><div className={theme.hotKeyMainInfo}>Scale</div>/<div>CTRL + MOUSE 3</div></div>
+                                                    <div className={theme.hotKeyInfo}><div className={theme.hotKeyMainInfo}>dragging</div>/<div>MOUSE 3</div></div>
+                                                </div>
+                                            )}
                                             <button className={theme.prevButton} onClick={handlePrev}><MdChevronLeft size={24} /></button>
                                             <button className={theme.nextButton} onClick={handleNext}><MdChevronRight size={24} /></button>
                                         </div>
