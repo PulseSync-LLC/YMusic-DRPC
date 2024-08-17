@@ -135,10 +135,19 @@ export default function TrackInfoPage() {
                             titleName={'Discord RPC'}
                             description={'Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord.'}
                             imageName={'discord'}
+                            onClick={() => {
+                                window.discordRpc.discordRpc(app.discordRpc.status ? false : true)
+                                setApp({
+                                    ...app,
+                                    discordRpc: {
+                                        ...app.discordRpc,
+                                        status: app.discordRpc.status ? false : true,
+                                    },
+                                })
+                            }
+                            }
+                            buttonName={app.discordRpc.status ? 'Выключить' : 'Включить'}
                         >
-                            <CheckboxNav
-                                checkType="startDiscordRpc"
-                            ></CheckboxNav>
                         </Container>
                         <div className={styles.container30x15}>
                             <div className={theme.container}>

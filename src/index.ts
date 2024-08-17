@@ -30,6 +30,7 @@ import { getPathToYandexMusic } from '../utils/appUtils'
 import Theme from './renderer/api/interfaces/theme.interface'
 import logger from './main/modules/logger'
 import isAppDev from 'electron-is-dev'
+import debug from "electron-debug";
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -68,6 +69,8 @@ Sentry.init({
     enableRendererProfiling: true,
     enableTracing: true,
 })
+debug();
+
 function checkCLIArguments() {
     const args = process.argv.slice(1)
     if (args.length > 0 && !isAppDev) {
@@ -101,7 +104,6 @@ const createWindow = (): void => {
         webPreferences: {
             preload: PRELOADER_PRELOAD_WEBPACK_ENTRY,
             contextIsolation: true,
-            devTools: isAppDev,
             nodeIntegration: true,
             webSecurity: false,
         },
@@ -123,7 +125,6 @@ const createWindow = (): void => {
         icon,
         webPreferences: {
             preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-            devTools: isAppDev,
             nodeIntegration: true,
             webSecurity: false,
         },
@@ -145,7 +146,6 @@ const createWindow = (): void => {
         return { action: 'deny' }
     })
     if (isAppDev) {
-        mainWindow.webContents.openDevTools()
         Object.defineProperty(app, 'isPackaged', {
             get() {
                 return true

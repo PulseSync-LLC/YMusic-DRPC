@@ -31,9 +31,6 @@ const Checkbox: React.FC<Props> = ({
             setIsActive(isChecked)
         } else {
             switch (checkType) {
-                case 'startDiscordRpc':
-                    setIsActive(window.electron.store.get('discordRpc.status'))
-                    break
                 case 'enableRpcButtonListen':
                     setIsActive(
                         window.electron.store.get(
@@ -63,16 +60,6 @@ const Checkbox: React.FC<Props> = ({
             onChange(event)
         } else {
             switch (checkType) {
-                case 'startDiscordRpc':
-                    window.discordRpc.discordRpc(event.target.checked)
-                    setApp({
-                        ...app,
-                        discordRpc: {
-                            ...app.discordRpc,
-                            status: event.target.checked,
-                        },
-                    })
-                    break
                 case 'enableRpcButtonListen':
                     window.electron.store.set(
                         'discordRpc.enableRpcButtonListen',
