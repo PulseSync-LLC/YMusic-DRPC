@@ -176,6 +176,9 @@ const Header: React.FC<p> = ({ goBack }) => {
                                 <div className={styles.user_container}>
                                     <img src={user.avatar} alt="" />
                                     {user.username}
+                                    <span className={styles.tooltip}>
+                                        Скоро
+                                    </span>
                                 </div>
                             )}
                         </div>
@@ -187,7 +190,7 @@ const Header: React.FC<p> = ({ goBack }) => {
                                     window.electron.window.minimize()
                                 }
                             >
-                                <Minus />
+                                <Minus color='#E4E5EA' />
                             </button>
                             <button
                                 id="minimize"
@@ -196,14 +199,14 @@ const Header: React.FC<p> = ({ goBack }) => {
                                     window.electron.window.maximize()
                                 }
                             >
-                                <Minimize />
+                                <Minimize color='#E4E5EA' />
                             </button>
                             <button
                                 id="close"
                                 className={styles.button_title}
                                 onClick={() => window.electron.window.close()}
                             >
-                                <Close />
+                                <Close color='#E4E5EA' />
                             </button>
                         </div>
                     </div>

@@ -119,29 +119,6 @@
                             }
                         }
 
-                        .tooltip {
-                            visibility: hidden;
-
-                            width: auto;
-                            max-width: fit-content;
-                            white-space: nowrap;
-                            box-shadow: 0px 0px 8px 5px rgba(0, 0, 0, 0.25);
-                            background: var(--Main);
-                            outline: 1px solid var(--BorderColor);
-                            border-radius: var(--BorderRadius);
-                            color: #fff;
-                            text-align: center;
-                            padding: 5px 15px;
-                            position: absolute;
-                            z-index: 99999999999;
-                            top: 125%;
-                            left: 50%;
-                            transform: translateX(-50%);
-
-                            opacity: 0;
-                            transition: opacity 0.3s;
-                        }
-
                         &:hover .tooltip {
                             visibility: visible;
                             opacity: 1;
@@ -154,6 +131,8 @@
                 }
 
                 .user_container {
+                    cursor: pointer;
+                    position: relative;
                     transition: var(--transition);
                     -webkit-app-region: no-drag;
                     padding: 0px 14px 0px 0px;
@@ -179,6 +158,11 @@
                         >img {
                             outline: 2px solid transition;
                         }
+                    }
+
+                    &:hover .tooltip {
+                        visibility: visible;
+                        opacity: 1;
                     }
                 }
 
@@ -219,4 +203,27 @@
             }
         }
     }
+}
+
+.tooltip {
+    visibility: hidden;
+
+    width: auto;
+    max-width: fit-content;
+    white-space: nowrap;
+    box-shadow: 0px 0px 8px 5px rgba(0, 0, 0, 0.25);
+    background: var(--Main);
+    outline: 1px solid var(--BorderColor);
+    border-radius: var(--BorderRadius);
+    color: #fff;
+    text-align: center;
+    padding: 5px 15px;
+    position: absolute;
+    z-index: 99999999999;
+    top: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+
+    opacity: 0;
+    transition: opacity 0.3s;
 }
