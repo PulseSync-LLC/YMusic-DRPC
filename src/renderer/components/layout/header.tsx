@@ -1,5 +1,5 @@
 import * as styles from './header.module.scss'
-import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import Minus from './../../../../static/assets/icons/minus.svg'
 import Minimize from './../../../../static/assets/icons/minimize.svg'
@@ -60,6 +60,42 @@ const Header: React.FC<p> = ({ goBack }) => {
             </a>
         )
     }
+
+    // Состояние для хранения трансформаций каждого бейджа
+    const [transformStyles, setTransformStyles] = useState<Record<string, string>>({});
+
+    // Обработчик перемещения мыши
+    const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>, badgeType: string) => {
+        const { clientX, clientY, currentTarget } = e;
+        const { offsetWidth, offsetHeight, offsetLeft, offsetTop } = currentTarget;
+
+        // Вычисление центра элемента
+        const centerX = offsetLeft + offsetWidth / 2;
+        const centerY = offsetTop + offsetHeight / 2;
+
+        // Вычисление углов наклона
+        const deltaX = (clientX - centerX) / (offsetWidth / 2);
+        const deltaY = (clientY - centerY) / (offsetHeight / 2);
+
+        // Применение трансформации
+        const angleX = deltaY * 60; // Регулируйте углы по необходимости
+        const angleY = -deltaX * 60;
+        const transform = `perspective(500px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
+
+        // Обновление состояния для конкретного бейджа
+        setTransformStyles(prevStyles => ({
+            ...prevStyles,
+            [badgeType]: transform
+        }));
+    }, []);
+
+    // Сброс трансформации при уходе курсора
+    const handleMouseLeave = useCallback((badgeType: string) => {
+        setTransformStyles(prevStyles => ({
+            ...prevStyles,
+            [badgeType]: ''
+        }));
+    }, []);
     return (
         <>
             <Modal
@@ -120,14 +156,15 @@ const Header: React.FC<p> = ({ goBack }) => {
                                             <div
                                                 className={styles.badge}
                                                 key={_badge.type}
+                                                onMouseMove={(e) => handleMouseMove(e, _badge.type)}
+                                                onMouseLeave={() => handleMouseLeave(_badge.type)}
                                             >
                                                 <img
                                                     src={`static/assets/badges/${_badge.type}.svg`}
                                                     alt={_badge.type}
+                                                    style={{ transform: transformStyles[_badge.type] }}
                                                 />
-                                                <span
-                                                    className={styles.tooltip}
-                                                >
+                                                <span className={styles.tooltip}>
                                                     {_badge.name}
                                                 </span>
                                             </div>

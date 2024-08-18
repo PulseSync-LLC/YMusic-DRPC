@@ -66,6 +66,7 @@
                 font-weight: 500;
                 color: var(--HeaderBarTextColor);
                 text-align: left;
+
                 &:hover {
                     color: white;
                 }
@@ -85,26 +86,37 @@
             .menu {
                 display: flex;
                 align-items: center;
-                gap: 7px;
+                gap: 15px;
 
                 .badges_container {
-                    display: flex;
                     -webkit-app-region: no-drag;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
                     align-items: center;
-                    gap: 5px;
-
-                    background: var(--MainBG);
-                    border-radius: var(--BorderRadius);
                     padding: 4px 12px;
+                    gap: 5px;
+                    background: #232630;
+                    border-radius: 84px;
+                    height: 26px;
 
                     .badge {
                         position: relative;
                         display: flex;
 
                         img {
+                            transition: width 0.2s cubic-bezier(0.39, 0.575, 0.565, 1), height 0.2s cubic-bezier(0.39, 0.575, 0.565, 1);
                             width: 26px;
                             height: 26px;
+                            background: transparent;
                             cursor: pointer;
+
+                            &:hover {
+                                background: #232630;
+                                border-radius: 16px;
+                                width: 36px;
+                                height: 36px;
+                            }
                         }
 
                         .tooltip {
@@ -142,27 +154,47 @@
                 }
 
                 .user_container {
+                    transition: var(--transition);
                     -webkit-app-region: no-drag;
+                    padding: 0px 14px 0px 0px;
+                    box-sizing: border-box;
                     display: flex;
                     flex-direction: row;
-                    align-items: center;
-                    padding: 0px 12px 0px 0px;
-                    gap: 12px;
+                    justify-content: flex-end;
+                    gap: 10px;
+                    background: #25332565;
 
-                    font-weight: 700;
+                    border-radius: 43px;
+                    font-family: 'Nunito Sans';
+                    font-style: normal;
+                    font-weight: 800;
                     font-size: 14px;
                     line-height: 140%;
+                    color: var(--online);
+                    align-items: center;
 
-                    color: var(--HeaderBarTextColor);
+                    &:hover {
+                        background: #253325;
 
-                    background: var(--MainBG);
-                    border-radius: var(--BorderRadius);
+                        >img {
+                            outline: 2px solid transition;
+                        }
+                    }
                 }
-                .user_container > img {
+
+                .user_container>img {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-end;
+                    align-items: flex-start;
+                    padding: 1px;
+                    gap: 10px;
+                    outline: 2px solid var(--online);
+                    border-radius: 43px;
+
                     --size: 34px;
                     width: var(--size);
                     height: var(--size);
-                    border-radius: var(--BorderRadius);
                 }
             }
 
