@@ -27,6 +27,8 @@
 
 ### Этапы установки:
 
+>Вы можете скачать build-версию на странице [релизов](https://github.com/PulseSync-LLC/YMusic-DRPC/releases), в этом случае пункты, написанные ниже, необязательны.
+
 1. **Скачайте YandexMusic:**
    - Скачайте YandexMusic BETA 5.4.2+ с [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
    - Установите YandexMusic в стандартный каталог: `C:\Users\<ВашеИмя>\AppData\Local\Programs\YandexMusic`.

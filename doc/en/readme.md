@@ -26,6 +26,7 @@
 </p>
 
 ### Installation Steps:
+>You can download the build version on the [releases page](https://github.com/PulseSync-LLC/YMusic-DRPC/releases ), in this case, the paragraphs written below are optional.
 
 1. **Download YandexMusic:**
    - Download YandexMusic BETA 5.0.19+ from [Yandex Music](https://music.yandex.ru/download/?utm_source=music&utm_medium=selfpromo_music&utm_term=branding&utm_campaign=app).
