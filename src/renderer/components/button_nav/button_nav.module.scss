@@ -1,11 +1,11 @@
 .button {
-    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.8s;
+    transition: var(--transition);
 
     cursor: pointer;
     display: flex;
     background: transparent;
     border: none;
-    border-radius: var(--BorderRadius);
+    border-radius: 16px;
     padding: 12px;
 
     & > svg {
