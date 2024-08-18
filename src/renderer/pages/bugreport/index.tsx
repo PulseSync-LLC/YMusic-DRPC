@@ -2,9 +2,11 @@ import Layout from '../../components/layout'
 import Container from '../../components/container'
 
 import * as styles from '../../../../static/styles/page/index.module.scss'
+import * as inputStyle from '../../../../static/styles/page/textInputContainer.module.scss'
 import * as theme from './bugreport.module.scss'
 import { MdAdd, MdChevronLeft, MdChevronRight, MdClose, MdColorLens, MdDeleteForever, MdOpenInBrowser } from 'react-icons/md'
 import { useEffect, useRef, useState } from 'react'
+import { useCharCount } from '../../utils/useCharCount';
 
 export default function BugReportPage() {
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -57,7 +59,7 @@ export default function BugReportPage() {
     };
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        if (e.button === 1) { // Проверка, что нажата средняя кнопка мыши (колёсико)
+        if (e.button === 1) {
             setMouseDown(true);
             setDragging(true);
             setStartDrag({ x: e.clientX - position.x, y: e.clientY - position.y });
@@ -65,7 +67,7 @@ export default function BugReportPage() {
     };
 
     const handleMouseMove = (e: React.MouseEvent) => {
-        if (dragging && mouseDown) { // Проверка, что колёсико мыши нажато
+        if (dragging && mouseDown) {
             const newX = e.clientX - startDrag.x;
             const newY = e.clientY - startDrag.y;
 
@@ -112,11 +114,14 @@ export default function BugReportPage() {
         };
     }, [scale]);
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const fixedTheme = { charCount: inputStyle.charCount };
+    useCharCount(containerRef, fixedTheme);
     return (
         <Layout title="Bug Report">
             <div className={styles.page}>
                 <div className={styles.container}>
-                    <div className={styles.main_container}>
+                    <div ref={containerRef} className={styles.main_container}>
                         <Container
                             titleName={'Bug Report'}
                             description={'Опишите свою проблему чтоб мы могли решить проблему.'}
@@ -135,21 +140,22 @@ export default function BugReportPage() {
                                 >
                                     <div
                                         className={
-                                            theme.textInputContainer
+                                            inputStyle.textInputContainer
                                         }
                                     >
                                         <div>Заголовок</div>
                                         <input
+                                            maxLength={124}
                                             type="text"
-                                            placeholder="Заголовок"
+                                            placeholder="заголовок"
                                             className={
-                                                theme.styledInput
+                                                inputStyle.styledInput
                                             }
                                         />
                                     </div>
                                     <div
                                         className={
-                                            theme.textInputContainer
+                                            inputStyle.textInputContainer
                                         }
                                     >
                                         <div>Описание проблемы</div>
@@ -157,21 +163,21 @@ export default function BugReportPage() {
                                             style={{ height: "130px" }}
                                             placeholder="описание"
                                             className={
-                                                theme.styledInput
+                                                inputStyle.styledInput
                                             }
                                         />
                                     </div>
                                     <div
                                         className={
-                                            theme.textInputContainer
+                                            inputStyle.textInputContainer
                                         }
                                     >
-                                        <div>шаги воспроизведения проблемы</div>
+                                        <div>Шаги воспроизведения проблемы</div>
                                         <textarea
                                             style={{ height: "170px" }}
-                                            placeholder="описание"
+                                            placeholder="опишите шаги"
                                             className={
-                                                theme.styledInput
+                                                inputStyle.styledInput
                                             }
                                         />
                                     </div>
@@ -185,21 +191,21 @@ export default function BugReportPage() {
                                 >
                                     <div
                                         className={
-                                            theme.textInputContainer
+                                            inputStyle.textInputContainer
                                         }
                                     >
                                         <div>Заголовок</div>
                                         <input
                                             type="text"
-                                            placeholder="Заголовок"
+                                            placeholder="заголовок"
                                             className={
-                                                theme.styledInput
+                                                inputStyle.styledInput
                                             }
                                         />
                                     </div>
                                     <div
                                         className={
-                                            theme.textInputContainer
+                                            inputStyle.textInputContainer
                                         }
                                     >
                                         <div>Описание проблемы</div>
@@ -207,15 +213,15 @@ export default function BugReportPage() {
                                             style={{ height: "130px" }}
                                             placeholder="описание"
                                             className={
-                                                theme.styledInput
+                                                inputStyle.styledInput
                                             }
                                         />
                                     </div>
-                                    <div className={theme.textInputContainer}>
+                                    <div className={inputStyle.textInputContainer}>
                                         <div>Скриншоты</div>
-                                        <div className={theme.styledInput}>
+                                        <div className={inputStyle.styledInput}>
                                             {images.map((src, index) => (
-                                                <div key={index} className={theme.uploadedImage}>
+                                                <div key={index} className={inputStyle.uploadedImage}>
                                                     <img
                                                         src={src}
                                                         alt={`Uploaded ${index + 1}`}
@@ -224,7 +230,7 @@ export default function BugReportPage() {
                                                     <button><MdDeleteForever size={18} /></button>
                                                 </div>
                                             ))}
-                                            <button className={theme.uploadButton}><MdAdd size={34} /></button>
+                                            <button className={inputStyle.uploadButton}><MdAdd size={34} /></button>
                                         </div>
                                     </div>
                                     <div className={theme.rightPos}>

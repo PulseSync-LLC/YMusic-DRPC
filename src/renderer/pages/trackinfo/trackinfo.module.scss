@@ -223,7 +223,7 @@
             z-index: 0;
         }
 
-        > div {
+        >div {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -405,59 +405,8 @@
 .openModalButton {
     cursor: pointer;
     color: #a4bdff;
+
     &:hover {
         color: #8ca5eb;
-    }
-}
-
-.textInputContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 0px;
-    gap: 2px;
-    width: -webkit-fill-available;
-    position: relative;
-
-    .error {
-        color: black;
-        background: #ffcb38;
-        font-weight: 900;
-        padding: 5px 10px;
-        border-radius: 2px;
-    }
-
-    > div {
-        font-weight: 700;
-        font-size: 12px;
-        line-height: 140%;
-        text-transform: uppercase;
-        color: #abafbf;
-    }
-
-    .styledInput {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        padding: 14px 23px;
-        gap: 10px;
-
-        width: -webkit-fill-available;
-
-        background: #0d0f14;
-        border: 1px solid #3e424c;
-        border-radius: 4px;
-
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 140%;
-
-        color: #abafbf;
-
-        &:focus {
-            color: white;
-            background: #1a1d24;
-            border-color: #5a5e6b;
-        }
     }
 }

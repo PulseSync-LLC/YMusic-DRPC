@@ -1,6 +1,6 @@
 .checkbox {
     cursor: pointer;
-    transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 1.8s;
+    transition: var(--transition);
 
     display: flex;
     flex-direction: column;
@@ -48,7 +48,7 @@
         }
 
         .custom_checkbox {
-            transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.1s;
+            transition: var(--transition);
             position: relative;
             box-sizing: border-box;
 
@@ -61,12 +61,12 @@
             width: 50px;
             height: 22px;
 
-            background: #798990;
-            outline: 1.5px solid #586770;
+            background: #3E424C;
+            outline: 2px solid #646B7D;
             border-radius: 50px;
 
             .checkbox_slider {
-                transition: cubic-bezier(0.05, 0.99, 0.05, 0.99) all 0.1s;
+                transition: var(--transition);
 
                 position: absolute;
                 box-sizing: border-box;
@@ -107,7 +107,7 @@
     .checkboxInner {
         .custom_checkbox {
             background: #2d57c7;
-            outline: 1.5px solid #2e64f5;
+            outline: 2px solid #2e64f5;
 
             .checkbox_slider {
                 padding: 6px 10px;

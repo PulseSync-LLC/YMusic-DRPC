@@ -4,9 +4,10 @@ import Container from '../../components/container'
 import CheckboxNav from '../../components/checkbox'
 
 import * as styles from '../../../../static/styles/page/index.module.scss'
+import * as inputStyle from '../../../../static/styles/page/textInputContainer.module.scss'
 import * as theme from './trackinfo.module.scss'
 
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import userContext from '../../api/context/user.context'
 import trackInitials from '../../api/initials/track.initials'
 import Skeleton from 'react-loading-skeleton'
@@ -17,6 +18,7 @@ import { MdClose, MdContentCopy } from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import toast from '../../api/toast'
 import { replaceParams } from '../../utils/formatRpc'
+import { useCharCount } from '../../utils/useCharCount';
 
 export default function TrackInfoPage() {
     const { user, app, setApp } = useContext(userContext)
@@ -126,11 +128,15 @@ export default function TrackInfoPage() {
             formik.handleSubmit()
         }
     }
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    const fixedTheme = { charCount: inputStyle.charCount };
+    useCharCount(containerRef, fixedTheme);
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
                 <div className={styles.container}>
-                    <div className={styles.main_container}>
+                    <div ref={containerRef} className={styles.main_container}>
                         <Container
                             titleName={'Discord RPC'}
                             description={'Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord.'}
@@ -163,7 +169,7 @@ export default function TrackInfoPage() {
                                             </div>
                                             <div
                                                 className={
-                                                    theme.textInputContainer
+                                                    inputStyle.textInputContainer
                                                 }
                                             >
                                                 <div>App ID</div>
@@ -177,7 +183,7 @@ export default function TrackInfoPage() {
                                                     }
                                                     placeholder="984031241357647892"
                                                     className={
-                                                        theme.styledInput
+                                                        inputStyle.styledInput
                                                     }
                                                     value={formik.values.appId}
                                                     onChange={
@@ -191,7 +197,7 @@ export default function TrackInfoPage() {
                                                 {formik.touched.appId &&
                                                     formik.errors.appId ? (
                                                     <div
-                                                        className={theme.error}
+                                                        className={inputStyle.error}
                                                     >
                                                         {formik.errors.appId}
                                                     </div>
@@ -199,7 +205,7 @@ export default function TrackInfoPage() {
                                             </div>
                                             <div
                                                 className={
-                                                    theme.textInputContainer
+                                                    inputStyle.textInputContainer
                                                 }
                                             >
                                                 <div>Details</div>
@@ -208,7 +214,7 @@ export default function TrackInfoPage() {
                                                     name="details"
                                                     placeholder="enter text"
                                                     className={
-                                                        theme.styledInput
+                                                        inputStyle.styledInput
                                                     }
                                                     value={
                                                         formik.values.details
@@ -223,7 +229,7 @@ export default function TrackInfoPage() {
                                                 {formik.touched.details &&
                                                     formik.errors.details ? (
                                                     <div
-                                                        className={theme.error}
+                                                        className={inputStyle.error}
                                                     >
                                                         {formik.errors.details}
                                                     </div>
@@ -231,7 +237,7 @@ export default function TrackInfoPage() {
                                             </div>
                                             <div
                                                 className={
-                                                    theme.textInputContainer
+                                                    inputStyle.textInputContainer
                                                 }
                                             >
                                                 <div>State</div>
@@ -240,7 +246,7 @@ export default function TrackInfoPage() {
                                                     name="state"
                                                     placeholder="enter text"
                                                     className={
-                                                        theme.styledInput
+                                                        inputStyle.styledInput
                                                     }
                                                     value={formik.values.state}
                                                     onChange={
@@ -253,7 +259,7 @@ export default function TrackInfoPage() {
                                                 {formik.touched.state &&
                                                     formik.errors.state ? (
                                                     <div
-                                                        className={theme.error}
+                                                        className={inputStyle.error}
                                                     >
                                                         {formik.errors.state}
                                                     </div>
@@ -279,7 +285,7 @@ export default function TrackInfoPage() {
                                             </CheckboxNav>
                                             <div
                                                 className={
-                                                    theme.textInputContainer
+                                                    inputStyle.textInputContainer
                                                 }
                                             >
                                                 <div>Button</div>
@@ -288,7 +294,7 @@ export default function TrackInfoPage() {
                                                     name="button"
                                                     placeholder="enter text"
                                                     className={
-                                                        theme.styledInput
+                                                        inputStyle.styledInput
                                                     }
                                                     value={formik.values.button}
                                                     onChange={
@@ -301,7 +307,7 @@ export default function TrackInfoPage() {
                                                 {formik.touched.button &&
                                                     formik.errors.button ? (
                                                     <div
-                                                        className={theme.error}
+                                                        className={inputStyle.error}
                                                     >
                                                         {formik.errors.button}
                                                     </div>

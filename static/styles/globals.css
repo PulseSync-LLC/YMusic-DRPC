@@ -17,6 +17,10 @@
     --BorderColor: #363944;
     --BorderRadius: 8px;
 
+    --textInputContainer: #A3ABC6;
+    --inputColor: #16181E;
+    --inputPlaceholderColor: #909BBE;
+
     /* Only Header*/
     --HeaderBarTextColor: #e4e5ea;
 
@@ -32,7 +36,7 @@
     --panelsColor: #292c36;
 
     /* Animation */
-    --transition: ease-in-out all 0.2s;
+    --transition: cubic-bezier(0.39, 0.575, 0.565, 1) all 0.2s;
 }
 
 * {
@@ -57,7 +61,7 @@ a {
 }
 
 a.active > button {
-    background: var(--NavigationOnColor);
+    background: var(--panelsColor);
     border: none;
 
     & > svg {
@@ -93,10 +97,41 @@ form {
     outline: 1px double #ffffff;
 }
 
+/* Общие стили для всех элементов со скроллом */
 ::-webkit-scrollbar {
-    width: 0px;
+    width: 1px; /* ширина скроллбара */
+    height: 8px; /* высота горизонтального скроллбара */
+    background-color: transparent; /* прозрачный фон, когда не скроллим */
+}
+
+/* Стили для ползунка */
+::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 100, 100, 0.6); /* цвет ползунка */
+    border-radius: 4px; /* закругленные углы */
+    transition: background-color 0.3s ease; /* плавное изменение цвета */
+}
+
+/* Стили при наведении курсора на ползунок */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(100, 100, 100, 0.8); /* более темный цвет при наведении */
+}
+
+/* Стили для фона скроллбара */
+::-webkit-scrollbar-track {
+    background-color: transparent; /* прозрачный фон */
+}
+
+/* Показ скроллбара только при скроллинге */
+body::-webkit-scrollbar {
+    width: 0px; /* скрываем скроллбар по умолчанию */
     height: 0px;
 }
+
+body:hover::-webkit-scrollbar {
+    width: 8px; /* показываем скроллбар при наведении */
+    height: 8px;
+}
+
 
 :disabled {
     cursor: not-allowed;
