@@ -1,26 +1,47 @@
-const { app, shell, BrowserWindow, Tray, ipcMain, Menu, dialog } = require('electron')
+const {
+    app,
+    shell,
+    BrowserWindow,
+    Tray,
+    ipcMain,
+    Menu,
+    dialog, nativeImage,
+} = require('electron')
 const path = require('path')
 const { exec } = require('child_process')
 const url = require('url')
 const fs = require('fs')
-const RPC = require('discord-rpc')
-const getTrackInfo = require('./RequestHandler')
+const { Client } = require('@xhayper/discord-rpc')
+const getTrackInfo = require('../../RequestHandler')
 
-let rpcConnected = false;
-const rpc = new RPC.Client({
-    transport: 'ipc',
-})
-
-rpc.login({
+let rpcConnected = false
+let rpc = new Client({
     clientId: '984031241357647892',
-}).catch((e) => {
-    console.error("discord-rpc: Ошибка при подключении: " + e)
-})
-rpc.on('connected', () => {
-    console.log('discord-rpc: connected')
-    rpcConnected = true
+    transport: {
+        type: 'ipc',
+    },
 })
 
+rpc.login().catch(e => {
+    console.error('discord-rpc: Error while connecting: ' + e)
+})
+rpc.on('ready', () => {
+    rpcConnected = true
+    console.info('discordRpc state: connected')
+})
+rpc.on('disconnected', () => {
+    rpcConnected = false
+    console.info('discordRpc state: disconnected')
+})
+
+rpc.on('error', () => {
+    rpcConnected = false
+    console.info('discordRpc state: error')
+})
+rpc.on('close', () => {
+    rpcConnected = false
+    console.info('discordRpc state: closed')
+})
 const ydrpcModification = path.join(
     process.env.LOCALAPPDATA,
     'YDRPC Modification',
@@ -47,7 +68,16 @@ if (!fs.existsSync(confFilePath)) {
 
 let metadata
 let tray = null
-
+const getNativeImg = (name, ext, useFor) =>
+nativeImage.createFromPath(
+    `${app.isPackaged ? process.resourcesPath + '/app.asar/.webpack/renderer/' : ''}main_window/static/assets/${
+        useFor ? useFor + '/' : ''
+    }${name}${ext}`,
+)
+const icon = getNativeImg('logoapp', '.ico', 'icon').resize({
+    width: 40,
+    height: 40,
+})
 function createWindow() {
     let win = new BrowserWindow({
         width: 615,
@@ -55,22 +85,25 @@ function createWindow() {
         minWidth: 615,
         minHeight: 577,
         maxWidth: 615,
-        icon: path.join(__dirname, 'src', 'assets', 'appicon.png'),
+        icon,
         frame: false,
         webPreferences: {
             nodeIntegration: true,
-            preload: path.join(__dirname, 'preload.js'),
+            preload: path.join(__dirname, '../renderer/main_window/preload.js'),
         },
     })
 
     win.loadURL(
         url.format({
-            pathname: path.join(__dirname, 'src/index.html'),
+            pathname: path.join(__dirname, '../renderer/main_window/index.html'),
             protocol: 'file:',
             slashes: true,
         }),
     )
-
+    win.once('ready-to-show', () => {
+        win.show()
+        win.moveTop()
+    })
     win.webContents.setWindowOpenHandler(edata => {
         shell.openExternal(edata.url)
         return { action: 'deny' }
@@ -78,7 +111,7 @@ function createWindow() {
 
     // win.webContents.openDevTools();
 
-    tray = new Tray(path.join(__dirname, 'src', 'assets', 'appicon.png'))
+    tray = new Tray(icon)
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Show App', click: () => win.show() },
         { label: 'Quit', click: () => app.quit() },
@@ -98,18 +131,18 @@ function createWindow() {
         win.hide()
     })
 
-    ipcMain.handle('patcherWin', (event) => {
-        require('./Patcher')
-        return
+    ipcMain.handle('patcherWin', event => {
+        require('../../Patcher')
     })
 
-    ipcMain.handle('unpatcherWin', async(event) => {
-        require('./PatcherBack')
-        return
+    ipcMain.handle('unpatcherWin', async event => {
+        require('../../PatcherBack')
     })
 
     ipcMain.handle('pathAppOpen', async () => {
-        await shell.openPath(path.join(__dirname))
+        const appPath = app.getAppPath()
+        const pulseSyncPath = path.resolve(appPath, '../..')
+        await shell.openPath(pulseSyncPath)
     })
 
     ipcMain.handle('checkFileExists', async () => {
@@ -144,7 +177,7 @@ function createWindow() {
         let fileCheck = path.join(themesDir, themeDir, 'metadata.json')
         let jsonData = fs.readFileSync(fileCheck, 'utf8')
         let theme = JSON.parse(jsonData)
-        theme.path = path.join(themesDir, themeDir, "\\")
+        theme.path = path.join(themesDir, themeDir, '\\')
         console.log(theme)
         return theme
     })
@@ -244,7 +277,7 @@ function createWindow() {
         metadata = getTrackInfo()
     }, 1000)
 
-    const updateDiscordRPC = (RPC, data) => {
+    const updateDiscordRPC = data => {
         const {
             playerBarTitle,
             artist,
@@ -259,8 +292,8 @@ function createWindow() {
             : playerBarTitle
         const largeImage = requestImgTrack[1] || 'ym'
         const smallImage = requestImgTrack[1] ? 'ym' : 'unset'
-        if(linkTitle) {
-            RPC.setActivity({
+        if (linkTitle) {
+            rpc.user.setActivity({
                 state: timeRange,
                 details: details,
                 largeImageKey: largeImage,
@@ -277,9 +310,8 @@ function createWindow() {
                     },
                 ],
             })
-        }
-        else {
-            RPC.setActivity({
+        } else {
+            rpc.user.setActivity({
                 state: timeRange,
                 details: details,
                 largeImageKey: largeImage,
@@ -295,69 +327,34 @@ function createWindow() {
         }
     }
 
-    const noYMAppDiscordRPC = RPC => {
-        RPC.setActivity({
+    const noYMAppDiscordRPC = () => {
+        rpc.user.setActivity({
             details: 'AFK',
             largeImageText: 'YM MINI',
             largeImageKey: 'ym',
         })
     }
 
-   setInterval(() => {
-        if(!rpcConnected) return;
-        if (metadata && Object.keys(metadata).length) {
-            updateDiscordRPC(rpc, metadata)
+    setInterval(() => {
+        if (!rpcConnected) {
+            rpc = new Client({
+                clientId: '984031241357647892',
+                transport: {
+                    type: 'ipc',
+                },
+            })
+            rpc.login().catch(e => {
+                console.error('discord-rpc error: ' + e)
+            })
         } else {
-            noYMAppDiscordRPC(rpc)
+            if (metadata && Object.keys(metadata).length) {
+                updateDiscordRPC(metadata)
+            } else {
+                noYMAppDiscordRPC()
+            }
         }
     }, 5000)
-
-    ipcMain.handle("checkIfPackageInstalled", async() => {
-        return await isGlobalPackageInstalled("asar")
-            .then(installed => {
-                if (installed) {
-                    console.log(`You can use the package asar globally.`);
-                    return true
-
-                } else {
-                    console.log(`Package asar is not found. Install it globally using npm install -g asar.`);
-                    showMessageBox(`Пакет asar не установлен. Пропиши npm i asar -g`);
-                    return false
-                }
-            })
-            .catch(error => {
-                console.error(`An error occurred: ${error}`);
-            })
-    })
-
 }
 app.on('ready', async () => {
     createWindow()
 })
-function isGlobalPackageInstalled(packageName) {
-    return new Promise((resolve, reject) => {
-        exec('npm list -g --depth=0', (error, stdout, stderr) => {
-            if (error) {
-                console.error(`An error occurred while checking the package ${packageName}:`, stderr);
-                reject(stderr);
-            } else {
-                if (stdout.includes(packageName)) {
-                    console.log(`Package ${packageName} is installed globally.`);
-                    resolve(true);
-                } else {
-                    console.log(`Package ${packageName} is not installed globally.`);
-                    resolve(false);
-                }
-            }
-        });
-
-    });
-}
-function showMessageBox(message) {
-    dialog.showMessageBox({
-        type: 'info',
-        buttons: ['OK'],
-        title: 'Package Check',
-        message: message
-    });
-}

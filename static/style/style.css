@@ -102,7 +102,7 @@ footer {
     gap: 20px;
 }
 
-.logoplace>span {
+.logoplace > span {
     font-size: 22px;
     font-weight: 900;
 }
@@ -348,7 +348,6 @@ a:hover {
     font-size: 17px;
     line-height: 21px;
 }
-
 
 .warn {
     font-size: 12px;

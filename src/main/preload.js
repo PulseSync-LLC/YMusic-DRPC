@@ -12,5 +12,6 @@ contextBridge.exposeInMainWorld('drp', {
         ipcRenderer.invoke('selectStyle', name, author),
     getThemesList: () => ipcRenderer.invoke('getThemesList'),
     checkFileExists: () => ipcRenderer.invoke('checkFileExists'),
-    checkIfPackageInstalled: () => ipcRenderer.invoke('checkIfPackageInstalled'),
+    checkIfPackageInstalled: () =>
+        ipcRenderer.invoke('checkIfPackageInstalled'),
 })

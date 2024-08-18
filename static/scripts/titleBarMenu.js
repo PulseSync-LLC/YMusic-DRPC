@@ -23,7 +23,6 @@ closeApp.addEventListener('click', async event => {
     }
 })
 
-
 patcherApp.addEventListener('click', async event => {
     patcherApp.disabled = true
     event.preventDefault()
@@ -97,24 +96,12 @@ window.onload = async () => {
             console.error('Ошибка при проверке файла:', err)
         })
     window.drp
-        .checkIfPackageInstalled()
-        .then(isInstalled => {
-            console.log(isInstalled)
-            if (!isInstalled) {
-                patcherApp.disabled = true
-                unpatcherApp.disabled = true
-            }
-        })
-        .catch(err => {
-            console.error('Ошиба при проверки пакетов:', err)
-        })
-    window.drp
         .checkSelectedStyle()
         .then(theme => {
             selectorSelectTheme(theme)
         })
         .catch(error => {
-            console.error("Error checking selected style:", error)
+            console.error('Error checking selected style:', error)
         })
 
     try {

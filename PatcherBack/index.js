@@ -1,57 +1,55 @@
-const { exec } = require('child_process');
-const fs = require('fs');
+const { exec } = require('child_process')
+const fs = require('fs')
 
 const appAsarPath =
-    process.env.LOCALAPPDATA +
-    '\\Programs\\YandexMusic\\resources\\app.asar';
+    process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources\\app.asar'
 
 const patchedTxt =
-    process.env.LOCALAPPDATA +
-    '\\Programs\\YandexMusic\\resources\\patched.txt';
+    process.env.LOCALAPPDATA + '\\Programs\\YandexMusic\\resources\\patched.txt'
 
 function deleteFiles(filePaths) {
-    const deleteCommands = filePaths.map(filePath => `del "${filePath}"`);
+    const deleteCommands = filePaths.map(filePath => `del "${filePath}"`)
 
     deleteCommands.forEach(command => {
         exec(command, (error, stdout, stderr) => {
-            console.log(`Executing command: ${command}`);
+            console.log(`Executing command: ${command}`)
             if (error) {
-                console.error(`Ошибка при удалении файла: ${error}`);
-                return;
+                console.error(`Ошибка при удалении файла: ${error}`)
+                return
             }
             if (stderr) {
-                console.error(`Ошибка при выполнении команды: ${stderr}`);
-                return;
+                console.error(`Ошибка при выполнении команды: ${stderr}`)
+                return
             }
-            console.log(`Файл успешно удален`);
-        });
-    });
+            console.log(`Файл успешно удален`)
+        })
+    })
 }
 
 function replaceFile(filePath) {
-    const copyPath = `${filePath}.copy`;
+    const copyPath = `${filePath}.copy`
 
     if (!fs.existsSync(copyPath)) {
-        console.error(`Файл ${copyPath} не найден`);
-        return;
+        console.error(`Файл ${copyPath} не найден`)
+        return
     }
 
-    const replaceCommand = `move /Y "${copyPath}" "${filePath}"`;
+    const replaceCommand = `move /Y "${copyPath}" "${filePath}"`
 
     exec(replaceCommand, (error, stdout, stderr) => {
-        console.log(`Executing command: ${replaceCommand}`);
+        console.log(`Executing command: ${replaceCommand}`)
         if (error) {
-            console.error(`Ошибка при замене файла: ${error}`);
-            return;
+            console.error(`Ошибка при замене файла: ${error}`)
+            return
         }
         if (stderr) {
-            console.error(`Ошибка при выполнении команды: ${stderr}`);
-            return;
+            console.error(`Ошибка при выполнении команды: ${stderr}`)
+            return
         }
-        console.log(`Файл ${filePath} успешно заменен`);
-    });
+        console.log(`Файл ${filePath} успешно заменен`)
+    })
 }
 
-deleteFiles([appAsarPath, patchedTxt]);
+deleteFiles([appAsarPath, patchedTxt])
 
-replaceFile(appAsarPath);
+replaceFile(appAsarPath)

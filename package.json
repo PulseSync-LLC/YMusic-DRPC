@@ -1,12 +1,24 @@
 {
     "name": "YMusic-DRPC",
     "version": "1.0.0",
-    "main": "index.js",
-    "author": "EvT",
+    "main": ".webpack/main",
+    "author": "PulseSync LLC",
     "license": "GPL-3.0",
     "devDependencies": {
-        "@electron-forge/cli": "7.4.0",
-        "electron": "^31.1.0"
+        "@electron-forge/cli": "^7.4.0",
+        "@electron-forge/maker-deb": "^7.4.0",
+        "@electron-forge/maker-rpm": "^7.4.0",
+        "@electron-forge/maker-squirrel": "^7.4.0",
+        "@electron-forge/maker-zip": "^7.4.0",
+        "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+        "@electron-forge/plugin-fuses": "^7.4.0",
+        "@electron-forge/plugin-webpack": "^7.4.0",
+        "@electron/fuses": "^1.8.0",
+        "@vercel/webpack-asset-relocator-loader": "1.7.3",
+        "css-loader": "^6.0.0",
+        "electron": "31.4.0",
+        "node-loader": "^2.0.0",
+        "style-loader": "^3.0.0"
     },
     "scripts": {
         "start": "electron-forge start",
@@ -16,40 +28,10 @@
         "lint": "eslint --ext .js,.jsx .",
         "format": "prettier --write ."
     },
-    "config": {
-        "forge": {
-            "packagerConfig": {
-                "quiet": false,
-                "name": "PulseSync",
-                "appCopyright": "Copyright (C) 2024 PulseSync-Official",
-                "asar": true,
-                "win32metadata": {
-                    "CompanyName": "PulseSync-Official"
-                }
-            },
-            "makers": [
-                {
-                    "name": "@electron-forge/maker-squirrel",
-                    "config": {
-                        "name": "pulsesync"
-                    }
-                },
-                {
-                    "name": "@electron-forge/maker-zip",
-                    "platforms": []
-                }
-            ]
-        }
-    },
     "dependencies": {
-        "@electron-forge/maker-deb": "7.4.0",
-        "@electron-forge/maker-dmg": "^7.4.0",
-        "@electron-forge/maker-rpm": "7.4.0",
-        "@electron-forge/maker-squirrel": "7.4.0",
-        "@electron-forge/maker-zip": "7.4.0",
-        "@electron-forge/plugin-webpack": "^7.4.0",
         "@electron/asar": "^3.2.10",
-        "discord-rpc": "^4.0.1",
-        "prettier": "^3.3.2"
+        "@xhayper/discord-rpc": "^1.2.0",
+        "copy-webpack-plugin": "^12.0.2",
+        "prettier": "^3.3.3"
     }
 }

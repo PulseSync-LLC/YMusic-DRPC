@@ -98,46 +98,46 @@ const server = http.createServer((req, res) => {
 
     if (req.method === 'GET' && req.url === '/script.js') {
         try {
-            const confPath = themesPath + 'conf.json';
-            let confData = fs.readFileSync(confPath, 'utf8');
-            let conf = JSON.parse(confData);
-            let scriptPath = themesPath + conf.select;
-    
+            const confPath = themesPath + 'conf.json'
+            let confData = fs.readFileSync(confPath, 'utf8')
+            let conf = JSON.parse(confData)
+            let scriptPath = themesPath + conf.select
+
             const setDefaultTheme = () => {
-                scriptPath = themesPath + 'Default';
-                conf.select = 'Default';
-                fs.writeFileSync(confPath, JSON.stringify(conf, null, 4));
-                return '{}';
-            };
-    
-            let jsContent;
+                scriptPath = themesPath + 'Default'
+                conf.select = 'Default'
+                fs.writeFileSync(confPath, JSON.stringify(conf, null, 4))
+                return '{}'
+            }
+
+            let jsContent
             if (!fs.existsSync(scriptPath) || conf.select === 'Default') {
-                jsContent = setDefaultTheme();
+                jsContent = setDefaultTheme()
             } else {
-                const metadataPath = path.join(scriptPath, 'metadata.json');
+                const metadataPath = path.join(scriptPath, 'metadata.json')
                 if (!fs.existsSync(metadataPath)) {
-                    jsContent = setDefaultTheme();
+                    jsContent = setDefaultTheme()
                 } else {
-                    const scriptContent = fs.readFileSync(metadataPath, 'utf8');
-                    const script = JSON.parse(scriptContent);
-    
+                    const scriptContent = fs.readFileSync(metadataPath, 'utf8')
+                    const script = JSON.parse(scriptContent)
+
                     if (script && script.script) {
-                        const scriptJS = path.join(scriptPath, script.script);
-                        jsContent = fs.readFileSync(scriptJS, 'utf8');
+                        const scriptJS = path.join(scriptPath, script.script)
+                        jsContent = fs.readFileSync(scriptJS, 'utf8')
                     } else {
-                        jsContent = setDefaultTheme();
+                        jsContent = setDefaultTheme()
                     }
                 }
             }
-    
-            res.writeHead(200, { 'Content-Type': 'application/javascript' });
-            res.end(jsContent);
+
+            res.writeHead(200, { 'Content-Type': 'application/javascript' })
+            res.end(jsContent)
         } catch (error) {
-            console.error('Error reading script file:', error);
-            res.writeHead(500, { 'Content-Type': 'application/json' });
-            res.end(JSON.stringify({ error: 'Error reading script file' }));
+            console.error('Error reading script file:', error)
+            res.writeHead(500, { 'Content-Type': 'application/json' })
+            res.end(JSON.stringify({ error: 'Error reading script file' }))
         }
-        return;
+        return
     }
 
     res.writeHead(404, { 'Content-Type': 'application/json' })
