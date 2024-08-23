@@ -171,8 +171,8 @@ class Patcher {
                             timecodesArray = timecodesArray.slice(0, 2);
                         }
 
-                        const ImgTrack = imgElements.length > 0 ? Array.from(imgElements, (element) => element.src) : [[None, 'ym']];
-
+                        const ImgTrack = imgElements.length > 0 ? Array.from(imgElements, (element) => element.src) : [];
+                      
                         return {
                             playerBarTitle: titleText,
                             artist: artistTexts.join(', '),
@@ -184,7 +184,7 @@ class Patcher {
 
                     setInterval(() => {
                         const result = logPlayerBarInfo();
-
+                        
                         fetch('http://127.0.0.1:2007/update_data', {
                             method: 'POST',
                             headers: {
@@ -299,7 +299,7 @@ class Patcher {
                 const patchStr = `const handleApplicationEvents = (window) => {
                     electron_1.session.defaultSession.webRequest.onCompleted({ urls: ['https://api.music.yandex.net/*'] }, (details) => {
                         const url = details.url;
-                        const regex = /https:\\/\\/api\\.music\\.yandex\\.net\\/tracks\\/(\\d+)\\/download-info/;
+                        const regex = /https:\\/\\/api\\.music\\.yandex\\.net\\/get-file-info\\?ts=\\d+&trackId=(\\d+)/;
 
                         const match = url.match(regex);
                         if (match && match[1]) {
