@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import toast from '../../api/toast'
 import { replaceParams } from '../../utils/formatRpc'
 import { useCharCount } from '../../utils/useCharCount';
+import Button from '../../components/button'
 
 export default function TrackInfoPage() {
     const { user, app, setApp } = useContext(userContext)
@@ -141,19 +142,21 @@ export default function TrackInfoPage() {
                             titleName={'Discord RPC'}
                             description={'Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord.'}
                             imageName={'discord'}
-                            onClick={() => {
-                                window.discordRpc.discordRpc(app.discordRpc.status ? false : true)
-                                setApp({
-                                    ...app,
-                                    discordRpc: {
-                                        ...app.discordRpc,
-                                        status: app.discordRpc.status ? false : true,
-                                    },
-                                })
-                            }
-                            }
-                            buttonName={app.discordRpc.status ? 'Выключить' : 'Включить'}
                         >
+                        <Button 
+                        title='' 
+                        onClick={() => {
+                            window.discordRpc.discordRpc(app.discordRpc.status ? false : true)
+                            setApp({
+                                ...app,
+                                discordRpc: {
+                                    ...app.discordRpc,
+                                    status: app.discordRpc.status ? false : true,
+                                },
+                            })
+                        }
+                        }
+                        children={app.discordRpc.status ? 'Выключить' : 'Включить'}/>
                         </Container>
                         <div className={styles.container30x15}>
                             <div className={theme.container}>

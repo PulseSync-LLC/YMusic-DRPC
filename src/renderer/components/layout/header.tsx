@@ -61,28 +61,22 @@ const Header: React.FC<p> = ({ goBack }) => {
         )
     }
 
-    // Состояние для хранения трансформаций каждого бейджа
     const [transformStyles, setTransformStyles] = useState<Record<string, string>>({});
 
-    // Обработчик перемещения мыши
     const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>, badgeType: string) => {
         const { clientX, clientY, currentTarget } = e;
         const { offsetWidth, offsetHeight, offsetLeft, offsetTop } = currentTarget;
 
-        // Вычисление центра элемента
         const centerX = offsetLeft + offsetWidth / 2;
         const centerY = offsetTop + offsetHeight / 2;
 
-        // Вычисление углов наклона
         const deltaX = (clientX - centerX) / (offsetWidth / 2);
         const deltaY = (clientY - centerY) / (offsetHeight / 2);
 
-        // Применение трансформации
-        const angleX = deltaY * 60; // Регулируйте углы по необходимости
+        const angleX = deltaY * 60;
         const angleY = -deltaX * 60;
         const transform = `perspective(500px) rotateX(${angleX}deg) rotateY(${angleY}deg)`;
 
-        // Обновление состояния для конкретного бейджа
         setTransformStyles(prevStyles => ({
             ...prevStyles,
             [badgeType]: transform
