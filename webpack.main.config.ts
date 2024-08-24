@@ -21,6 +21,7 @@ export const mainConfig: Configuration = {
             '.css',
             '.scss',
             '.json',
+            '.wav',
             '.md',
             '.svg',
         ],
