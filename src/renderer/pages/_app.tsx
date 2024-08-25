@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { createHashRouter, RouterProvider } from 'react-router-dom'
 import UserMeQuery from '../api/queries/user/getMe.query'
 
@@ -33,6 +33,70 @@ import { AppInfoInterface } from '../api/interfaces/appinfo.interface'
 import Preloader from '../components/preloader'
 import { replaceParams } from '../utils/formatRpc'
 
+function useKeyPressSound() {
+    const soundFiles = {
+        randomKeyPress: [
+            '../../../static/assets/sounds/v1keyPress1.wav',
+            '../../../static/assets/sounds/v1keyPress2.wav',
+            '../../../static/assets/sounds/v1keyPress3.wav'
+        ],
+        backspace: '../../../static/assets/sounds/v1dropdownClose.wav', //test
+        ctrlBackspace: '../../../static/assets/sounds/v2modalClose.wav', //test
+        ctrlA: '../../../static/assets/sounds/v2modalOpen.wav', //test
+        textSelection: '../../../static/assets/sounds/v1dropdownOpen.wav', //test
+        deselection: '../../../static/assets/sounds/v1copy.wav', //test
+        typingSpace: '../../../static/assets/sounds/v1buttonHover.wav', //test
+        typingEnter: '' //test
+    };
+
+    const audioRefs = useRef([]);
+
+    const createAudio = (soundFile: string) => {
+        const audio = new Audio(soundFile);
+        audio.volume = 1.0;
+        audioRefs.current.push(audio);
+        audio.onended = () => {
+            audio.src = '';
+            audioRefs.current = audioRefs.current.filter(a => a !== audio);
+        };
+        return audio;
+    };
+
+    const fadeOutPreviousSounds = () => {
+        audioRefs.current.forEach(audio => {
+            let volume = audio.volume;
+            const interval = setInterval(() => {
+                if (volume > 0) {
+                    volume -= 1 / 6;
+                    audio.volume = Math.max(volume, 0);
+                } else {
+                    clearInterval(interval);
+                    audio.pause();
+                }
+            }, 50);
+        });
+    };
+
+    const playSound = (soundFile: string) => {
+        fadeOutPreviousSounds();
+        const audio = createAudio(soundFile);
+        audio.play();
+    };
+
+    return {
+        playRandomKeyPressSound: () => {
+            playSound(soundFiles.randomKeyPress[Math.floor(Math.random() * soundFiles.randomKeyPress.length)]);
+        },
+        playBackspaceSound: () => playSound(soundFiles.backspace),
+        playCtrlBackspaceSound: () => playSound(soundFiles.ctrlBackspace),
+        playCtrlASound: () => playSound(soundFiles.ctrlA),
+        playTextSelectionSound: () => playSound(soundFiles.textSelection),
+        playDeselectionSound: () => playSound(soundFiles.deselection),
+        playTypingSpaceSound: () => playSound(soundFiles.typingSpace),
+        playTypingEnterSound: () => ""
+    };
+}
+
 function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
     const [socketError, setSocketError] = useState(-1)
@@ -42,6 +106,15 @@ function _app() {
     const [app, setApp] = useState<SettingsInterface>(settingsInitials)
     const [yaClient, setYaClient] = useState<YandexMusicClient | null>(null)
     const [loading, setLoading] = useState(true)
+    const {
+        playRandomKeyPressSound,
+        playBackspaceSound,
+        playCtrlBackspaceSound,
+        playCtrlASound,
+        playTextSelectionSound,
+        playDeselectionSound,
+        playTypingSpaceSound
+    } = useKeyPressSound();
     const socket = io(config.SOCKET_URL, {
         autoConnect: false,
         auth: {
@@ -131,6 +204,50 @@ function _app() {
             return false
         }
     }
+    useEffect(() => {
+        let lastSelectionLength = 0;
+
+        const playSoundForKey = (event: { target: any; ctrlKey: any; code: string; key: string | any[]; altKey: any; shiftKey: any }) => {
+            const target = event.target;
+
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+                if (event.ctrlKey && event.code === 'KeyA') {
+                    playCtrlASound();
+                } else if (event.ctrlKey && event.key === 'Backspace') {
+                    playCtrlBackspaceSound();
+                } else if (event.key === 'Backspace') {
+                    playBackspaceSound();
+                } else if (event.key === ' ') {
+                    playTypingSpaceSound();
+                } else if (!event.ctrlKey && !event.altKey && event.key.length === 1) {
+                    playRandomKeyPressSound();
+                } else if (event.shiftKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
+                    playTextSelectionSound();
+                }
+            }
+        };
+
+        const playSoundForSelectionChange = () => {
+            const selection = document.getSelection();
+            if (selection) {
+                const currentSelectionLength = selection.toString().length;
+                if (currentSelectionLength > 0 && currentSelectionLength !== lastSelectionLength) {
+                    playTextSelectionSound();
+                } else if (currentSelectionLength === 0 && lastSelectionLength > 0) {
+                    playDeselectionSound();
+                }
+                lastSelectionLength = currentSelectionLength;
+            }
+        };
+
+        document.addEventListener('keydown', playSoundForKey);
+        document.addEventListener('selectionchange', playSoundForSelectionChange);
+
+        return () => {
+            document.removeEventListener('keydown', playSoundForKey);
+            document.removeEventListener('selectionchange', playSoundForSelectionChange);
+        };
+    }, [playRandomKeyPressSound, playBackspaceSound, playCtrlBackspaceSound, playCtrlASound, playTextSelectionSound, playDeselectionSound, playTypingSpaceSound]);
     useEffect(() => {
         const handleMouseButton = (event: MouseEvent) => {
             if (event.button === 3) {
@@ -417,7 +534,7 @@ const Player: React.FC<any> = ({ children }) => {
 
     useEffect(() => {
         if (user.id !== '-1') {
-            ;(async () => {
+             ;(async () => {
                 if (typeof window !== 'undefined') {
                     if (app.discordRpc.status) {
                         window.desktopEvents?.on('trackinfo', (event, data) => {
