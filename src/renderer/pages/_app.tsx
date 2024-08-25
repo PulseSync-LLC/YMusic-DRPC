@@ -567,71 +567,68 @@ const Player: React.FC<any> = ({ children }) => {
         }
     }, [user.id, app.discordRpc.status])
     useEffect(() => {
-        if (app.discordRpc.status && user.id !== '-1') {
-            const timeRange =
-                track.timecodes.length === 2
+        const updateDiscordRpc = () => {
+            if (app.discordRpc.status && user.id !== '-1') {
+                const timeRange = track.timecodes.length === 2
                     ? `${track.timecodes[0]} - ${track.timecodes[1]}`
-                    : ''
+                    : '';
+    
+                const details = track.artist.length > 0
+                    ? `${track.playerBarTitle} - ${track.artist}`
+                    : track.playerBarTitle;
+    
+                const activity: any = {
+                    type: 2,
+                    largeImageKey: track.requestImgTrack[1],
+                    smallImageKey: 'https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png',
+                    smallImageText: 'Yandex Music',
+                    state: app.discordRpc.state.length > 0
+                        ? replaceParams(app.discordRpc.state, track)
+                        : timeRange || 'Listening to music',
+                    details: app.discordRpc.details.length > 0
+                        ? replaceParams(app.discordRpc.details, track)
+                        : details
+                };
+    
+                if (app.discordRpc.enableRpcButtonListen && track.linkTitle) {
+                    activity.buttons = [
+                        {
+                            label: app.discordRpc.button || '✌️ Open in Yandex Music',
+                            url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`
+                        }
+                    ];
+                }
+    
+                if (app.discordRpc.enableGithubButton) {
+                    activity.buttons = activity.buttons || [];
+                    activity.buttons.push({
+                        label: '♡ PulseSync Project',
+                        url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`
+                    });
+                }
 
-            let details
-            if (track.artist.length > 0) {
-                details = `${track.playerBarTitle} - ${track.artist}`
-            } else {
-                details = track.playerBarTitle
+                if (activity.buttons.length === 0) {
+                    delete activity.buttons
+                }
+    
+                if (!track.artist && !timeRange) {
+                    track.artist = 'Нейромузыка';
+                    setTrack(prevTrack => ({
+                        ...prevTrack,
+                        artist: 'Нейромузыка',
+                    }));
+                    activity.details = `${track.playerBarTitle} - ${track.artist}`;
+                }
+    
+                try {
+                    window.discordRpc.setActivity(activity);
+                } catch (error) {
+                    console.error("Failed to set Discord activity:", error);
+                }
             }
-
-            const activity: any = {
-                type: 2,
-                largeImageKey: track.requestImgTrack[1],
-                smallImageKey:
-                    'https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png',
-                smallImageText: 'Yandex Music',
-            }
-
-            if (app.discordRpc.state.length > 0) {
-                activity.state = replaceParams(app.discordRpc.state, track)
-            } else if (timeRange) {
-                activity.state = timeRange
-            }
-
-            if (app.discordRpc.details.length > 0) {
-                activity.details = replaceParams(app.discordRpc.details, track)
-            } else if (details) {
-                activity.details = details
-            }
-
-            activity.buttons = []
-            if (app.discordRpc.enableRpcButtonListen && track.linkTitle) {
-                activity.buttons.push({
-                    label: app.discordRpc.button
-                        ? app.discordRpc.button
-                        : '✌️ Open in Yandex Music',
-                    url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
-                })
-            }
-
-            if (app.discordRpc.enableGithubButton) {
-                activity.buttons.push({
-                    label: '♡ PulseSync Project',
-                    url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`,
-                })
-            }
-
-            if (activity.buttons.length === 0) {
-                delete activity.buttons
-            }
-
-            if (!track.artist && !timeRange) {
-                track.artist = 'Нейромузыка'
-                setTrack(prevTrack => ({
-                    ...prevTrack,
-                    artist: 'Нейромузыка',
-                }))
-                activity.details = `${track.playerBarTitle} - ${track.artist}`
-            }
-
-            window.discordRpc.setActivity(activity)
-        }
+        };
+    
+        updateDiscordRpc();
     }, [app.settings, user, track, app.discordRpc])
     return (
         <PlayerContext.Provider
