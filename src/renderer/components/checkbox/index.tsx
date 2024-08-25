@@ -6,6 +6,9 @@ import React, {
 } from 'react'
 import * as styles from './checkbox.module.scss'
 import userContext from '../../api/context/user.context'
+import toggleOffSound from './../../../../static/assets/sounds/v1toggleOff.wav';
+import toggleOnSound from './../../../../static/assets/sounds/v1toggleOn.wav';
+import useSound from 'use-sound';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
     children?: any
@@ -26,6 +29,9 @@ const Checkbox: React.FC<Props> = ({
 }) => {
     const [isActive, setIsActive] = useState(false)
     const { app, setApp } = useContext(userContext)
+    const [playToggleOff] = useSound(toggleOffSound);
+    const [playToggleOn] = useSound(toggleOnSound);
+
     useEffect(() => {
         if (isChecked !== undefined) {
             setIsActive(isChecked)
@@ -55,6 +61,14 @@ const Checkbox: React.FC<Props> = ({
     }, [isChecked])
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newCheckedStatus = event.target.checked;
+
+        if (newCheckedStatus) {
+            playToggleOn();
+        } else {
+            playToggleOff();
+        }
+
         setIsActive(event.target.checked)
         if (onChange) {
             onChange(event)
