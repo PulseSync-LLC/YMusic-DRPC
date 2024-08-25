@@ -143,20 +143,21 @@ export default function TrackInfoPage() {
                             description={'Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord.'}
                             imageName={'discord'}
                         >
-                        <Button 
-                        title='' 
-                        onClick={() => {
-                            window.discordRpc.discordRpc(app.discordRpc.status ? false : true)
-                            setApp({
-                                ...app,
-                                discordRpc: {
-                                    ...app.discordRpc,
-                                    status: app.discordRpc.status ? false : true,
-                                },
-                            })
-                        }
-                        }
-                        children={app.discordRpc.status ? 'Выключить' : 'Включить'}/>
+                            <Button
+                                title=''
+                                onClick={() => {
+                                    window.discordRpc.discordRpc(app.discordRpc.status ? false : true);
+                                    setApp({
+                                        ...app,
+                                        discordRpc: {
+                                            ...app.discordRpc,
+                                            status: app.discordRpc.status ? false : true,
+                                        },
+                                    });
+                                }}
+                                disableOnClickSound={app.discordRpc.status ? false : true}
+                                children={app.discordRpc.status ? 'Выключить' : 'Включить'}
+                            />
                         </Container>
                         <div className={styles.container30x15}>
                             <div className={theme.container}>

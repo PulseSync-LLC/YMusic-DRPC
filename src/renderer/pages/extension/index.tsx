@@ -6,8 +6,9 @@ import * as theme from './extension.module.scss'
 import ExtensionCard from '../../components/extensionCard'
 import { useEffect, useMemo, useState } from 'react'
 import ThemeInterface from '../../api/interfaces/theme.interface'
-import Button_nav from '../../components/button_nav'
+import Button_nav from '../../components/nav_button_pulse'
 import { MdAdminPanelSettings } from 'react-icons/md'
+import Button from '../../components/button'
 
 export default function ThemePage() {
     const [themes, setThemes] = useState<ThemeInterface[]>([])
@@ -57,14 +58,17 @@ export default function ThemePage() {
                             titleName={'Ваши расширения'}
                             description={'Вы можете управлять всеми установленными расширениями для PulseSync.'}
                             imageName={'extension'}
-                            onClick={() =>
-                                window.desktopEvents.send(
-                                    'openPath',
-                                    'themePath',
-                                )
-                            }
-                            buttonName={'Директория аддонов'}
                         >
+                            <Button
+                                title=''
+                                onClick={() => {
+                                    window.desktopEvents.send(
+                                        'openPath',
+                                        'themePath',
+                                    )
+                                }}
+                                children={'Директория аддонов'}
+                            />
                         </Container>
                         <div className={styles.container30x15}>
                             <div className={theme.grid}>
