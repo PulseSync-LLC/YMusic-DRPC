@@ -2,7 +2,7 @@ import * as styles from './layout.module.scss'
 import React, { useContext, useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import Header from './header'
-import ButtonNav from '../button_nav'
+import NavButtonPulse from '../nav_button_pulse';
 import Discord from './../../../../static/assets/icons/discord.svg'
 import {
     MdBugReport,
@@ -71,56 +71,23 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                 <div className={styles.main_window}>
                     <div className={styles.navigation_bar}>
                         <div className={styles.navigation_buttons}>
-                            <NavLink
-                                to="/trackinfo"
-                                className={({ isActive, isPending }) =>
-                                    isPending
-                                        ? 'pending'
-                                        : isActive
-                                            ? 'active'
-                                            : ''
-                                }
-                            >
-                                <ButtonNav>
-                                    <Discord height={24} width={24} />
-                                </ButtonNav>
-                            </NavLink>
-                            <NavLink
-                                to="/extension"
-                                className={({ isActive, isPending }) =>
-                                    isPending
-                                        ? 'pending'
-                                        : isActive
-                                            ? 'active'
-                                            : ''
-                                }
-                            >
-                                <ButtonNav>
-                                    <MdExtension size={24} />
-                                </ButtonNav>
-                            </NavLink>
-                            <ButtonNav disabled>
+                            <NavButtonPulse to="/trackinfo">
+                                <Discord height={24} width={24} />
+                            </NavButtonPulse>
+                            <NavButtonPulse to="/extension">
+                                <MdExtension size={24} />
+                            </NavButtonPulse>
+                            <NavButtonPulse to="/store" disabled>
                                 <MdStoreMallDirectory size={24} />
-                            </ButtonNav>
-                            <ButtonNav disabled>
+                            </NavButtonPulse>
+                            <NavButtonPulse to="/contact" disabled>
                                 <MdConnectWithoutContact size={24} />
-                            </ButtonNav>
+                            </NavButtonPulse>
                         </div>
                         <div className={styles.navigation_buttons}>
-                            <NavLink
-                                to="/bugreport"
-                                className={({ isActive, isPending }) =>
-                                    isPending
-                                        ? 'pending'
-                                        : isActive
-                                            ? 'active'
-                                            : ''
-                                }
-                            >
-                                <ButtonNav>
-                                    <MdBugReport size={24} />
-                                </ButtonNav>
-                            </NavLink>
+                            <NavButtonPulse to="/bugreport">
+                                <MdBugReport size={24} />
+                            </NavButtonPulse>
                             {updateAvailable && (
                                 <button
                                     onClick={() => {
