@@ -16,6 +16,37 @@ interface ContextMenuProps {
     modalRef: React.RefObject<{ openModal: () => void; closeModal: () => void }>
 }
 
+interface ButtonConfig {
+    key: string
+    disabled: boolean
+    onClick: (event?: React.MouseEvent<HTMLButtonElement>) => void
+    text: string
+}
+
+interface SectionConfig {
+    title: string
+    buttons: ButtonConfig[]
+}
+
+const ButtonGroup: React.FC<{ config: SectionConfig }> = ({ config }) => (
+    <div className={styles.innerFunction}>
+        {config.title}
+        <ArrowContext />
+        <div className={styles.showButtons}>
+            {config.buttons.map(button => (
+                <button
+                    key={button.key}
+                    className={styles.contextButton}
+                    disabled={button.disabled}
+                    onClick={button.onClick}
+                >
+                    {button.text}
+                </button>
+            ))}
+        </div>
+    </div>
+)
+
 const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
     const { app, yaClient, setApp, setUser, setUpdate } =
         useContext(userContext)
@@ -177,164 +208,72 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
 
         window.desktopEvents?.on('UPDATE_APP_DATA', handleUpdateAppData)
     }
+    const buttonConfigs: SectionConfig[] = [
+        {
+            title: 'Патч',
+            buttons: [
+                { key: 'patch_button', disabled: false, onClick: () => { }, text: 'Патч' },
+                { key: 'repatch_button', disabled: true, onClick: (e) => toastLoading(e, 'Репатч...'), text: 'Репатч' },
+                { key: 'depatch_button', disabled: true, onClick: (e) => toastLoading(e, 'Депатч...'), text: 'Депатч' },
+                { key: 'github_link', disabled: false, onClick: githubLink, text: 'Скрипт патчера на GitHub' }
+            ]
+        },
+        {
+            title: 'Автотрей',
+            buttons: [
+                { key: 'enable_autoTray', disabled: false, onClick: (e) => enableFunc('autoTray', true), text: 'Включить' },
+                { key: 'disable_autoTray', disabled: true, onClick: (e) => enableFunc('autoTray', false), text: 'Выключить' }
+            ]
+        },
+        {
+            title: 'Автозапуск приложения',
+            buttons: [
+                { key: 'enable_autoStart', disabled: false, onClick: (e) => enableFunc('autoStart', true), text: 'Включить' },
+                { key: 'disable_autoStart', disabled: true, onClick: (e) => enableFunc('autoStart', false), text: 'Выключить' }
+            ]
+        },
+        {
+            title: 'Автозапуск Яндекс Музыки',
+            buttons: [
+                { key: 'enable_autoStartMusic', disabled: true, onClick: (e) => enableFunc('autoStartMusic', true), text: 'Включить' },
+                { key: 'disable_autoStartMusic', disabled: true, onClick: (e) => enableFunc('autoStartMusic', false), text: 'Выключить' }
+            ]
+        },
+        {
+            title: 'Звуки интерфейса',
+            buttons: [
+                { key: 'none', disabled: true, onClick: (e) => enableFunc('none', true), text: 'Включить' },
+                { key: 'none', disabled: true, onClick: (e) => enableFunc('none', false), text: 'Выключить' }
+            ]
+        },
+        {
+            title: 'Размер интерфейса',
+            buttons: [
+                { key: 'size_interface', disabled: true, onClick: (e) => { }, text: 'Скоро' }
+            ]
+        },
+        {
+            title: 'Особое',
+            buttons: [
+                { key: 'beta_version', disabled: false, onClick: handleOpenModal, text: `Beta v${app.info.version}` },
+                { key: 'check_update', disabled: false, onClick: () => window.desktopEvents?.send('checkUpdate'), text: 'Проверить обновления' },
+                { key: 'download_track', disabled: currentTrack === trackInitials || currentTrack.id === '', onClick: downloadTrack, text: `Скачать ${currentTrack.playerBarTitle} в папку музыка` },
+                { key: 'music_path', disabled: false, onClick: () => window.desktopEvents.send('openPath', 'musicPath'), text: 'Директория со скаченной музыкой' }
+            ]
+        }
+    ]
+
     return (
         <div className={styles.patchMenu}>
             <button
                 className={styles.contextButton}
-                onClick={() => {
-                    window.desktopEvents.send('openPath', 'appPath')
-                }}
+                onClick={() => window.desktopEvents.send('openPath', 'appPath')}
             >
                 Директория приложения
             </button>
-            <div className={styles.innerFunction}>
-                Патч
-                <ArrowContext />
-                <div className={styles.showButtons}>
-                    <button
-                        key="patch_button"
-                        disabled={app.settings.patched}
-                        className={styles.contextButton}
-                    >
-                        Патч
-                    </button>
-                    <button
-                        onClick={e => {
-                            toastLoading(e, 'Репатч...')
-                            repatch()
-                        }}
-                        key="repatch_button"
-                        disabled={!app.settings.patched}
-                        className={styles.contextButton}
-                    >
-                        Репатч
-                    </button>
-                    <button
-                        onClick={e => {
-                            toastLoading(e, 'Депатч...')
-                            depatch()
-                        }}
-                        key="depatch_button"
-                        disabled={!app.settings.patched}
-                        className={styles.contextButton}
-                    >
-                        Депатч
-                    </button>
-                    <button
-                        onClick={githubLink}
-                        className={styles.contextButton}
-                    >
-                        Скрипт патчера на GitHub
-                    </button>
-                </div>
-            </div>
-            <div className={styles.innerFunction}>
-                Автотрей
-                <ArrowContext />
-                <div className={styles.showButtons}>
-                    <button
-                        className={styles.contextButton}
-                        disabled={app.settings.autoStartInTray}
-                        onClick={() => enableFunc('autoTray', true)}
-                    >
-                        Включить
-                    </button>
-                    <button
-                        className={styles.contextButton}
-                        disabled={!app.settings.autoStartInTray}
-                        onClick={() => enableFunc('autoTray', false)}
-                    >
-                        Выключить
-                    </button>
-                </div>
-            </div>
-            <div className={styles.innerFunction}>
-                Автозапуск приложения
-                <ArrowContext />
-                <div className={styles.showButtons}>
-                    <button
-                        className={styles.contextButton}
-                        disabled={app.settings.autoStartApp}
-                        onClick={() => enableFunc('autoStart', true)}
-                    >
-                        Включить
-                    </button>
-                    <button
-                        className={styles.contextButton}
-                        disabled={!app.settings.autoStartApp}
-                        onClick={() => enableFunc('autoStart', false)}
-                    >
-                        Выключить
-                    </button>
-                </div>
-            </div>
-            <div className={styles.innerFunction}>
-                Автозапуск Яндекс Музыки
-                <ArrowContext />
-                <div className={styles.showButtons}>
-                    <button
-                        className={styles.contextButton}
-                        disabled
-                        onClick={() => enableFunc('autoStartMusic', true)}
-                    >
-                        Включить
-                    </button>
-                    <button
-                        className={styles.contextButton}
-                        disabled
-                        onClick={() => enableFunc('autoStartMusic', false)}
-                    >
-                        Выключить
-                    </button>
-                </div>
-            </div>
-            <div className={styles.innerFunction}>
-                Размер интерфейса
-                <ArrowContext />
-                <div className={styles.showButtons}>
-                    <button className={styles.contextButton} disabled>
-                        Скоро
-                    </button>
-                </div>
-            </div>
-            <div className={styles.innerFunction}>
-                Особое
-                <ArrowContext />
-                <div className={styles.showButtons}>
-                    <div
-                        className={styles.contextButton}
-                        onClick={handleOpenModal}
-                    >
-                        Beta v{app.info.version}
-                    </div>
-                    <button
-                        className={styles.contextButton}
-                        onClick={e => {
-                            window.desktopEvents?.send('checkUpdate')
-                        }}
-                    >
-                        Проверить обновления
-                    </button>
-                    <button
-                        className={styles.contextButton}
-                        onClick={downloadTrack}
-                        disabled={
-                            currentTrack === trackInitials ||
-                            currentTrack.id === ''
-                        }
-                    >
-                        Скачать {currentTrack.playerBarTitle} в папку музыка
-                    </button>
-                    <button
-                        className={styles.contextButton}
-                        onClick={() => {
-                            window.desktopEvents.send('openPath', 'musicPath')
-                        }}
-                    >
-                        Директория со скаченной музыкой
-                    </button>
-                </div>
-            </div>
+            {buttonConfigs.map((config, index) => (
+                <ButtonGroup key={index} config={config} />
+            ))}
             <button className={styles.contextButton} onClick={logout}>
                 Выйти
             </button>
