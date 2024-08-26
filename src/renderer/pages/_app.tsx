@@ -49,38 +49,39 @@ function useKeyPressSound() {
         typingEnter: '' //test
     };
 
+    const audioContext = useRef(new AudioContext());
     const audioRefs = useRef([]);
 
-    const createAudio = (soundFile: string) => {
-        const audio = new Audio(soundFile);
-        audio.volume = 1.0;
-        audioRefs.current.push(audio);
-        audio.onended = () => {
-            audio.src = '';
-            audioRefs.current = audioRefs.current.filter(a => a !== audio);
+    const createAudio = async (soundFile: string) => {
+        const response = await fetch(soundFile);
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioContext.current.decodeAudioData(arrayBuffer);
+
+        const source = audioContext.current.createBufferSource();
+        source.buffer = audioBuffer;
+
+        const gainNode = audioContext.current.createGain();
+        source.connect(gainNode);
+        gainNode.connect(audioContext.current.destination);
+
+        audioRefs.current.push({ source, gainNode });
+
+        source.onended = () => {
+            audioRefs.current = audioRefs.current.filter(a => a.source !== source);
         };
-        return audio;
+
+        return source;
     };
 
-    const fadeOutPreviousSounds = () => {
-        audioRefs.current.forEach(audio => {
-            let volume = audio.volume;
-            const interval = setInterval(() => {
-                if (volume > 0) {
-                    volume -= 1 / 6;
-                    audio.volume = Math.max(volume, 0);
-                } else {
-                    clearInterval(interval);
-                    audio.pause();
-                }
-            }, 50);
-        });
+    const playSound = async (soundFile: string) => {
+        const source = await createAudio(soundFile);
+        source.start();
     };
 
-    const playSound = (soundFile: string) => {
-        fadeOutPreviousSounds();
-        const audio = createAudio(soundFile);
-        audio.play();
+    const playSoundWithPitch = async (soundFile: string, playbackRate: number) => {
+        const source = await createAudio(soundFile);
+        source.playbackRate.value = playbackRate;
+        source.start();
     };
 
     return {
@@ -89,13 +90,14 @@ function useKeyPressSound() {
         },
         playBackspaceSound: () => playSound(soundFiles.backspace),
         playCtrlBackspaceSound: () => playSound(soundFiles.ctrlBackspace),
-        playCtrlASound: () => playSound(soundFiles.ctrlA),
-        playTextSelectionSound: () => playSound(soundFiles.textSelection),
+        playCtrlASound: () => playSoundWithPitch(soundFiles.ctrlA, 0.5),
+        playTextSelectionSound: (pitch: number) => playSoundWithPitch(soundFiles.textSelection, pitch),
         playDeselectionSound: () => playSound(soundFiles.deselection),
         playTypingSpaceSound: () => playSound(soundFiles.typingSpace),
         playTypingEnterSound: () => ""
     };
 }
+
 
 function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
@@ -221,8 +223,6 @@ function _app() {
                     playTypingSpaceSound();
                 } else if (!event.ctrlKey && !event.altKey && event.key.length === 1) {
                     playRandomKeyPressSound();
-                } else if (event.shiftKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
-                    playTextSelectionSound();
                 }
             }
         };
@@ -231,8 +231,10 @@ function _app() {
             const selection = document.getSelection();
             if (selection) {
                 const currentSelectionLength = selection.toString().length;
+                const pitch = 1 + Math.min(currentSelectionLength, 50) / 100;
+
                 if (currentSelectionLength > 0 && currentSelectionLength !== lastSelectionLength) {
-                    playTextSelectionSound();
+                    playTextSelectionSound(pitch);
                 } else if (currentSelectionLength === 0 && lastSelectionLength > 0) {
                     playDeselectionSound();
                 }
@@ -534,7 +536,7 @@ const Player: React.FC<any> = ({ children }) => {
 
     useEffect(() => {
         if (user.id !== '-1') {
-             ;(async () => {
+            ; (async () => {
                 if (typeof window !== 'undefined') {
                     if (app.discordRpc.status) {
                         window.desktopEvents?.on('trackinfo', (event, data) => {
@@ -572,11 +574,11 @@ const Player: React.FC<any> = ({ children }) => {
                 const timeRange = track.timecodes.length === 2
                     ? `${track.timecodes[0]} - ${track.timecodes[1]}`
                     : '';
-    
+
                 const details = track.artist.length > 0
                     ? `${track.playerBarTitle} - ${track.artist}`
                     : track.playerBarTitle;
-    
+
                 const activity: any = {
                     type: 2,
                     largeImageKey: track.requestImgTrack[1],
@@ -589,7 +591,7 @@ const Player: React.FC<any> = ({ children }) => {
                         ? replaceParams(app.discordRpc.details, track)
                         : details
                 };
-    
+
                 if (app.discordRpc.enableRpcButtonListen && track.linkTitle) {
                     activity.buttons = [
                         {
@@ -598,7 +600,7 @@ const Player: React.FC<any> = ({ children }) => {
                         }
                     ];
                 }
-    
+
                 if (app.discordRpc.enableGithubButton) {
                     activity.buttons = activity.buttons || [];
                     activity.buttons.push({
@@ -610,7 +612,7 @@ const Player: React.FC<any> = ({ children }) => {
                 if (activity.buttons.length === 0) {
                     delete activity.buttons
                 }
-    
+
                 if (!track.artist && !timeRange) {
                     track.artist = 'Нейромузыка';
                     setTrack(prevTrack => ({
@@ -619,7 +621,7 @@ const Player: React.FC<any> = ({ children }) => {
                     }));
                     activity.details = `${track.playerBarTitle} - ${track.artist}`;
                 }
-    
+
                 try {
                     window.discordRpc.setActivity(activity);
                 } catch (error) {
@@ -627,7 +629,7 @@ const Player: React.FC<any> = ({ children }) => {
                 }
             }
         };
-    
+
         updateDiscordRpc();
     }, [app.settings, user, track, app.discordRpc])
     return (
