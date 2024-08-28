@@ -25,6 +25,7 @@ import { store } from '../modules/storage'
 import UnPatcher from '../modules/patcher/unpatch'
 import { UpdateStatus } from '../modules/updater/constants/updateStatus'
 import { updateAppId } from '../modules/discordRpc'
+import archiver from 'archiver'
 
 const updater = getUpdater()
 let reqModal = 0
@@ -250,6 +251,54 @@ export const handleEvents = (window: BrowserWindow): void => {
             case 'log':
                 logger.renderer.log(data.text)
                 break
+        }
+    })
+    ipcMain.handle('getSystemInfo', async () => {
+        return {
+            appVersion: app.getVersion(),
+            osType: os.type(),
+            osRelease: os.release(),
+            cpu: os.cpus(),
+            memory: os.totalmem(),
+            freeMemory: os.freemem(),
+            arch: os.arch(),
+        }
+    })
+
+    ipcMain.handle('getLogArchive', async () => {
+        const logDirPath = path.join(
+            app.getPath('appData'),
+            'PulseSync',
+            'logs',
+        )
+
+        const now = new Date()
+        const year = now.getFullYear()
+        const month = String(now.getMonth() + 1).padStart(2, '0')
+        const day = String(now.getDate()).padStart(2, '0')
+
+        const archiveName = `logs-${year}-${month}-${day}.zip`
+        const archivePath = path.join(app.getPath('temp'), archiveName)
+
+        try {
+            const output = fs.createWriteStream(archivePath)
+            const archive = archiver('zip', { zlib: { level: 9 } })
+
+            return new Promise((resolve, reject) => {
+                output.on('close', () => {
+                    resolve(archivePath)
+                })
+
+                archive.on('error', err => {
+                    reject(`Ошибка при создании архива: ${err.message}`)
+                })
+
+                archive.pipe(output)
+                archive.directory(logDirPath, false)
+                archive.finalize()
+            })
+        } catch (error) {
+            return `Ошибка при создании архива: ${error.message}`
         }
     })
 }

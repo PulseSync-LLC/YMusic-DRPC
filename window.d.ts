@@ -1,7 +1,7 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { Presence } from 'discord-rpc'
 import { Track } from 'yandex-music-client'
 import { Electron, ipcRenderer } from 'electron'
+import { SetActivity } from '@xhayper/discord-rpc/dist/structures/ClientUser'
 
 declare global {
     interface Window {
@@ -47,7 +47,7 @@ declare global {
         }
         discordRpc: {
             discordRpc: (val: boolean) => void
-            setActivity: (props: Presence) => void
+            setActivity: (props: SetActivity) => void
             clearActivity: () => void
         }
         desktopEvents: {

@@ -39,7 +39,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
         })
     }
     const logout = () => {
-        fetch(config.SERVER_URL + 'auth/logout', {
+        fetch(config.SERVER_URL + '/auth/logout', {
             method: 'PUT',
             headers: {
                 authorization: 'Bearer: ' + getUserToken(),

@@ -15,10 +15,9 @@ import playerContext from '../../api/context/player.context'
 import { object, string } from 'yup'
 import { useFormik } from 'formik'
 import { MdClose, MdContentCopy } from 'react-icons/md'
-import { useNavigate } from 'react-router-dom'
 import toast from '../../api/toast'
 import { replaceParams } from '../../utils/formatRpc'
-import { useCharCount } from '../../utils/useCharCount';
+import { useCharCount } from '../../utils/useCharCount'
 
 export default function TrackInfoPage() {
     const { user, app, setApp } = useContext(userContext)
@@ -129,9 +128,9 @@ export default function TrackInfoPage() {
         }
     }
 
-    const containerRef = useRef<HTMLDivElement>(null);
-    const fixedTheme = { charCount: inputStyle.charCount };
-    useCharCount(containerRef, fixedTheme);
+    const containerRef = useRef<HTMLDivElement>(null)
+    const fixedTheme = { charCount: inputStyle.charCount }
+    useCharCount(containerRef, fixedTheme)
     return (
         <Layout title="Discord RPC">
             <div className={styles.page}>
@@ -139,22 +138,28 @@ export default function TrackInfoPage() {
                     <div ref={containerRef} className={styles.main_container}>
                         <Container
                             titleName={'Discord RPC'}
-                            description={'Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord.'}
+                            description={
+                                'Активируйте этот параметр, чтобы ваш текущий статус отображался в Discord.'
+                            }
                             imageName={'discord'}
                             onClick={() => {
-                                window.discordRpc.discordRpc(app.discordRpc.status ? false : true)
+                                window.discordRpc.discordRpc(
+                                    app.discordRpc.status ? false : true,
+                                )
                                 setApp({
                                     ...app,
                                     discordRpc: {
                                         ...app.discordRpc,
-                                        status: app.discordRpc.status ? false : true,
+                                        status: app.discordRpc.status
+                                            ? false
+                                            : true,
                                     },
                                 })
+                            }}
+                            buttonName={
+                                app.discordRpc.status ? 'Выключить' : 'Включить'
                             }
-                            }
-                            buttonName={app.discordRpc.status ? 'Выключить' : 'Включить'}
-                        >
-                        </Container>
+                        ></Container>
                         <div className={styles.container30x15}>
                             <div className={theme.container}>
                                 <form>
@@ -178,7 +183,7 @@ export default function TrackInfoPage() {
                                                     name="appId"
                                                     aria-errormessage={
                                                         (formik.errors as any)[
-                                                        'appId'
+                                                            'appId'
                                                         ]
                                                     }
                                                     placeholder="984031241357647892"
@@ -191,13 +196,14 @@ export default function TrackInfoPage() {
                                                     }
                                                     onBlur={e => {
                                                         handleBlur(e)
-                                                        //handleBlurCount()
                                                     }}
                                                 />
                                                 {formik.touched.appId &&
-                                                    formik.errors.appId ? (
+                                                formik.errors.appId ? (
                                                     <div
-                                                        className={inputStyle.error}
+                                                        className={
+                                                            inputStyle.error
+                                                        }
                                                     >
                                                         {formik.errors.appId}
                                                     </div>
@@ -227,9 +233,11 @@ export default function TrackInfoPage() {
                                                     }}
                                                 />
                                                 {formik.touched.details &&
-                                                    formik.errors.details ? (
+                                                formik.errors.details ? (
                                                     <div
-                                                        className={inputStyle.error}
+                                                        className={
+                                                            inputStyle.error
+                                                        }
                                                     >
                                                         {formik.errors.details}
                                                     </div>
@@ -257,9 +265,11 @@ export default function TrackInfoPage() {
                                                     }}
                                                 />
                                                 {formik.touched.state &&
-                                                    formik.errors.state ? (
+                                                formik.errors.state ? (
                                                     <div
-                                                        className={inputStyle.error}
+                                                        className={
+                                                            inputStyle.error
+                                                        }
                                                     >
                                                         {formik.errors.state}
                                                     </div>
@@ -305,9 +315,11 @@ export default function TrackInfoPage() {
                                                     }}
                                                 />
                                                 {formik.touched.button &&
-                                                    formik.errors.button ? (
+                                                formik.errors.button ? (
                                                     <div
-                                                        className={inputStyle.error}
+                                                        className={
+                                                            inputStyle.error
+                                                        }
                                                     >
                                                         {formik.errors.button}
                                                     </div>
@@ -356,7 +368,7 @@ export default function TrackInfoPage() {
                                             <div className={theme.statusRPC}>
                                                 <div>
                                                     {app.discordRpc.status &&
-                                                        currentTrack !==
+                                                    currentTrack !==
                                                         trackInitials ? (
                                                         <div
                                                             className={
@@ -371,7 +383,7 @@ export default function TrackInfoPage() {
                                                                     currentTrack
                                                                         .requestImgTrack[1]
                                                                         ? currentTrack
-                                                                            .requestImgTrack[1]
+                                                                              .requestImgTrack[1]
                                                                         : './static/assets/logo/logoappsummer.png'
                                                                 }
                                                                 alt=""
@@ -397,38 +409,38 @@ export default function TrackInfoPage() {
                                                                         .discordRpc
                                                                         .details
                                                                         .length >
-                                                                        0
+                                                                    0
                                                                         ? replaceParams(
-                                                                            app
-                                                                                .discordRpc
-                                                                                .details,
-                                                                            currentTrack,
-                                                                        )
+                                                                              app
+                                                                                  .discordRpc
+                                                                                  .details,
+                                                                              currentTrack,
+                                                                          )
                                                                         : `${currentTrack.playerBarTitle} - ${currentTrack.artist}`}
                                                                 </div>
                                                                 {currentTrack
                                                                     .timecodes
                                                                     .length >
                                                                     0 && (
-                                                                        <div
-                                                                            className={
-                                                                                theme.time
-                                                                            }
-                                                                        >
-                                                                            {app
-                                                                                .discordRpc
-                                                                                .state
-                                                                                .length >
-                                                                                0
-                                                                                ? replaceParams(
-                                                                                    app
-                                                                                        .discordRpc
-                                                                                        .state,
-                                                                                    currentTrack,
-                                                                                )
-                                                                                : `${currentTrack.timecodes[0]} - ${currentTrack.timecodes[1]}`}
-                                                                        </div>
-                                                                    )}
+                                                                    <div
+                                                                        className={
+                                                                            theme.time
+                                                                        }
+                                                                    >
+                                                                        {app
+                                                                            .discordRpc
+                                                                            .state
+                                                                            .length >
+                                                                        0
+                                                                            ? replaceParams(
+                                                                                  app
+                                                                                      .discordRpc
+                                                                                      .state,
+                                                                                  currentTrack,
+                                                                              )
+                                                                            : `${currentTrack.timecodes[0]} - ${currentTrack.timecodes[1]}`}
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
                                                     ) : (
@@ -476,7 +488,7 @@ export default function TrackInfoPage() {
                                                         {app.discordRpc.button
                                                             .length > 0
                                                             ? app.discordRpc
-                                                                .button
+                                                                  .button
                                                             : '✌️ Open in Yandex Music'}
                                                     </div>
                                                     <div

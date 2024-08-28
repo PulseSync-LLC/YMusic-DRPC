@@ -6,7 +6,7 @@ import {
     concat,
 } from '@apollo/client'
 import config from './config'
-const graphqlUrl = config.SERVER_URL + 'graphql'
+const graphqlUrl = config.SERVER_URL + '/graphql'
 
 const httpLink = new HttpLink({ uri: graphqlUrl })
 

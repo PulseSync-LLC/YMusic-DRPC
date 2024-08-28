@@ -35,7 +35,9 @@ const Container: React.FC<p> = ({
                         </div>
                         <div className={styles.detailPage}>
                             <div className={styles.title}>{titleName}</div>
-                            <div className={styles.description}>{description}</div>
+                            <div className={styles.description}>
+                                {description}
+                            </div>
                         </div>
                     </div>
                     {onClick && <button onClick={onClick}>{buttonName}</button>}

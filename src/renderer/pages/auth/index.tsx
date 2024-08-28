@@ -18,7 +18,7 @@ export default function AuthPage() {
     const [mdText, setMdText] = useState(null)
     const { user, app } = useContext(userContext)
     const auth = () => {
-        window.open(config.SERVER_URL + 'auth/discord')
+        window.open(config.SERVER_URL + '/auth/discord')
         navigate('/auth/callback', {
             replace: true,
         })

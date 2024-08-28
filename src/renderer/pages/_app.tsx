@@ -311,7 +311,7 @@ function _app() {
             const fetchAppInfo = async () => {
                 try {
                     const res = await fetch(
-                        `${config.SERVER_URL}api/v1/app/info`,
+                        `${config.SERVER_URL}/api/v1/app/info`,
                     )
                     const data = await res.json()
                     if (data.ok && Array.isArray(data.appInfo)) {
@@ -376,6 +376,15 @@ function _app() {
             }
         }
     }, [])
+    if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
+        ;(window as any).setToken = async (args: any) => {
+            window.electron.store.set('tokens.token', args)
+            await authorize()
+        }
+        ;(window as any).testEvent = async (args: any) => {
+            eval(args)
+        }
+    }
     return (
         <div className="app-wrapper">
             <Toaster />
@@ -451,69 +460,73 @@ const Player: React.FC<any> = ({ children }) => {
     }, [user.id, app.discordRpc.status])
     useEffect(() => {
         if (app.discordRpc.status && user.id !== '-1') {
-            const timeRange =
-                track.timecodes.length === 2
-                    ? `${track.timecodes[0]} - ${track.timecodes[1]}`
-                    : ''
-
-            let details
-            if (track.artist.length > 0) {
-                details = `${track.playerBarTitle} - ${track.artist}`
+            if (track.playerBarTitle === '' && track.artist === '') {
+                const activity: any = {
+                    details: 'AFK',
+                    largeImageText: 'YM',
+                    largeImageKey:
+                        'https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png',
+                }
+                window.discordRpc.setActivity(activity)
             } else {
-                details = track.playerBarTitle
-            }
+                const timeRange =
+                    track.timecodes.length === 2
+                        ? `${track.timecodes[0]} - ${track.timecodes[1]}`
+                        : ''
 
-            const activity: any = {
-                type: 2,
-                largeImageKey: track.requestImgTrack[1],
-                smallImageKey:
-                    'https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png',
-                smallImageText: 'Yandex Music',
-            }
+                const details =
+                    track.artist.length > 0
+                        ? `${track.playerBarTitle} - ${track.artist}`
+                        : track.playerBarTitle
 
-            if (app.discordRpc.state.length > 0) {
-                activity.state = replaceParams(app.discordRpc.state, track)
-            } else if (timeRange) {
-                activity.state = timeRange
-            }
+                const activity: any = {
+                    type: 2,
+                    largeImageKey: track.requestImgTrack[1],
+                    smallImageKey:
+                        'https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png',
+                    smallImageText: 'Yandex Music',
+                    state:
+                        app.discordRpc.state.length > 0
+                            ? replaceParams(app.discordRpc.state, track)
+                            : timeRange || 'Listening to music',
+                    details:
+                        app.discordRpc.details.length > 0
+                            ? replaceParams(app.discordRpc.details, track)
+                            : details,
+                }
 
-            if (app.discordRpc.details.length > 0) {
-                activity.details = replaceParams(app.discordRpc.details, track)
-            } else if (details) {
-                activity.details = details
-            }
+                activity.buttons = []
+                if (app.discordRpc.enableRpcButtonListen && track.linkTitle) {
+                    activity.buttons.push({
+                        label: app.discordRpc.button
+                            ? app.discordRpc.button
+                            : '✌️ Open in Yandex Music',
+                        url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
+                    })
+                }
 
-            activity.buttons = []
-            if (app.discordRpc.enableRpcButtonListen && track.linkTitle) {
-                activity.buttons.push({
-                    label: app.discordRpc.button
-                        ? app.discordRpc.button
-                        : '✌️ Open in Yandex Music',
-                    url: `yandexmusic://album/${encodeURIComponent(track.linkTitle)}`,
-                })
-            }
+                if (app.discordRpc.enableGithubButton) {
+                    activity.buttons.push({
+                        label: '♡ PulseSync Project',
+                        url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`,
+                    })
+                }
 
-            if (app.discordRpc.enableGithubButton) {
-                activity.buttons.push({
-                    label: '♡ PulseSync Project',
-                    url: `https://github.com/PulseSync-LLC/YMusic-DRPC/tree/patcher-ts`,
-                })
-            }
+                if (activity.buttons.length === 0) {
+                    delete activity.buttons
+                }
 
-            if (activity.buttons.length === 0) {
-                delete activity.buttons
-            }
+                if (!track.artist && !timeRange) {
+                    track.artist = 'Нейромузыка'
+                    setTrack(prevTrack => ({
+                        ...prevTrack,
+                        artist: 'Нейромузыка',
+                    }))
+                    activity.details = `${track.playerBarTitle} - ${track.artist}`
+                }
 
-            if (!track.artist && !timeRange) {
-                track.artist = 'Нейромузыка'
-                setTrack(prevTrack => ({
-                    ...prevTrack,
-                    artist: 'Нейромузыка',
-                }))
-                activity.details = `${track.playerBarTitle} - ${track.artist}`
+                window.discordRpc.setActivity(activity)
             }
-
-            window.discordRpc.setActivity(activity)
         }
     }, [app.settings, user, track, app.discordRpc])
     return (

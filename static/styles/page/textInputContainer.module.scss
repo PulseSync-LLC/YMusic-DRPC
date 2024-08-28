@@ -15,7 +15,7 @@
         border-radius: 2px;
     }
 
-    >div {
+    > div {
         font-weight: 700;
         font-size: 12px;
         line-height: 140%;
@@ -44,7 +44,7 @@
 
         color: #abafbf;
 
-        &::placeholder{
+        &::placeholder {
             color: var(--inputPlaceholderColor);
         }
 
@@ -70,18 +70,18 @@
             min-width: 110px;
 
             background: var(--inputColor);
-            outline: 1px solid #3E424C;
+            outline: 1px solid #3e424c;
             border-radius: 6px;
 
             &:hover {
-                outline: 1px solid #3468F2;
+                outline: 1px solid #3468f2;
 
-                &>button {
+                & > button {
                     opacity: 1;
                 }
             }
 
-            &>button {
+            & > button {
                 transition: var(--transition);
                 opacity: 0;
                 cursor: pointer;
@@ -95,18 +95,18 @@
                 top: -5px;
 
                 border: 0;
-                color: #E54747;
-                background: #1E2027;
+                color: #e54747;
+                background: #1e2027;
                 outline: 1px solid #363944;
                 border-radius: 6px;
 
                 &:hover {
-                    background: #2F1A1A;
-                    outline: 1px solid #BD4040;
+                    background: #2f1a1a;
+                    outline: 1px solid #bd4040;
                 }
             }
 
-            &>img {
+            & > img {
                 display: block;
                 object-fit: cover;
                 border-radius: 6px;
@@ -130,7 +130,7 @@
             height: 110px;
             min-width: 110px;
 
-            background: #1E2027;
+            background: #1e2027;
             outline: 1px solid #363944;
             border-radius: 6px;
         }
@@ -139,9 +139,12 @@
             .uploadButton {
                 cursor: pointer;
                 opacity: 1;
-
+                &:disabled {
+                    opacity: 0.6;
+                    cursor: not-allowed;
+                }
                 &:hover {
-                    background: #3468F2;
+                    background: #3468f2;
                     outline: 1px solid #2353d8;
                 }
             }

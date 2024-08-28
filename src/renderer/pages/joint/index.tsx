@@ -2,7 +2,6 @@ import Layout from '../../components/layout'
 import Container from '../../components/container'
 
 import * as styles from '../../../../static/styles/page/index.module.scss'
-// import theme from './joint.module.scss'
 
 export default function JointPage() {
     return (

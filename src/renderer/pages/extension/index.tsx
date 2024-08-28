@@ -55,7 +55,9 @@ export default function ThemePage() {
                     <div className={styles.main_container}>
                         <Container
                             titleName={'Ваши расширения'}
-                            description={'Вы можете управлять всеми установленными расширениями для PulseSync.'}
+                            description={
+                                'Вы можете управлять всеми установленными расширениями для PulseSync.'
+                            }
                             imageName={'extension'}
                             onClick={() =>
                                 window.desktopEvents.send(
@@ -64,8 +66,7 @@ export default function ThemePage() {
                                 )
                             }
                             buttonName={'Директория аддонов'}
-                        >
-                        </Container>
+                        ></Container>
                         <div className={styles.container30x15}>
                             <div className={theme.grid}>
                                 {themes

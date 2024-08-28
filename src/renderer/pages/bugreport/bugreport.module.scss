@@ -29,9 +29,9 @@
             border-radius: 8px;
             background: rgba(0, 0, 0, 0.1);
             outline: 1px solid transparent;
-            color: #8F94A8;
+            color: #8f94a8;
             border: 0;
-            font-family: "Nunito Sans";
+            font-family: 'Nunito Sans';
             font-style: normal;
             font-weight: 700;
             font-size: 14px;
@@ -45,8 +45,8 @@
 
         .switchButtonActive {
             background: var(--inputColor);
-            outline: 1px solid #3E424C;
-            color: #FFFFFF;
+            outline: 1px solid #3e424c;
+            color: #ffffff;
 
             &:hover {
                 background: var(--inputColor);
@@ -81,13 +81,13 @@
             flex-direction: row;
             padding: 9px 25px;
             gap: 10px;
-            background: #3E424C;
+            background: #3e424c;
             border-radius: 58px;
-            font-family: "Nunito Sans";
+            font-family: 'Nunito Sans';
             font-style: normal;
             font-weight: 700;
             font-size: 14px;
-            color: #FFFFFF;
+            color: #ffffff;
             border: none;
             align-items: center;
             min-width: fit-content;
@@ -98,7 +98,6 @@
         }
     }
 }
-
 
 .fullScreenOverlay {
     position: fixed;
@@ -166,7 +165,7 @@
             width: 310px;
             height: 106px;
             left: 10px;
-            bottom: 5px;;
+            bottom: 5px;
 
             .hotKeyInfo {
                 background: var(--inputColor);
@@ -185,8 +184,8 @@
                 line-height: 140%;
                 gap: 10px;
                 text-transform: uppercase;
-                
-                color: #3E424C;
+
+                color: #3e424c;
 
                 .hotKeyMainInfo {
                     color: white;

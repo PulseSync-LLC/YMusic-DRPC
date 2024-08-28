@@ -30,7 +30,7 @@ import { getPathToYandexMusic } from '../utils/appUtils'
 import Theme from './renderer/api/interfaces/theme.interface'
 import logger from './main/modules/logger'
 import isAppDev from 'electron-is-dev'
-import debug from "electron-debug";
+import debug from 'electron-debug'
 
 declare const MAIN_WINDOW_WEBPACK_ENTRY: string
 declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string
@@ -69,7 +69,7 @@ Sentry.init({
     enableRendererProfiling: true,
     enableTracing: true,
 })
-debug();
+debug()
 
 function checkCLIArguments() {
     const args = process.argv.slice(1)
@@ -413,7 +413,7 @@ app.whenReady().then(async () => {
                 '../',
                 'ReactDevTools',
                 'fmkadmapgofadopljbjfkapdkoienihi',
-                '5.2.0_0',
+                '5.3.1_0',
             ),
         )
     }
@@ -441,12 +441,6 @@ export async function prestartCheck() {
     if (!store.has('discordRpc.appId')) {
         store.set('discordRpc.appId', '')
     }
-    // if (
-    //     store.has('settings.autoStartMusic') &&
-    //     store.get('settings.autoStartMusic')
-    // ) {
-    //     await checkAndStartYandexMusic()
-    // }
     if (store.has('discordRpc.status') && store.get('discordRpc.status')) {
         rpc_connect()
     }

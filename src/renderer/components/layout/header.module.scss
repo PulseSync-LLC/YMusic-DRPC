@@ -105,7 +105,9 @@
                         display: flex;
 
                         img {
-                            transition: width 0.2s cubic-bezier(0.39, 0.575, 0.565, 1), height 0.2s cubic-bezier(0.39, 0.575, 0.565, 1);
+                            transition:
+                                width 0.2s cubic-bezier(0.39, 0.575, 0.565, 1),
+                                height 0.2s cubic-bezier(0.39, 0.575, 0.565, 1);
                             width: 26px;
                             height: 26px;
                             background: transparent;
@@ -155,7 +157,7 @@
                     &:hover {
                         background: #253325;
 
-                        >img {
+                        > img {
                             outline: 2px solid transition;
                         }
                     }
@@ -166,7 +168,7 @@
                     }
                 }
 
-                .user_container>img {
+                .user_container > img {
                     display: flex;
                     flex-direction: row;
                     justify-content: flex-end;

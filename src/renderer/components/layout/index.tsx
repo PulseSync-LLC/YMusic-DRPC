@@ -24,7 +24,8 @@ interface p {
 }
 
 const Layout: React.FC<p> = ({ title, children, goBack }) => {
-    const { app, setApp, updateAvailable, setUpdate } = useContext(userContext)
+    const { app, setApp, updateAvailable, setUpdate, user } =
+        useContext(userContext)
     const toastLoading = (event: any, title: string) => {
         let toastId: string
         toastId = hotToast.loading(title, {
@@ -77,8 +78,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                            ? 'active'
-                                            : ''
+                                          ? 'active'
+                                          : ''
                                 }
                             >
                                 <ButtonNav>
@@ -91,8 +92,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                            ? 'active'
-                                            : ''
+                                          ? 'active'
+                                          : ''
                                 }
                             >
                                 <ButtonNav>
@@ -113,11 +114,13 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                     isPending
                                         ? 'pending'
                                         : isActive
-                                            ? 'active'
-                                            : ''
+                                          ? 'active'
+                                          : ''
                                 }
                             >
-                                <ButtonNav>
+                                <ButtonNav
+                                    disabled={user.perms !== 'developer'}
+                                >
                                     <MdBugReport size={24} />
                                 </ButtonNav>
                             </NavLink>
@@ -125,7 +128,9 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                 <button
                                     onClick={() => {
                                         setUpdate(false)
-                                        window.desktopEvents?.send('update-install')
+                                        window.desktopEvents?.send(
+                                            'update-install',
+                                        )
                                     }}
                                     className={styles.update_download}
                                 >

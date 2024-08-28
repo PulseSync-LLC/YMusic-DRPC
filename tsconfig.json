@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2021",
+    "target": "ES2022",
     "lib": ["ES2016.Array.Include", "ES2021", "DOM", "DOM.Iterable", "ScriptHost"],
     "allowJs": true,
+    "maxNodeModuleJsDepth": 10,
     "module": "commonjs",
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -16,7 +17,7 @@
     "paths": {
       "*": ["node_modules/*"],
       "@/*": ["static/*"]
-    }
+    },
   },
   "include": ["src/**/*", "styles.d.ts", "window.d.ts", "cors-anywhere.d.ts", "declarations.d.ts"]
 }
