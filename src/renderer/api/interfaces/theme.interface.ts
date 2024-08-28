@@ -7,4 +7,5 @@ export default interface ThemeInterface {
     path: string
     lastModified: number
     size: number
+    tags: string[];
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { CSSProperties, useState } from 'react'
 import * as styles from './card.module.scss'
 import Checkbox from '../checkbox'
 import ThemeInterface from '../../api/interfaces/theme.interface'
@@ -9,6 +9,8 @@ interface Props {
     isChecked: boolean
     onCheckboxChange: (themeName: string, isChecked: boolean) => void
     children?: any
+    className?: string
+    style?: CSSProperties
 }
 
 const ExtensionCard: React.FC<Props> = ({
@@ -16,6 +18,8 @@ const ExtensionCard: React.FC<Props> = ({
     isChecked,
     onCheckboxChange,
     children,
+    className,
+    style
 }) => {
     const [imageSrc, setImageSrc] = useState(
         'static/assets/images/no_themeImage.png',
@@ -33,8 +37,9 @@ const ExtensionCard: React.FC<Props> = ({
             })
     }
     getUserImage()
+
     return (
-        <div className={styles.card}>
+        <div className={`${className} ${styles.card}`} style={style}>
             <div className={styles.cardContainer}>
                 <div className={styles.containerDetail}>
                     <img

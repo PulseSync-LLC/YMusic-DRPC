@@ -9,5 +9,6 @@ const ThemeInitials: ThemeInterface = {
     path: 'local',
     lastModified: 0,
     size: 0,
+    tags: []
 }
 export default ThemeInitials

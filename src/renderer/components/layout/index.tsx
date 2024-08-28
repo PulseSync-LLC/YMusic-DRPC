@@ -77,6 +77,9 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                             <NavButtonPulse to="/extension">
                                 <MdExtension size={24} />
                             </NavButtonPulse>
+                            <NavButtonPulse to="/extensionbeta">
+                                <MdExtension size={24} />
+                            </NavButtonPulse>
                             <NavButtonPulse to="/store" disabled>
                                 <MdStoreMallDirectory size={24} />
                             </NavButtonPulse>
