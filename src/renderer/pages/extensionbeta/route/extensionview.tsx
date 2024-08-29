@@ -42,6 +42,15 @@ const ExtensionViewPage: React.FC = () => {
                                 {Array.isArray(theme.tags) && theme.tags.length > 0 && (
                                     <p>Теги: {theme.tags.join(', ')}</p>
                                 )}
+                                {/* 
+                        <Checkbox
+                            checkType="changeTheme"
+                            isChecked={isChecked}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                onCheckboxChange(theme.name, e.target.checked)
+                            }
+                        />
+                        */}
                             </div>
                         </div>
                     </div>

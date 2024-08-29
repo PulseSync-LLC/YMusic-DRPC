@@ -1,17 +1,17 @@
-import React, { CSSProperties, useState, useEffect } from 'react'
-import * as styles from './card.module.scss'
-import Checkbox from '../checkbox'
-import ThemeInterface from '../../api/interfaces/theme.interface'
-import { MdDateRange, MdDesignServices, MdFolder, MdStar } from 'react-icons/md'
-import { useNavigate } from 'react-router-dom'
+import React, { CSSProperties, useState, useEffect } from 'react';
+import * as styles from './card.module.scss';
+import Checkbox from '../checkbox';
+import ThemeInterface from '../../api/interfaces/theme.interface';
+import { MdDateRange, MdDesignServices, MdFolder, MdStar } from 'react-icons/md';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
-    theme: ThemeInterface
-    isChecked: boolean
-    onCheckboxChange: (themeName: string, isChecked: boolean) => void
-    children?: any
-    className?: string
-    style?: CSSProperties
+    theme: ThemeInterface;
+    isChecked: boolean;
+    onCheckboxChange: (themeName: string, isChecked: boolean) => void;
+    children?: any;
+    className?: string;
+    style?: CSSProperties;
 }
 
 const ExtensionCard: React.FC<Props> = ({
@@ -24,22 +24,41 @@ const ExtensionCard: React.FC<Props> = ({
 }) => {
     const navigate = useNavigate();
     const [imageSrc, setImageSrc] = useState('static/assets/images/no_themeImage.png');
+    const [bannerSrc, setBannerSrc] = useState('static/assets/images/no_themeImage.png');
 
-    const getUserImage = () => {
-        fetch(`${theme.path}/${theme.image}`)
-            .then((res) => {
-                if (res.ok) {
-                    setImageSrc(res.url);
-                }
-            })
-            .catch(() => {
-                setImageSrc('static/assets/images/no_themeImage.png');
-            });
+    // Utility function to format paths correctly for URLs
+    const formatPath = (path: string) => {
+        // Replace backslashes with forward slashes and encode URI
+        return encodeURI(path.replace(/\\/g, '/'));
     };
 
     useEffect(() => {
         if (theme.path && theme.image) {
-            getUserImage();
+            const imgSrc = formatPath(`${theme.path}/${theme.image}`);
+            fetch(imgSrc)
+                .then((res) => {
+                    if (res.ok) {
+                        setImageSrc(imgSrc);
+                    }
+                })
+                .catch(() => {
+                    setImageSrc('static/assets/images/no_themeImage.png');
+                });
+        }
+    }, [theme]);
+
+    useEffect(() => {
+        if (theme.path && theme.banner) {
+            const bannerPath = formatPath(`${theme.path}/${theme.banner}`);
+            fetch(bannerPath)
+                .then((res) => {
+                    if (res.ok) {
+                        setBannerSrc(bannerPath);
+                    }
+                })
+                .catch(() => {
+                    setBannerSrc('static/assets/images/no_themeImage.png');
+                });
         }
     }, [theme]);
 
@@ -48,52 +67,31 @@ const ExtensionCard: React.FC<Props> = ({
     };
 
     return (
-        <div className={`${className} ${styles.card}`} onClick={handleClick} style={style}>
-            <div className={styles.cardContainer}>
-                <div className={styles.containerDetail}>
-                    <img
-                        className={styles.icon}
-                        src={imageSrc}
-                        width="50"
-                        height="50"
-                        alt="Theme image"
-                    />
-                    <div className={styles.themeDetals}>
-                        <span className={styles.title}>{theme.name}</span>
-                        <span className={styles.author}>{theme.author}</span>
+        <div
+            className={`${className} ${styles.extensionCard}`}
+            onClick={handleClick}
+            style={{
+                background: `linear-gradient(0deg, #292C36 0%, rgba(41, 44, 54, 0.9) 100%), url(${bannerSrc})`,
+                backgroundSize: 'cover',
+            }}
+        >
+            <div className={styles.imageOverlay}>
+                <div className={styles.leftOrig}>
+                    <img className={styles.themeImage} src={imageSrc} alt="Theme image" />
+                    <div className={styles.detailTop}>
+                        <span className={styles.themeTitle}>{theme.name}</span>
+                        <span className={styles.themeAuthor}>By {theme.author}</span>
                     </div>
                 </div>
-                <div className={styles.themeVerStar}>
-                    <div className={styles.tabDetail}>
-                        <MdDesignServices size={20} />
-                        ver. {theme.version}
-                    </div>
-                    <div className={styles.star}>
-                        <MdStar size={20} /> Null
-                    </div>
+                <div className={styles.rightOrig}>
+                    (local) ver. {theme.version}
                 </div>
             </div>
-            <div className={styles.cardContainerTab}>
-                <div className={styles.leftTab}>
-                    <Checkbox
-                        checkType="changeTheme"
-                        isChecked={isChecked}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            onCheckboxChange(theme.name, e.target.checked)
-                        }
-                    />
-                    <div className={styles.tabDetail}>
-                        <MdFolder size={20} />
-                        {theme.size}
-                    </div>
-                </div>
-                <div className={styles.tabDetail}>
-                    <MdDateRange size={20} />
-                    {theme.lastModified} (local)
-                </div>
-            </div>
+            <span className={styles.themeDescription}>
+                {theme.description}
+            </span>
         </div>
-    )
-}
+    );
+};
 
-export default ExtensionCard
+export default ExtensionCard;
