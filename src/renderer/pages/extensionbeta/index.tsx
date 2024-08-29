@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import ThemeInterface from '../../api/interfaces/theme.interface';
 import Button from '../../components/button';
 import stringSimilarity from 'string-similarity';
+import CustomCheckbox from '../../components/checkbox_props';
 
 export default function ExtensionPage() {
     const [themes, setThemes] = useState<ThemeInterface[]>([]);
@@ -59,9 +60,9 @@ export default function ExtensionPage() {
             .map(theme => ({
                 ...theme,
                 matches: theme.name.toLowerCase().includes(searchQuery) ||
-                          theme.author.toLowerCase().includes(searchQuery) ||
-                          stringSimilarity.compareTwoStrings(theme.name.toLowerCase(), searchQuery) > 0.35 ||
-                          stringSimilarity.compareTwoStrings(theme.author.toLowerCase(), searchQuery) > 0.35,
+                    theme.author.toLowerCase().includes(searchQuery) ||
+                    stringSimilarity.compareTwoStrings(theme.name.toLowerCase(), searchQuery) > 0.35 ||
+                    stringSimilarity.compareTwoStrings(theme.author.toLowerCase(), searchQuery) > 0.35,
             }))
             .sort((a, b) => a.matches === b.matches ? 0 : a.matches ? -1 : 1);
     };
@@ -124,27 +125,19 @@ export default function ExtensionPage() {
                                 <div className={theme.tagsSection}>
                                     <div className={theme.tagsLabel}>Tags</div>
                                     {allTags.map((tag) => (
-                                        <label
+                                        <CustomCheckbox
                                             key={tag}
+                                            checked={selectedTags.has(tag)}
+                                            onChange={() => handleTagChange(tag)}
+                                            label={`${tag} (${tagCounts[tag]})`}
                                             className={selectedTags.has(tag) ? theme.selectedTag : ''}
-                                        >
-                                            <input
-                                                className={theme.checkbox}
-                                                type="checkbox"
-                                                checked={selectedTags.has(tag)}
-                                                onChange={() => handleTagChange(tag)}
-                                            />
-                                            {tag} ({tagCounts[tag]})
-                                        </label>
-                                    ))}
-                                    <label>
-                                        <input
-                                            type="checkbox"
-                                            checked={hideEnabled}
-                                            onChange={handleHideEnabledChange}
                                         />
-                                        Скрыть включенные
-                                    </label>
+                                    ))}
+                                    <CustomCheckbox
+                                        checked={hideEnabled}
+                                        onChange={handleHideEnabledChange}
+                                        label="Скрыть включенные"
+                                    />
                                 </div>
                             </div>
                             <div className={theme.preview}>
