@@ -3,6 +3,7 @@ import ThemeInterface from '../interfaces/theme.interface'
 const ThemeInitials: ThemeInterface = {
     name: 'Default',
     image: 'url',
+    banner: 'url',
     author: 'Your Name',
     description: 'Default theme.',
     version: '1.0.0',
