@@ -26,9 +26,7 @@ const ExtensionCard: React.FC<Props> = ({
     const [imageSrc, setImageSrc] = useState('static/assets/images/no_themeImage.png');
     const [bannerSrc, setBannerSrc] = useState('static/assets/images/no_themeImage.png');
 
-    // Utility function to format paths correctly for URLs
     const formatPath = (path: string) => {
-        // Replace backslashes with forward slashes and encode URI
         return encodeURI(path.replace(/\\/g, '/'));
     };
 

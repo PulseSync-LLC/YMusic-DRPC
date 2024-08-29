@@ -5,17 +5,28 @@
     position: relative;
     padding: 24px;
     cursor: pointer;
-    background-size: cover !important;
     outline: 1px solid var(--BorderColor);
+    background-size: 170% !important;
+    background-position: 50% 50% !important;
 
     &:hover {
-        height: 275px;
-        padding: 20px 24px;
+        background-size: 150% !important;
         outline: 1px solid #5d6480;
 
-        &>.imageOverlay>.leftOrig>.themeImage {
-            width: 51px;
-            height: 51px;
+        &>.imageOverlay {
+            gap: 8px;
+
+            &>.leftOrig{
+                gap: 12px;
+                &>.themeImage {
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+        }
+
+        &>.themeDescription {
+            -webkit-line-clamp: 7;
         }
     }
 
@@ -26,6 +37,7 @@
         padding: 0px 0px 16px;
         gap: 16px;
         width: 100%;
+        transition: var(--transition);
 
         &>.leftOrig {
             display: flex;
@@ -34,11 +46,12 @@
 
             gap: 24px;
             width: 100%;
+            transition: var(--transition);
 
             &>.themeImage {
                 transition: var(--transition);
-                width: 45px;
-                height: 45px;
+                width: 55px;
+                height: 55px;
                 border-radius: 6px;
             }
 
@@ -108,6 +121,7 @@
     }
 
     &>.themeDescription {
+        transition: var(--transition);
         width: 100%;
         font-weight: 400;
         font-size: 14px;

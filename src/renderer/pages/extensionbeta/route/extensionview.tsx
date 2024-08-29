@@ -32,6 +32,15 @@ const ExtensionViewPage: React.FC = () => {
                                         (e.target as HTMLImageElement).src = 'static/assets/images/no_themeImage.png';
                                     }}
                                 />
+                                <img
+                                    src={`${theme.path}/${theme.banner}`}
+                                    alt={`${theme.name} image`}
+                                    width="600"
+                                    height="600"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = 'static/assets/images/no_themeImage.png';
+                                    }}
+                                />
                                 {theme.author && <p>Автор: {theme.author}</p>}
                                 {theme.description && <p>Описание: {theme.description}</p>}
                                 {theme.version && <p>Версия: {theme.version}</p>}
@@ -42,15 +51,13 @@ const ExtensionViewPage: React.FC = () => {
                                 {Array.isArray(theme.tags) && theme.tags.length > 0 && (
                                     <p>Теги: {theme.tags.join(', ')}</p>
                                 )}
-                                {/* 
-                        <Checkbox
-                            checkType="changeTheme"
-                            isChecked={isChecked}
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                onCheckboxChange(theme.name, e.target.checked)
-                            }
-                        />
-                        */}
+                                {/* <Checkbox
+                                    checkType="changeTheme"
+                                    isChecked={isChecked}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                                        onCheckboxChange(theme.name, e.target.checked)
+                                    }
+                                /> */}
                             </div>
                         </div>
                     </div>
