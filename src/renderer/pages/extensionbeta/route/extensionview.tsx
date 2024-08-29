@@ -23,7 +23,15 @@ const ExtensionViewPage: React.FC = () => {
                         <div className={styles.container30x15}>
                             <div>
                                 <h1>{theme.name || 'Название недоступно'}</h1>
-                                <img src={`${theme.path}/${theme.image}`} alt={`${theme.name} image`} width="100" height="100" />
+                                <img
+                                    src={`${theme.path}/${theme.image}`}
+                                    alt={`${theme.name} image`}
+                                    width="100"
+                                    height="100"
+                                    onError={(e) => {
+                                        (e.target as HTMLImageElement).src = 'static/assets/images/no_themeImage.png';
+                                    }}
+                                />
                                 {theme.author && <p>Автор: {theme.author}</p>}
                                 {theme.description && <p>Описание: {theme.description}</p>}
                                 {theme.version && <p>Версия: {theme.version}</p>}
