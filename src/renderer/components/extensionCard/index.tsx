@@ -1,8 +1,9 @@
-import React, { CSSProperties, useState } from 'react'
+import React, { CSSProperties, useState, useEffect } from 'react'
 import * as styles from './card.module.scss'
 import Checkbox from '../checkbox'
 import ThemeInterface from '../../api/interfaces/theme.interface'
 import { MdDateRange, MdDesignServices, MdFolder, MdStar } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom'
 
 interface Props {
     theme: ThemeInterface
@@ -19,27 +20,35 @@ const ExtensionCard: React.FC<Props> = ({
     onCheckboxChange,
     children,
     className,
-    style
+    style,
 }) => {
-    const [imageSrc, setImageSrc] = useState(
-        'static/assets/images/no_themeImage.png',
-    )
+    const navigate = useNavigate();
+    const [imageSrc, setImageSrc] = useState('static/assets/images/no_themeImage.png');
 
     const getUserImage = () => {
-        fetch(theme.path + '/' + theme.image)
-            .then(res => {
+        fetch(`${theme.path}/${theme.image}`)
+            .then((res) => {
                 if (res.ok) {
-                    setImageSrc(res.url)
+                    setImageSrc(res.url);
                 }
             })
             .catch(() => {
-                setImageSrc('static/assets/images/no_themeImage.png')
-            })
-    }
-    getUserImage()
+                setImageSrc('static/assets/images/no_themeImage.png');
+            });
+    };
+
+    useEffect(() => {
+        if (theme.path && theme.image) {
+            getUserImage();
+        }
+    }, [theme]);
+
+    const handleClick = () => {
+        navigate(`/extensionbeta/${theme.name}`, { state: { theme } });
+    };
 
     return (
-        <div className={`${className} ${styles.card}`} style={style}>
+        <div className={`${className} ${styles.card}`} onClick={handleClick} style={style}>
             <div className={styles.cardContainer}>
                 <div className={styles.containerDetail}>
                     <img

@@ -7,6 +7,7 @@ import CallbackPage from './auth/callback'
 import TrackInfoPage from './trackinfo'
 import ExtensionPage from './extension'
 import ExtensionBetaPage from './extensionbeta'
+import ExtensionViewPage from './extensionbeta/route/extensionview'
 import JointPage from './joint'
 import BugReportPage from './bugreport'
 
@@ -145,6 +146,10 @@ function _app() {
         {
             path: '/extensionbeta',
             element: <ExtensionBetaPage />,
+        },
+        {
+            path: '/extensionbeta/:contactId',
+            element: <ExtensionViewPage />,
         },
         {
             path: '/joint',
