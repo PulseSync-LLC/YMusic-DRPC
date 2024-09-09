@@ -74,9 +74,9 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                             <NavButtonPulse to="/trackinfo">
                                 <Discord height={24} width={24} />
                             </NavButtonPulse>
-                            <NavButtonPulse to="/extension">
+                            {/* <NavButtonPulse to="/extension">
                                 <MdExtension size={24} />
-                            </NavButtonPulse>
+                            </NavButtonPulse> */}
                             <NavButtonPulse to="/extensionbeta">
                                 <MdExtension size={24} />
                             </NavButtonPulse>

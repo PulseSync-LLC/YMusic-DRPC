@@ -1,8 +1,8 @@
-import React, { CSSProperties, useState, useEffect } from 'react';
+import React, { CSSProperties, useState, useEffect, useRef } from 'react';
 import * as styles from './card.module.scss';
-import Checkbox from '../checkbox';
 import ThemeInterface from '../../api/interfaces/theme.interface';
-import { MdDateRange, MdDesignServices, MdFolder, MdStar } from 'react-icons/md';
+import ContextMenu from '../../components/context_menu_themes';
+import { createActions } from '../../components/context_menu_themes/sectionConfig';
 import { useNavigate } from 'react-router-dom';
 
 interface Props {
@@ -25,6 +25,11 @@ const ExtensionCard: React.FC<Props> = ({
     const navigate = useNavigate();
     const [imageSrc, setImageSrc] = useState('static/assets/images/no_themeImage.png');
     const [bannerSrc, setBannerSrc] = useState('static/assets/images/no_themeImage.png');
+
+    const [contextMenuVisible, setContextMenuVisible] = useState(false);
+    const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+    const [clickEnabled, setClickEnabled] = useState(true);
+    const cardRef = useRef<HTMLDivElement | null>(null);
 
     const formatPath = (path: string) => {
         return encodeURI(path.replace(/\\/g, '/'));
@@ -61,13 +66,31 @@ const ExtensionCard: React.FC<Props> = ({
     }, [theme]);
 
     const handleClick = () => {
-        navigate(`/extensionbeta/${theme.name}`, { state: { theme } });
+        if (clickEnabled) {
+            navigate(`/extensionbeta/${theme.name}`, { state: { theme } });
+        }
+    };
+
+    const handleRightClick = (event: React.MouseEvent) => {
+        event.preventDefault();
+        if (cardRef.current) {
+            setMenuPosition({ x: 0, y: 0 });
+            setContextMenuVisible(true);
+            setClickEnabled(false);
+        }
+    };
+
+    const closeContextMenu = () => {
+        setContextMenuVisible(false);
+        setClickEnabled(true);
     };
 
     return (
         <div
+            ref={cardRef}
             className={`${className} ${styles.extensionCard}`}
             onClick={handleClick}
+            onContextMenu={handleRightClick}
             style={{
                 background: `linear-gradient(0deg, #292C36 0%, rgba(41, 44, 54, 0.9) 100%), url(${bannerSrc})`,
                 backgroundSize: 'cover',
@@ -88,6 +111,13 @@ const ExtensionCard: React.FC<Props> = ({
             <span className={styles.themeDescription}>
                 {theme.description}
             </span>
+            {contextMenuVisible && (
+                <ContextMenu
+                    items={createActions(theme.name)}
+                    position={menuPosition}
+                    onClose={closeContextMenu}
+                />
+            )}
         </div>
     );
 };

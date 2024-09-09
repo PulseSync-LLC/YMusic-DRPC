@@ -1,4 +1,4 @@
-// ExtensionPage.tsx
+// extensionbeta/index.tsx
 
 import Layout from '../../components/layout';
 import Container from '../../components/container';
@@ -10,6 +10,7 @@ import ThemeInterface from '../../api/interfaces/theme.interface';
 import Button from '../../components/button';
 import stringSimilarity from 'string-similarity';
 import CustomCheckbox from '../../components/checkbox_props';
+import { useLocation } from 'react-router-dom';
 
 export default function ExtensionPage() {
     const [themes, setThemes] = useState<ThemeInterface[]>([]);
@@ -19,6 +20,16 @@ export default function ExtensionPage() {
     const [searchQuery, setSearchQuery] = useState('');
     const [hideEnabled, setHideEnabled] = useState(false);
     const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const selectedTagFromUrl = params.get('selectedTag');
+        if (selectedTagFromUrl) {
+            setSelectedTags(new Set([selectedTagFromUrl]));
+        }
+    }, [location.search]);
 
     useEffect(() => {
         if (typeof window !== 'undefined' && window.desktopEvents) {
@@ -98,7 +109,7 @@ export default function ExtensionPage() {
                 <div className={styles.container}>
                     <div className={styles.main_container}>
                         <Container
-                            titleName={'Ваши расширения'}
+                            titleName={'Ваши расширения (BETA)'}
                             description={'Вы можете управлять всеми установленными расширениями для PulseSync.'}
                             imageName={'extension'}
                         >
