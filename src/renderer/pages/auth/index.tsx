@@ -13,6 +13,15 @@ import { MdAdminPanelSettings } from 'react-icons/md'
 import userContext from '../../api/context/user.context'
 import config from '../../api/config'
 
+
+const LinkRenderer = (props: any) => {
+    return (
+        <a href={props.href} target="_blank" rel="noopener noreferrer">
+            {props.children}
+        </a>
+    )
+}
+
 export default function AuthPage() {
     const navigate = useNavigate()
     const [mdText, setMdText] = useState(null)
@@ -46,7 +55,12 @@ export default function AuthPage() {
             <div className={styles.main_window}>
                 <div className={styles.container}>
                     <div className={styles.policy}>
-                        <MarkDown remarkPlugins={[remarkGfm]}>
+                        <MarkDown
+                            remarkPlugins={[remarkGfm]}
+                            components={{
+                                a: LinkRenderer,
+                            }}
+                        >
                             {memoizedMdText}
                         </MarkDown>
                         <CheckboxNav checkType="readPolicy">

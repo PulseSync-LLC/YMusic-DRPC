@@ -28,16 +28,20 @@ export const navigateToDeeplink = (
     const match = url.match(regex)
     if (!match) return
     const mainPath = match[1]
+
     switch (mainPath) {
         case 'callback':
             const reg = url.match(/\?token=([^&]+)&id=([^&]+)/)
+            if (!reg || reg.length < 3) {
+                return
+            }
             const token = decodeURIComponent(reg[1])
             const id = decodeURIComponent(reg[2]);
             fetch(`${config.SERVER_URL}/api/v1/user/${id}/access`).then(async (res) => {
                 const j = await res.json()
                 if (j.ok) {
                     if (!j.access) {
-                      return app.quit()
+                        return app.quit()
                     }
                 }
                 else {
@@ -50,12 +54,17 @@ export const navigateToDeeplink = (
             window.webContents.send('authSuccess')
             break
         case 'ban':
-            const regex = url.match(/\?reason=([^&]+)/)
-            const reason = decodeURIComponent(regex[1])
+            const regexBan = url.match(/\?reason=([^&]+)/)
+            if (!regexBan || regexBan.length < 2) {
+                return
+            }
+            const reason = decodeURIComponent(regexBan[1])
             window.webContents.send('authBanned', {reason: reason})
             break
         case 'joinRoom':
             break
+        default:
+            break;
     }
     window.focus()
     state.deeplink = null

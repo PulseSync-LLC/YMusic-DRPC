@@ -79,7 +79,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                     },
                 })
                 window.electron.store.set('settings.autoStartApp', status)
-                window.desktopEvents?.send('settings.autoStartApp', status)
+                window.desktopEvents?.send('autoStartApp', status)
                 break
             case 'autoStartMusic':
                 setApp({
