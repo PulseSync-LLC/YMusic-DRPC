@@ -7,7 +7,6 @@ import CallbackPage from './auth/callback'
 import TrackInfoPage from './trackinfo'
 import ExtensionPage from './extension'
 import JointPage from './joint'
-import BugReportPage from './bugreport'
 
 import hotToast, { Toaster } from 'react-hot-toast'
 import { CssVarsProvider } from '@mui/joy'
@@ -69,11 +68,7 @@ function _app() {
         {
             path: '/joint',
             element: <JointPage />,
-        },
-        {
-            path: '/bugreport',
-            element: <BugReportPage />,
-        },
+        }
     ])
     const authorize = async () => {
         const token = await getUserToken()

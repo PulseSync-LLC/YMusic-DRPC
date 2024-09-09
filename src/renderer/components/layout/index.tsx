@@ -5,7 +5,6 @@ import Header from './header'
 import ButtonNav from '../button_nav'
 import Discord from './../../../../static/assets/icons/discord.svg'
 import {
-    MdBugReport,
     MdConnectWithoutContact,
     MdDownload,
     MdEngineering,
@@ -108,22 +107,6 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                             </ButtonNav>
                         </div>
                         <div className={styles.navigation_buttons}>
-                            <NavLink
-                                to="/bugreport"
-                                className={({ isActive, isPending }) =>
-                                    isPending
-                                        ? 'pending'
-                                        : isActive
-                                          ? 'active'
-                                          : ''
-                                }
-                            >
-                                <ButtonNav
-                                    disabled={user.perms !== 'developer'}
-                                >
-                                    <MdBugReport size={24} />
-                                </ButtonNav>
-                            </NavLink>
                             {updateAvailable && (
                                 <button
                                     onClick={() => {
