@@ -45,10 +45,10 @@ function useKeyPressSound() {
         backspace: '../../../static/assets/sounds/v1dropdownClose.wav', //test
         ctrlBackspace: '../../../static/assets/sounds/v2modalClose.wav', //test
         ctrlA: '../../../static/assets/sounds/v2modalOpen.wav', //test
-        textSelection: '../../../static/assets/sounds/v1dropdownOpen.wav', //test
-        deselection: '../../../static/assets/sounds/v1copy.wav', //test
+        textSelection: '../../../static/assets/sounds/v2Select.wav', //test
+        deselection: '../../../static/assets/sounds/v2Deselect.wav', //test
         typingSpace: '../../../static/assets/sounds/v1buttonHover.wav', //test
-        typingEnter: '' //test
+        typingEnter: '../../../static/assets/sounds/v2Enter.wav' //test
     };
 
     const audioContext = useRef(new AudioContext());
@@ -96,7 +96,7 @@ function useKeyPressSound() {
         playTextSelectionSound: (pitch: number) => playSoundWithPitch(soundFiles.textSelection, pitch),
         playDeselectionSound: () => playSound(soundFiles.deselection),
         playTypingSpaceSound: () => playSound(soundFiles.typingSpace),
-        playTypingEnterSound: () => ""
+        playTypingEnterSound: () => playSound(soundFiles.typingEnter),
     };
 }
 
@@ -117,7 +117,8 @@ function _app() {
         playCtrlASound,
         playTextSelectionSound,
         playDeselectionSound,
-        playTypingSpaceSound
+        playTypingSpaceSound,
+        playTypingEnterSound
     } = useKeyPressSound();
     const socket = io(config.SOCKET_URL, {
         autoConnect: false,
@@ -229,6 +230,8 @@ function _app() {
                     playCtrlBackspaceSound();
                 } else if (event.key === 'Backspace') {
                     playBackspaceSound();
+                } else if (event.key === 'Enter') {
+                    playTypingEnterSound();
                 } else if (event.key === ' ') {
                     playTypingSpaceSound();
                 } else if (!event.ctrlKey && !event.altKey && event.key.length === 1) {
@@ -259,7 +262,7 @@ function _app() {
             document.removeEventListener('keydown', playSoundForKey);
             document.removeEventListener('selectionchange', playSoundForSelectionChange);
         };
-    }, [playRandomKeyPressSound, playBackspaceSound, playCtrlBackspaceSound, playCtrlASound, playTextSelectionSound, playDeselectionSound, playTypingSpaceSound]);
+    }, [playRandomKeyPressSound, playBackspaceSound, playCtrlBackspaceSound, playCtrlASound, playTextSelectionSound, playDeselectionSound, playTypingSpaceSound, playTypingEnterSound]);
     useEffect(() => {
         const handleMouseButton = (event: MouseEvent) => {
             if (event.button === 3) {
