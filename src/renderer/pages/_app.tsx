@@ -246,6 +246,9 @@ function _app() {
                     },
                 }))
             })
+            window.desktopEvents?.on('discordRpcState', (event, data) => {
+                toast.error(data)
+            })
             window.desktopEvents
                 ?.invoke('getVersion')
                 .then((version: string) => {
@@ -434,10 +437,11 @@ const Player: React.FC<any> = ({ children }) => {
                                 linkTitle: data.linkTitle,
                             }))
                         })
-                        window.desktopEvents?.on('track_id', (event, data) => {
+                        window.desktopEvents?.on('track_info', (event, data) => {
                             setTrack(prevTrack => ({
                                 ...prevTrack,
-                                id: data,
+                                id: data.trackId,
+                                url: data.url,
                             }))
                         })
                     } else {

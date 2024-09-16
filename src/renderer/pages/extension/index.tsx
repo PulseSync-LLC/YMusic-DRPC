@@ -6,8 +6,6 @@ import * as theme from './extension.module.scss'
 import ExtensionCard from '../../components/extensionCard'
 import { useEffect, useMemo, useState } from 'react'
 import ThemeInterface from '../../api/interfaces/theme.interface'
-import Button_nav from '../../components/button_nav'
-import { MdAdminPanelSettings } from 'react-icons/md'
 
 export default function ThemePage() {
     const [themes, setThemes] = useState<ThemeInterface[]>([])

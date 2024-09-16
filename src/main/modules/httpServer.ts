@@ -71,13 +71,13 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
     }
 
     if (req.method === 'POST' && req.url === '/track_info') {
-        let data = ''
+        let data: any = ''
         req.on('data', chunk => {
             data += chunk
         })
         req.on('end', () => {
             try {
-                mainWindow.webContents.send('track_id', data)
+                mainWindow.webContents.send('track_info', JSON.parse(data))
                 res.writeHead(200, { 'Content-Type': 'application/json' })
                 res.end(
                     JSON.stringify({ message: 'Data received successfully' }),
@@ -169,7 +169,7 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
                     res.end(
                         JSON.stringify({
                             ok: true,
-                            css: cssContent,
+                            css: cssContent ? cssContent : "{}",
                             script: jsContent ? jsContent : '',
                         }),
                     )

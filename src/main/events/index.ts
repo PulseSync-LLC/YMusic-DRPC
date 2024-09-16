@@ -26,6 +26,7 @@ import UnPatcher from '../modules/patcher/unpatch'
 import { UpdateStatus } from '../modules/updater/constants/updateStatus'
 import { updateAppId } from '../modules/discordRpc'
 import archiver from 'archiver'
+import {Track} from "yandex-music-client";
 
 const updater = getUpdater()
 let reqModal = 0
@@ -58,9 +59,6 @@ export const handleEvents = (window: BrowserWindow): void => {
         setTimeout(async () => {
             await Patcher.patchRum().then(async () => {
                 store.set('settings.patched', true)
-                setTimeout(async () => {
-                    await checkAndStartYandexMusic()
-                }, 3000)
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     patch: true,
                 })
@@ -75,9 +73,6 @@ export const handleEvents = (window: BrowserWindow): void => {
             setTimeout(async () => {
                 Patcher.patchRum().then(async () => {
                     store.set('settings.patched', true)
-                    setTimeout(async () => {
-                        await checkAndStartYandexMusic()
-                    }, 3000)
                     mainWindow.webContents.send('UPDATE_APP_DATA', {
                         repatch: true,
                     })
@@ -93,9 +88,6 @@ export const handleEvents = (window: BrowserWindow): void => {
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     depatch: true,
                 })
-                setTimeout(async () => {
-                    await checkAndStartYandexMusic()
-                }, 2000)
             })
         }, 2000)
     })
@@ -132,7 +124,7 @@ export const handleEvents = (window: BrowserWindow): void => {
 
     ipcMain.on(
         'download-track',
-        (event, val: { url: string; track: TrackInterface }) => {
+        (event, val: { url: string; track: TrackInterface, trackInfo: Track }) => {
             const musicDir = app.getPath('music')
             const downloadDir = path.join(musicDir, 'PulseSyncMusic')
             dialog
@@ -165,7 +157,6 @@ export const handleEvents = (window: BrowserWindow): void => {
                                     percent,
                                 )
                             })
-
                             response
                                 .pipe(fs.createWriteStream(result.filePath))
                                 .on('finish', () => {
@@ -264,8 +255,7 @@ export const handleEvents = (window: BrowserWindow): void => {
             arch: os.arch(),
         }
     })
-
-    ipcMain.handle('getLogArchive', async () => {
+    ipcMain.on('getLogArchive', async (event) => {
         const logDirPath = path.join(
             app.getPath('appData'),
             'PulseSync',
@@ -278,27 +268,56 @@ export const handleEvents = (window: BrowserWindow): void => {
         const day = String(now.getDate()).padStart(2, '0')
 
         const archiveName = `logs-${year}-${month}-${day}.zip`
-        const archivePath = path.join(app.getPath('temp'), archiveName)
+        const archivePath = path.join(logDirPath, archiveName)
 
+        const userInfo = os.userInfo();
+        const systemInfo = {
+            appVersion: app.getVersion(),
+            osType: os.type(),
+            osRelease: os.release(),
+            cpu: os.cpus(),
+            memory: os.totalmem(),
+            freeMemory: os.freemem(),
+            arch: os.arch(),
+            platform: os.platform(),
+            uptime: os.uptime(),
+            networkInterfaces: os.networkInterfaces(),
+            networkStats: await si.networkStats(),
+            fsSize: await si.fsSize(),
+            osInfo: await si.osInfo(),
+            battery: await si.battery(),
+            memInfo: await si.mem(),
+            userInfo: {
+                username: userInfo.username,
+                homedir: userInfo.homedir,
+                shell: userInfo.shell,
+                uid: userInfo.uid,
+                gid: userInfo.gid
+            },
+        };
+        const systemInfoPath = path.join(logDirPath, 'system-info.json');
+        try {
+            fs.writeFileSync(systemInfoPath, JSON.stringify(systemInfo, null, 2), 'utf-8');
+        } catch (error) {
+            logger.main.error(`Error while creating system-info.json: ${error.message}`);
+        }
         try {
             const output = fs.createWriteStream(archivePath)
             const archive = archiver('zip', { zlib: { level: 9 } })
 
-            return new Promise((resolve, reject) => {
-                output.on('close', () => {
-                    resolve(archivePath)
-                })
-
-                archive.on('error', err => {
-                    reject(`Ошибка при создании архива: ${err.message}`)
-                })
-
-                archive.pipe(output)
-                archive.directory(logDirPath, false)
-                archive.finalize()
+            output.on('close', () => {
+                shell.showItemInFolder(archivePath)
             })
+
+            archive.on('error', (err) => {
+                logger.main.error(`Error while creating archive file: ${err.message}`)
+            })
+
+            archive.pipe(output)
+            archive.directory(logDirPath, false)
+            await archive.finalize()
         } catch (error) {
-            return `Ошибка при создании архива: ${error.message}`
+            logger.main.error(`Error while creating archive file: ${error.message}`)
         }
     })
 }

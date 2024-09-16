@@ -22,6 +22,7 @@ import { useCharCount } from '../../utils/useCharCount'
 export default function TrackInfoPage() {
     const { user, app, setApp } = useContext(userContext)
     const { currentTrack } = useContext(playerContext)
+    const [rickRollClick, setRickRoll] = useState(false)
     const [modal, setModal] = useState(false)
     const [modalAnim, setModalAnim] = useState(false)
     const [previousValues, setPreviousValues] = useState({
@@ -480,9 +481,7 @@ export default function TrackInfoPage() {
                                                     <div
                                                         className={theme.button}
                                                         onClick={() => {
-                                                            window.open(
-                                                                'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-                                                            )
+                                                           setRickRoll(!rickRollClick)
                                                         }}
                                                     >
                                                         {app.discordRpc.button
@@ -491,6 +490,11 @@ export default function TrackInfoPage() {
                                                                   .button
                                                             : '✌️ Open in Yandex Music'}
                                                     </div>
+                                                    {rickRollClick && (
+                                                        <video width="600" autoPlay loop>
+                                                            <source src="https://s3.pulsesync.dev/files/heheheha.mp4" type="video/mp4" />
+                                                        </video>
+                                                    )}
                                                     <div
                                                         className={theme.button}
                                                         onClick={() => {

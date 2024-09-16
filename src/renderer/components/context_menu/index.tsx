@@ -11,6 +11,7 @@ import trackInitials from '../../api/initials/track.initials'
 import config from '../../api/config'
 import getUserToken from '../../api/getUserToken'
 import userInitials from '../../api/initials/user.initials'
+import client from "../../api/yaClient";
 
 interface ContextMenuProps {
     modalRef: React.RefObject<{ openModal: () => void; closeModal: () => void }>
@@ -96,8 +97,9 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
     const downloadTrack = (event: any) => {
         event.stopPropagation()
         let toastId: string
+        console.log(currentTrack)
         getTrackUrl(yaClient, currentTrack.id, true)
-            .then(_result => {
+            .then(async _result => {
                 toastId = hotToast.loading('Загрузка...', {
                     style: {
                         background: '#292C36',
@@ -113,7 +115,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                         toast.loading(
                             <>
                                 <span>Загрузка</span>
-                                <b style={{ marginLeft: '.5em' }}>
+                                <b style={{marginLeft: '.5em'}}>
                                     {Math.floor(value)}%
                                 </b>
                             </>,
@@ -123,20 +125,25 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                         )
                     },
                 )
-
+                const formData = {
+                    "trackIds": [currentTrack.id],
+                    "with-positions": true
+                };
+                const trackInfo = await client.tracks.getTracks(formData)
                 window.electron.downloadTrack({
                     track: currentTrack,
                     url: _result,
+                    trackInfo
                 })
 
                 window.desktopEvents?.once('download-track-cancelled', () =>
                     hotToast.dismiss(toastId),
                 )
                 window.desktopEvents?.once('download-track-failed', () =>
-                    toast.error('Ошибка загрузки трека', { id: toastId }),
+                    toast.error('Ошибка загрузки трека', {id: toastId}),
                 )
                 window.desktopEvents?.once('download-track-finished', () =>
-                    toast.success('Загрузка завершена', { id: toastId }),
+                    toast.success('Загрузка завершена', {id: toastId}),
                 )
             })
             .catch(e => {
@@ -189,7 +196,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </button>
             <div className={styles.innerFunction}>
                 Патч
-                <ArrowContext />
+                <ArrowContext/>
                 <div className={styles.showButtons}>
                     <button
                         key="patch_button"
@@ -230,7 +237,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </div>
             <div className={styles.innerFunction}>
                 Автотрей
-                <ArrowContext />
+                <ArrowContext/>
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
@@ -250,7 +257,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </div>
             <div className={styles.innerFunction}>
                 Автозапуск приложения
-                <ArrowContext />
+                <ArrowContext/>
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
@@ -269,28 +276,8 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 </div>
             </div>
             <div className={styles.innerFunction}>
-                Автозапуск Яндекс Музыки
-                <ArrowContext />
-                <div className={styles.showButtons}>
-                    <button
-                        className={styles.contextButton}
-                        disabled
-                        onClick={() => enableFunc('autoStartMusic', true)}
-                    >
-                        Включить
-                    </button>
-                    <button
-                        className={styles.contextButton}
-                        disabled
-                        onClick={() => enableFunc('autoStartMusic', false)}
-                    >
-                        Выключить
-                    </button>
-                </div>
-            </div>
-            <div className={styles.innerFunction}>
                 Размер интерфейса
-                <ArrowContext />
+                <ArrowContext/>
                 <div className={styles.showButtons}>
                     <button className={styles.contextButton} disabled>
                         Скоро
@@ -298,23 +285,9 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 </div>
             </div>
             <div className={styles.innerFunction}>
-                Особое
-                <ArrowContext />
+                Музыка
+                <ArrowContext/>
                 <div className={styles.showButtons}>
-                    <div
-                        className={styles.contextButton}
-                        onClick={handleOpenModal}
-                    >
-                        Beta v{app.info.version}
-                    </div>
-                    <button
-                        className={styles.contextButton}
-                        onClick={e => {
-                            window.desktopEvents?.send('checkUpdate')
-                        }}
-                    >
-                        Проверить обновления
-                    </button>
                     <button
                         className={styles.contextButton}
                         onClick={downloadTrack}
@@ -332,6 +305,35 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                         }}
                     >
                         Директория со скаченной музыкой
+                    </button>
+                </div>
+            </div>
+            <div className={styles.innerFunction}>
+                Особое
+                <ArrowContext/>
+                <div className={styles.showButtons}>
+                    <div
+                        className={styles.contextButton}
+                        onClick={handleOpenModal}
+                    >
+                        Beta v{app.info.version}
+                    </div>
+                    <button
+                        className={styles.contextButton}
+                        onClick={e => {
+                            window.desktopEvents?.send('checkUpdate')
+                        }}
+                    >
+                        Проверить обновления
+                    </button>
+                    <button
+                        className={styles.contextButton}
+                        onClick={() => {
+                            window.desktopEvents.send('getLogArchive')
+                            toast.success('Успешно')
+                        }}
+                    >
+                        Собрать логи в архив
                     </button>
                 </div>
             </div>

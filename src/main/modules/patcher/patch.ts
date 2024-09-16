@@ -234,7 +234,7 @@ class Patcher {
                                             themeChanged = true;
                                         }
                                     } else {
-                                        if (script && data.script.trim() !== "") {
+                                        if (script) {
                                             themeChanged = true;
                                         }
                                     }
@@ -296,7 +296,8 @@ class Patcher {
 
             if (eventsPath) {
                 let eventsPathContent = fs.readFileSync(eventsPath, 'utf8');
-                const patchStr = `const handleApplicationEvents = (window) => {
+                const patchStr = `
+                const handleApplicationEvents = (window) => {
                     electron_1.session.defaultSession.webRequest.onCompleted({ urls: ['https://api.music.yandex.net/*'] }, (details) => {
                         const url = details.url;
                         const regex = /https:\\/\\/api\\.music\\.yandex\\.net\\/get-file-info\\?ts=\\d+&trackId=(\\d+)/;
@@ -304,10 +305,14 @@ class Patcher {
                         const match = url.match(regex);
                         if (match && match[1]) {
                             const trackId = match[1];
+                            const trackInfo = {
+                                url,
+                                trackId,
+                            }
                             console.log("Track ID found:", trackId);
                             fetch("http://127.0.0.1:2007/track_info", {
                                 method: "POST",
-                                body: trackId
+                                body: JSON.stringify(trackInfo),
                             });
                         }
                     });`;

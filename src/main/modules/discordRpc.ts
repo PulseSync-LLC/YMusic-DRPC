@@ -4,6 +4,7 @@ import { SetActivity } from '@xhayper/discord-rpc/dist/structures/ClientUser'
 import { store } from './storage'
 import logger from './logger'
 import config from '../../config.json'
+import {mainWindow} from "../../index";
 
 let clientId
 let client: Client
@@ -72,10 +73,12 @@ function rpc_connect() {
     client.on('error', () => {
         rpcConnected = false
         console.info('discordRpc state: error')
+        mainWindow.webContents.send('discordRpcState', "Ошибка подключения к Discord")
     })
     client.on('close', () => {
         rpcConnected = false
         console.info('discordRpc state: closed')
+        mainWindow.webContents.send('discordRpcState', "Ошибка подключения к Discord")
     })
 }
 const getRpcApp = () => {

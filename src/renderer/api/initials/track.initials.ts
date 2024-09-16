@@ -7,6 +7,7 @@ const TrackInitials: TrackInterface = {
     requestImgTrack: [],
     linkTitle: '',
     id: '',
+    url: '',
 }
 
 export default TrackInitials
