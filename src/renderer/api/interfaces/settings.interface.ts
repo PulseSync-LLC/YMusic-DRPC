@@ -1,5 +1,4 @@
 export interface Settings {
-    patched: boolean
     readPolicy: boolean
     autoStartInTray: boolean
     autoStartMusic: boolean
@@ -8,8 +7,13 @@ export interface Settings {
 export interface Info {
     version: string
 }
+export interface Patcher {
+    version: string
+    changelog: string[]
+    patched: boolean
+    updated: boolean
+}
 export interface Tokens {
-    ya_token: string
     token: string
 }
 export interface discordRpc {
@@ -26,5 +30,6 @@ export default interface SettingsInterface {
     settings: Settings
     discordRpc: discordRpc
     tokens: Tokens
+    patcher: Patcher
     info: Info
 }

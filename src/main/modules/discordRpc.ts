@@ -5,6 +5,7 @@ import { store } from './storage'
 import logger from './logger'
 import config from '../../config.json'
 import {mainWindow} from "../../index";
+import {updateTray} from "./tray";
 
 let clientId
 let client: Client
@@ -22,16 +23,7 @@ ipcMain.on('discordrpc-setstate', (event, activity: SetActivity) => {
     }
 })
 ipcMain.on('discordrpc-discordRpc', (event, val) => {
-    logger.discordRpc.info('discordRpc state: ' + val)
-    store.set('discordRpc.status', val)
-    if (val && !rpcConnected) {
-        rpc_connect()
-    } else {
-        client.destroy().catch((e) => {
-            logger.discordRpc.error(e)
-        })
-        rpcConnected = false
-    }
+    setRpcStatus(val)
 })
 function updateAppId(newAppId: string) {
     if(newAppId === config.CLIENT_ID) return;
@@ -72,14 +64,26 @@ function rpc_connect() {
 
     client.on('error', () => {
         rpcConnected = false
-        console.info('discordRpc state: error')
-        mainWindow.webContents.send('discordRpcState', "Ошибка подключения к Discord")
+        logger.discordRpc.error('discordRpc state: error')
     })
     client.on('close', () => {
         rpcConnected = false
-        console.info('discordRpc state: closed')
-        mainWindow.webContents.send('discordRpcState', "Ошибка подключения к Discord")
+        logger.discordRpc.error('discordRpc state: closed')
     })
+}
+export const setRpcStatus = (status: boolean) => {
+    logger.discordRpc.info('discordRpc state: ' + status)
+    store.set('discordRpc.status', status)
+    mainWindow.webContents.send('discordRpcState', status)
+    updateTray()
+    if (status && !rpcConnected) {
+        rpc_connect()
+    } else {
+        client.destroy().catch((e) => {
+            logger.discordRpc.error(e)
+        })
+        rpcConnected = false
+    }
 }
 const getRpcApp = () => {
     return client.application

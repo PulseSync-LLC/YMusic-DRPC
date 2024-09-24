@@ -63,7 +63,7 @@ const icon = getNativeImg('appicon', '.png', 'icon').resize({
 })
 app.setAppUserModelId('pulsesync.app')
 Sentry.init({
-    debug: isAppDev,
+    debug: false,
     dsn: config.SENTRY_DSN,
     enableRendererProfiling: true,
     enableTracing: true,
@@ -443,12 +443,12 @@ export async function prestartCheck() {
     if (store.has('discordRpc.status') && store.get('discordRpc.status')) {
         rpc_connect()
     }
-    if (store.has('settings.patched') && store.get('settings.patched')) {
+    if (store.has('patcher.patched') && store.get('patcher.patched')) {
         if (!fs.existsSync(asarCopy)) {
-            store.set('settings.patched', false)
+            store.set('patcher.patched', false)
         }
     } else if (fs.existsSync(asarCopy)) {
-        store.set('settings.patched', true)
+        store.set('patcher.patched', true)
     }
 }
 app.on('window-all-closed', () => {

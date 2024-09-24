@@ -11,14 +11,13 @@ import trackInitials from '../../api/initials/track.initials'
 import config from '../../api/config'
 import getUserToken from '../../api/getUserToken'
 import userInitials from '../../api/initials/user.initials'
-import client from "../../api/yaClient";
 
 interface ContextMenuProps {
     modalRef: React.RefObject<{ openModal: () => void; closeModal: () => void }>
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
-    const { app, yaClient, setApp, setUser, setUpdate } =
+    const { app, setApp, setUser, setUpdate } =
         useContext(userContext)
     const { currentTrack } = useContext(playerContext)
     const handleOpenModal = () => {
@@ -33,8 +32,8 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
         window.electron.patcher.depatch()
         setApp({
             ...app,
-            settings: {
-                ...app.settings,
+            patcher: {
+                ...app.patcher,
                 patched: false,
             },
         })
@@ -96,64 +95,65 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
     }
     const downloadTrack = (event: any) => {
         event.stopPropagation()
-        let toastId: string
-        console.log(currentTrack)
-        getTrackUrl(yaClient, currentTrack.id, true)
-            .then(async _result => {
-                toastId = hotToast.loading('Загрузка...', {
-                    style: {
-                        background: '#292C36',
-                        color: '#ffffff',
-                        border: 'solid 1px #363944',
-                        borderRadius: '8px',
-                    },
-                })
-
-                window.desktopEvents?.on(
-                    'download-track-progress',
-                    (event, value) => {
-                        toast.loading(
-                            <>
-                                <span>Загрузка</span>
-                                <b style={{marginLeft: '.5em'}}>
-                                    {Math.floor(value)}%
-                                </b>
-                            </>,
-                            {
-                                id: toastId,
-                            },
-                        )
-                    },
-                )
-                const formData = {
-                    "trackIds": [currentTrack.id],
-                    "with-positions": true
-                };
-                const trackInfo = await client.tracks.getTracks(formData)
-                window.electron.downloadTrack({
-                    track: currentTrack,
-                    url: _result,
-                    trackInfo
-                })
-
-                window.desktopEvents?.once('download-track-cancelled', () =>
-                    hotToast.dismiss(toastId),
-                )
-                window.desktopEvents?.once('download-track-failed', () =>
-                    toast.error('Ошибка загрузки трека', {id: toastId}),
-                )
-                window.desktopEvents?.once('download-track-finished', () =>
-                    toast.success('Загрузка завершена', {id: toastId}),
-                )
-            })
-            .catch(e => {
-                window.desktopEvents?.send('renderer-log', {
-                    info: 'Download track failed: ' + e,
-                })
-                toast.error('Не удалось получить ссылку для трека')
-            })
-
-        window.desktopEvents?.removeAllListeners('download-track-progress')
+        toast.error("Временно не работает")
+        // let toastId: string
+        // console.log(currentTrack)
+        // getTrackUrl(yaClient, currentTrack.id, true)
+        //     .then(async _result => {
+        //         toastId = hotToast.loading('Загрузка...', {
+        //             style: {
+        //                 background: '#292C36',
+        //                 color: '#ffffff',
+        //                 border: 'solid 1px #363944',
+        //                 borderRadius: '8px',
+        //             },
+        //         })
+        //
+        //         window.desktopEvents?.on(
+        //             'download-track-progress',
+        //             (event, value) => {
+        //                 toast.loading(
+        //                     <>
+        //                         <span>Загрузка</span>
+        //                         <b style={{marginLeft: '.5em'}}>
+        //                             {Math.floor(value)}%
+        //                         </b>
+        //                     </>,
+        //                     {
+        //                         id: toastId,
+        //                     },
+        //                 )
+        //             },
+        //         )
+        //         const formData = {
+        //             "trackIds": [currentTrack.id],
+        //             "with-positions": true
+        //         };
+        //         const trackInfo = await client.tracks.getTracks(formData)
+        //         window.electron.downloadTrack({
+        //             track: currentTrack,
+        //             url: _result,
+        //             trackInfo
+        //         })
+        //
+        //         window.desktopEvents?.once('download-track-cancelled', () =>
+        //             hotToast.dismiss(toastId),
+        //         )
+        //         window.desktopEvents?.once('download-track-failed', () =>
+        //             toast.error('Ошибка загрузки трека', {id: toastId}),
+        //         )
+        //         window.desktopEvents?.once('download-track-finished', () =>
+        //             toast.success('Загрузка завершена', {id: toastId}),
+        //         )
+        //     })
+        //     .catch(e => {
+        //         window.desktopEvents?.send('renderer-log', {
+        //             info: 'Download track failed: ' + e,
+        //         })
+        //         toast.error('Не удалось получить ссылку для трека')
+        //     })
+        //
+        // window.desktopEvents?.removeAllListeners('download-track-progress')
     }
     const toastLoading = (event: any, title: string) => {
         let toastId: string
@@ -200,7 +200,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                 <div className={styles.showButtons}>
                     <button
                         key="patch_button"
-                        disabled={app.settings.patched}
+                        disabled={app.patcher.patched}
                         className={styles.contextButton}
                     >
                         Патч
@@ -211,7 +211,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                             repatch()
                         }}
                         key="repatch_button"
-                        disabled={!app.settings.patched}
+                        disabled={!app.patcher.patched}
                         className={styles.contextButton}
                     >
                         Репатч
@@ -222,7 +222,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                             depatch()
                         }}
                         key="depatch_button"
-                        disabled={!app.settings.patched}
+                        disabled={!app.patcher.patched}
                         className={styles.contextButton}
                     >
                         Депатч

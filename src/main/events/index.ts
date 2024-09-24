@@ -58,7 +58,7 @@ export const handleEvents = (window: BrowserWindow): void => {
         await checkAndTerminateYandexMusic()
         setTimeout(async () => {
             await Patcher.patchRum().then(async () => {
-                store.set('settings.patched', true)
+                store.set('patcher.patched', true)
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     patch: true,
                 })
@@ -72,7 +72,7 @@ export const handleEvents = (window: BrowserWindow): void => {
             await UnPatcher.unpatch()
             setTimeout(async () => {
                 Patcher.patchRum().then(async () => {
-                    store.set('settings.patched', true)
+                    store.set('patcher.patched', true)
                     mainWindow.webContents.send('UPDATE_APP_DATA', {
                         repatch: true,
                     })
@@ -84,7 +84,7 @@ export const handleEvents = (window: BrowserWindow): void => {
         await checkAndTerminateYandexMusic()
         setTimeout(async () => {
             await UnPatcher.unpatch().then(async () => {
-                store.set('settings.patched', false)
+                store.set('patcher.patched', false)
                 mainWindow.webContents.send('UPDATE_APP_DATA', {
                     depatch: true,
                 })
@@ -199,7 +199,6 @@ export const handleEvents = (window: BrowserWindow): void => {
         })
     })
     ipcMain.on('update-rpcSettings', async (event, data) => {
-        console.log(data)
         switch (Object.keys(data)[0]) {
             case 'appId':
                 updateAppId(data.appId)

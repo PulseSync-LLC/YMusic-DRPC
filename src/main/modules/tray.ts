@@ -1,36 +1,33 @@
-import { app, ipcMain, Menu, MenuItem, shell, Tray } from 'electron'
+import { app, Menu, MenuItem, shell, Tray } from 'electron'
 import { getNativeImg } from '../utils'
-import { Track } from 'yandex-music-client'
-import { truncate } from '../../renderer/utils/track'
 import { mainWindow } from '../../index'
-import {getUpdater} from "./updater/updater";
-import {checkOrFindUpdate} from "../events";
-import path from "path";
+import { checkOrFindUpdate } from '../events'
+import path from 'path'
+import { store } from './storage'
+import { setRpcStatus } from './discordRpc'
 
 let tray: Tray
 let menu: Menu
-const ICON_EXT = '@2x.png'
 
-// const playPauseItem: any = {
-//     label: 'Слушать',
-//     icon: null,
-//     click: () => mainWindow.webContents.send('player-pause'),
-// }
 function createTray() {
     const icon = getNativeImg('appicon', '.png', 'icon').resize({
         width: 16,
         height: 16,
     })
+    const dsIcon = getNativeImg('discord', '.png', 'icon').resize({
+        width: 16,
+        height: 12,
+    })
 
     tray = new Tray(icon)
     menu = new Menu()
 
-    // menu.append(new MenuItem(playPauseItem))
     menu.append(
         new MenuItem({
             label: 'Перейти в дискорд PulseSync',
+            icon: dsIcon,
             click: async () => {
-                await shell.openExternal('https://discord.gg/qy42uGTzRy')
+                await shell.openExternal('https://discord.gg/pulsesync')
             },
         }),
     )
@@ -47,6 +44,16 @@ function createTray() {
             },
         }),
     )
+    const menuItem = new MenuItem({
+        type: 'checkbox',
+        label: "Discord RPC",
+        checked: store.get('discordRpc.status'),
+        id: 'rpc-status',
+        click: async () => {
+            setRpcStatus(!store.get('discordRpc.status'))
+        },
+    })
+    menu.append(menuItem)
     menu.append(
         new MenuItem({
             label: 'Проверить обновления',
@@ -58,7 +65,7 @@ function createTray() {
     menu.append(
         new MenuItem({
             type: 'separator',
-        })
+        }),
     )
     menu.append(
         new MenuItem({
@@ -67,22 +74,15 @@ function createTray() {
             click: app.quit,
         }),
     )
-    tray.setToolTip("PulseSync")
+    tray.setToolTip('PulseSync')
     tray.setContextMenu(menu)
     tray.on('click', event => {
         mainWindow.show()
     })
 }
-
-// ipcMain.on('player-setTrack', (event, track: Track) => {
-//     tray.setTitle(truncate(track.title, 30))
-// })
-
-// ipcMain.on('player-playing', (event, playing) => {
-//     playPauseItem.icon = playing
-//         ? getNativeImg('pause', ICON_EXT, 'touchbar')
-//         : getNativeImg('play', ICON_EXT, 'touchbar')
-//     playPauseItem.label = playing ? 'Пауза' : 'Слушать'
-// })
+export const updateTray = () => {
+    menu.getMenuItemById('rpc-status').checked = store.get('discordRpc.status')
+    tray.setContextMenu(menu)
+}
 
 export default createTray

@@ -75,8 +75,6 @@ export const handleDeeplinkOnApplicationStartup = (): void => {
     if (lastArgFromProcessArgs && checkIsDeeplink(lastArgFromProcessArgs)) {
         state.deeplink = lastArgFromProcessArgs
     }
-    console.log(process.execPath)
-    console.log(lastArgFromProcessArgs)
     if (isAppDev) {
         app.setAsDefaultProtocolClient('pulsesync', process.execPath)
     } else {

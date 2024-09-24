@@ -123,7 +123,7 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                         </div>
                     </div>
 
-                    {!app.settings.patched && (
+                    {!app.patcher.patched && (
                         <div className={styles.alert_patch}>
                             <div className={styles.patch_container}>
                                 <img
@@ -147,8 +147,8 @@ const Layout: React.FC<p> = ({ title, children, goBack }) => {
                                             window.electron.patcher.patch()
                                             setApp({
                                                 ...app,
-                                                settings: {
-                                                    ...app.settings,
+                                                patcher: {
+                                                    ...app.patcher,
                                                     patched: true,
                                                 },
                                             })

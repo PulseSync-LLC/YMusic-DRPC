@@ -19,10 +19,8 @@ interface p {
     socketConnected: boolean
     app: SettingsInterface
     setApp: (settingsData: any) => void
-    yaClient: YandexMusicClient
     setUpdate: (state: boolean) => void
     updateAvailable?: boolean
-    setYaClient: (client: YandexMusicClient) => void
     appInfo: AppInfoInterface[]
 }
 
@@ -35,10 +33,8 @@ const UserContext = createContext<p>({
     socketConnected: false,
     app: settingsInitials,
     setApp: () => void 0,
-    yaClient: null,
     setUpdate: () => void 0,
     updateAvailable: false,
-    setYaClient: () => void 0,
     appInfo: AppinfoInitials,
 })
 

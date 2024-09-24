@@ -2,7 +2,6 @@ import SettingsInterface from '../interfaces/settings.interface'
 
 const settingsInitials: SettingsInterface = {
     settings: {
-        patched: false,
         readPolicy: false,
         autoStartInTray: false,
         autoStartMusic: false,
@@ -11,8 +10,13 @@ const settingsInitials: SettingsInterface = {
     info: {
         version: '',
     },
+    patcher: {
+        version: '',
+        patched: false,
+        updated: false,
+        changelog: [],
+    },
     tokens: {
-        ya_token: '',
         token: '',
     },
     discordRpc: {

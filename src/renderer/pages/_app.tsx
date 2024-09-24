@@ -31,6 +31,7 @@ import { AppInfoInterface } from '../api/interfaces/appinfo.interface'
 
 import Preloader from '../components/preloader'
 import { replaceParams } from '../utils/formatRpc'
+import {fetchSettings} from "../api/settings";
 
 function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
@@ -39,7 +40,6 @@ function _app() {
     const [updateAvailable, setUpdate] = useState(false)
     const [user, setUser] = useState<UserInterface>(userInitials)
     const [app, setApp] = useState<SettingsInterface>(settingsInitials)
-    const [yaClient, setYaClient] = useState<YandexMusicClient | null>(null)
     const [loading, setLoading] = useState(true)
     const socket = io(config.SOCKET_URL, {
         autoConnect: false,
@@ -157,22 +157,6 @@ function _app() {
             return () => clearInterval(intervalId)
         }
     }, [])
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const ya_token = window.electron.store.get('tokens.ya_token')
-            const client = new YandexMusicClient({
-                BASE: `https://api.music.yandex.net`,
-                HEADERS: {
-                    'Accept-Language': 'ru',
-                    Authorization: ya_token ? `OAuth ${ya_token}` : undefined,
-                    'X-Yandex-Music-Device': ya_token
-                        ? window.electron.musicDevice()
-                        : undefined,
-                },
-            })
-            setYaClient(client)
-        }
-    }, [app.tokens.ya_token])
     socket.on('connect', () => {
         console.log('Socket connected')
         toast.success('Соединение установлено')
@@ -237,17 +221,14 @@ function _app() {
 
     useEffect(() => {
         if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
-            window.desktopEvents?.on('ya_token', (event, data) => {
+            window.desktopEvents?.on('discordRpcState', (event, data) => {
                 setApp(prevSettings => ({
                     ...prevSettings,
-                    tokens: {
-                        ...prevSettings.tokens,
-                        ya_token: data.ya_token,
-                    },
+                        discordRpc: {
+                            ...prevSettings.discordRpc,
+                            status: data,
+                        },
                 }))
-            })
-            window.desktopEvents?.on('discordRpcState', (event, data) => {
-                toast.error(data)
             })
             window.desktopEvents
                 ?.invoke('getVersion')
@@ -324,54 +305,11 @@ function _app() {
                     console.error('Failed to fetch app info:', error)
                 }
             }
-            const fetchSettings = async () => {
-                const keys = [
-                    'settings.autoStartInTray',
-                    'settings.autoStartApp',
-                    'settings.autoStartMusic',
-                    'settings.patched',
-                    'settings.readPolicy',
-                    'tokens.ya_token',
-                    'tokens.token',
-                    'discordRpc.enableRpcButtonListen',
-                    'discordRpc.enableGithubButton',
-                    'discordRpc.status',
-                    'discordRpc.details',
-                    'discordRpc.state',
-                    'discordRpc.button',
-                    'discordRpc.appId',
-                ]
-
-                const config = { ...settingsInitials } as any
-
-                keys.forEach(key => {
-                    const value = window.electron.store.get(key)
-                    if (value !== undefined) {
-                        const [mainKey, subKey] = key.split('.')
-                        if (subKey) {
-                            config[mainKey] = {
-                                ...config[mainKey],
-                                [subKey]: value,
-                            }
-                        }
-                    }
-                })
-
-                setApp(config)
-            }
-
-            fetchSettings()
+            const loadSettings = async () => {
+                await fetchSettings(setApp); // Вызываем функцию для получения настроек
+            };
+            loadSettings();
             fetchAppInfo()
-            const token = window.electron.store.get('tokens.ya_token')
-            if (token) {
-                setApp(prevSettings => ({
-                    ...prevSettings,
-                    tokens: {
-                        ...prevSettings.tokens,
-                        token,
-                    },
-                }))
-            }
         }
     }, [])
     if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
@@ -398,8 +336,6 @@ function _app() {
                     setApp,
                     updateAvailable,
                     setUpdate,
-                    setYaClient,
-                    yaClient,
                     appInfo,
                 }}
             >

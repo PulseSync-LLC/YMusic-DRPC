@@ -32,7 +32,6 @@ async function initializeStore() {
     }
 }
 
-// Инициализация хранилища при старте приложения
 initializeStore()
 
 export { store, initializeStore }
