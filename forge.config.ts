@@ -33,7 +33,7 @@ const forge_config: ForgeConfig = {
                 macUpdateManifestBaseUrl: `${config.UPDATE_URL}/beta_build/darwin/${arch}`,
             }),
         },
-        new MakerDMG({}),
+        // new MakerDMG({}),
         new MakerRpm({}),
         new MakerDeb({}),
     ],
