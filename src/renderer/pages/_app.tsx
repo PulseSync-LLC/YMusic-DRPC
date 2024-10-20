@@ -31,7 +31,7 @@ import { AppInfoInterface } from '../api/interfaces/appinfo.interface'
 
 import Preloader from '../components/preloader'
 import { replaceParams } from '../utils/formatRpc'
-import {fetchSettings} from "../api/settings";
+import { fetchSettings } from '../api/settings'
 
 function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
@@ -68,63 +68,69 @@ function _app() {
         {
             path: '/joint',
             element: <JointPage />,
-        }
+        },
     ])
-    const authorize = async () => {
-        const token = await getUserToken()
-        const sendErrorAuthNotify = () => {
-            toast.error('Ошибка авторизации')
-            window.desktopEvents?.send('show-notification', {
-                title: 'Ошибка авторизации 😡',
-                body: 'Произошла ошибка при авторизации в программе',
+    const authorize = () => {
+        window.desktopEvents
+            ?.invoke('checkSleepMode')
+            .then(async (res: boolean) => {
+                if (!res) {
+                    const token = await getUserToken()
+                    const sendErrorAuthNotify = () => {
+                        toast.error('Ошибка авторизации')
+                        window.desktopEvents?.send('show-notification', {
+                            title: 'Ошибка авторизации 😡',
+                            body: 'Произошла ошибка при авторизации в программе',
+                        })
+                    }
+                    if (token) {
+                        try {
+                            let res = await apolloClient.query({
+                                query: UserMeQuery,
+                                fetchPolicy: 'no-cache',
+                            })
+
+                            const { data } = res
+                            if (data.getMe && data.getMe.id) {
+                                setUser(data.getMe)
+                                await router.navigate('/trackinfo', {
+                                    replace: true,
+                                })
+                                window.desktopEvents?.send('authStatus', true)
+                                return true
+                            } else {
+                                setLoading(false)
+                                window.electron.store.delete('tokens.token')
+
+                                await router.navigate('/', {
+                                    replace: true,
+                                })
+                                setUser(userInitials)
+                                sendErrorAuthNotify()
+                                window.desktopEvents?.send('authStatus', false)
+                                return false
+                            }
+                        } catch (e) {
+                            setLoading(false)
+                            sendErrorAuthNotify()
+
+                            if (window.electron.store.has('tokens.token')) {
+                                window.electron.store.delete('tokens.token')
+                            }
+                            await router.navigate('/', {
+                                replace: true,
+                            })
+                            setUser(userInitials)
+                            window.desktopEvents?.send('authStatus', false)
+                            return false
+                        }
+                    } else {
+                        window.desktopEvents?.send('authStatus', false)
+                        setLoading(false)
+                        return false
+                    }
+                }
             })
-        }
-        if (token) {
-            try {
-                let res = await apolloClient.query({
-                    query: UserMeQuery,
-                    fetchPolicy: 'no-cache',
-                })
-
-                const { data } = res
-                if (data.getMe && data.getMe.id) {
-                    setUser(data.getMe)
-                    await router.navigate('/trackinfo', {
-                        replace: true,
-                    })
-                    window.desktopEvents?.send('authStatus', true)
-                    return true
-                } else {
-                    setLoading(false)
-                    window.electron.store.delete('tokens.token')
-
-                    await router.navigate('/', {
-                        replace: true,
-                    })
-                    setUser(userInitials)
-                    sendErrorAuthNotify()
-                    window.desktopEvents?.send('authStatus', false)
-                    return false
-                }
-            } catch (e) {
-                setLoading(false)
-                sendErrorAuthNotify()
-
-                if (window.electron.store.has('tokens.token')) {
-                    window.electron.store.delete('tokens.token')
-                }
-                await router.navigate('/', {
-                    replace: true,
-                })
-                setUser(userInitials)
-                window.desktopEvents?.send('authStatus', false)
-                return false
-            }
-        } else {
-            window.desktopEvents?.send('authStatus', false)
-            setLoading(false)
-            return false
-        }
     }
     useEffect(() => {
         const handleMouseButton = (event: MouseEvent) => {
@@ -224,10 +230,10 @@ function _app() {
             window.desktopEvents?.on('discordRpcState', (event, data) => {
                 setApp(prevSettings => ({
                     ...prevSettings,
-                        discordRpc: {
-                            ...prevSettings.discordRpc,
-                            status: data,
-                        },
+                    discordRpc: {
+                        ...prevSettings.discordRpc,
+                        status: data,
+                    },
                 }))
             })
             window.desktopEvents
@@ -306,9 +312,9 @@ function _app() {
                 }
             }
             const loadSettings = async () => {
-                await fetchSettings(setApp); // Вызываем функцию для получения настроек
-            };
-            loadSettings();
+                await fetchSettings(setApp) // Вызываем функцию для получения настроек
+            }
+            loadSettings()
             fetchAppInfo()
         }
     }, [])
@@ -373,13 +379,16 @@ const Player: React.FC<any> = ({ children }) => {
                                 linkTitle: data.linkTitle,
                             }))
                         })
-                        window.desktopEvents?.on('track_info', (event, data) => {
-                            setTrack(prevTrack => ({
-                                ...prevTrack,
-                                id: data.trackId,
-                                url: data.url,
-                            }))
-                        })
+                        window.desktopEvents?.on(
+                            'track_info',
+                            (event, data) => {
+                                setTrack(prevTrack => ({
+                                    ...prevTrack,
+                                    id: data.trackId,
+                                    url: data.url,
+                                }))
+                            },
+                        )
                     } else {
                         window.desktopEvents.removeListener(
                             'track-info',
@@ -398,7 +407,7 @@ const Player: React.FC<any> = ({ children }) => {
             if (track.playerBarTitle === '' && track.artist === '') {
                 const activity: any = {
                     details: 'AFK',
-                    largeImageText: 'YM',
+                    largeImageText: app.info.version,
                     largeImageKey:
                         'https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png',
                 }
@@ -419,7 +428,7 @@ const Player: React.FC<any> = ({ children }) => {
                     largeImageKey: track.requestImgTrack[1],
                     smallImageKey:
                         'https://cdn.discordapp.com/app-assets/984031241357647892/1180527644668862574.png',
-                    smallImageText: 'Yandex Music',
+                    smallImageText: app.info.version,
                     state:
                         app.discordRpc.state.length > 0
                             ? replaceParams(app.discordRpc.state, track)

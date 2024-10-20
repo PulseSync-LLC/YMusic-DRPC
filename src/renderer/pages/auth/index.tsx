@@ -13,7 +13,6 @@ import { MdAdminPanelSettings } from 'react-icons/md'
 import userContext from '../../api/context/user.context'
 import config from '../../api/config'
 
-
 const LinkRenderer = (props: any) => {
     return (
         <a href={props.href} target="_blank" rel="noopener noreferrer">

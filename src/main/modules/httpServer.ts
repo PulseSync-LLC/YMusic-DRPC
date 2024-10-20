@@ -6,6 +6,7 @@ import { mainWindow } from '../../index'
 import { store } from './storage'
 import {authorized} from "../events";
 import isAppDev from "electron-is-dev";
+import logger from "./logger";
 
 let jsonDataGET: any = {}
 let selectedTheme: string = 'Default'
@@ -83,7 +84,7 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
                     JSON.stringify({ message: 'Data received successfully' }),
                 )
             } catch (error) {
-                console.error('Error parsing JSON:', error)
+                logger.http.error('Error parsing JSON:', error)
                 res.writeHead(400, { 'Content-Type': 'application/json' })
                 res.end(JSON.stringify({ error: 'Invalid JSON' }))
             }
@@ -104,7 +105,7 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
                     JSON.stringify({ message: 'Data received successfully' }),
                 )
             } catch (error) {
-                console.error('Error parsing JSON:', error)
+                logger.http.error('Error parsing JSON:', error)
                 res.writeHead(400, { 'Content-Type': 'application/json' })
                 res.end(JSON.stringify({ error: 'Invalid JSON' }))
             }
@@ -167,7 +168,7 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
                 return
             }
         } catch (error) {
-            console.error('Error reading theme files:', error)
+            logger.http.error('Error reading theme files:', error)
             res.writeHead(500, { 'Content-Type': 'application/json' })
             res.end(JSON.stringify({ error: 'Error reading theme files' }))
         }
@@ -201,7 +202,7 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
                 res.end(JSON.stringify({ error: 'Assets folder not found' }))
             }
         } catch (error) {
-            console.error('Error reading theme files:', error)
+            logger.http.error('Error reading theme files:', error)
             res.writeHead(500, { 'Content-Type': 'application/json' })
             res.end(JSON.stringify({ error: 'Error reading theme files' }))
         }
@@ -241,7 +242,7 @@ server.on('request', (req: http.IncomingMessage, res: http.ServerResponse) => {
                 res.end(JSON.stringify({ error: 'File not found' }))
             }
         } catch (error) {
-            console.error('Error serving static file:', error)
+            logger.http.error('Error serving static file:', error)
             res.writeHead(500, { 'Content-Type': 'application/json' })
             res.end(JSON.stringify({ error: 'Error serving static file' }))
         }

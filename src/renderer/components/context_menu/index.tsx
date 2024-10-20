@@ -17,8 +17,7 @@ interface ContextMenuProps {
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
-    const { app, setApp, setUser, setUpdate } =
-        useContext(userContext)
+    const { app, setApp, setUser, setUpdate } = useContext(userContext)
     const { currentTrack } = useContext(playerContext)
     const handleOpenModal = () => {
         if (modalRef.current) {
@@ -95,7 +94,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
     }
     const downloadTrack = (event: any) => {
         event.stopPropagation()
-        toast.error("Временно не работает")
+        toast.error('Временно не работает')
         // let toastId: string
         // console.log(currentTrack)
         // getTrackUrl(yaClient, currentTrack.id, true)
@@ -171,6 +170,9 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
                     case 'repatch':
                         toast.success('Успешный репатч', { id: toastId })
                         break
+                    case 'patch':
+                        toast.success('Успешный патч', { id: toastId })
+                        break
                     case 'depatch':
                         toast.success('Успешный депатч', { id: toastId })
                         break
@@ -196,7 +198,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </button>
             <div className={styles.innerFunction}>
                 Патч
-                <ArrowContext/>
+                <ArrowContext />
                 <div className={styles.showButtons}>
                     <button
                         key="patch_button"
@@ -237,7 +239,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </div>
             <div className={styles.innerFunction}>
                 Автотрей
-                <ArrowContext/>
+                <ArrowContext />
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
@@ -257,7 +259,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </div>
             <div className={styles.innerFunction}>
                 Автозапуск приложения
-                <ArrowContext/>
+                <ArrowContext />
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
@@ -277,7 +279,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </div>
             <div className={styles.innerFunction}>
                 Размер интерфейса
-                <ArrowContext/>
+                <ArrowContext />
                 <div className={styles.showButtons}>
                     <button className={styles.contextButton} disabled>
                         Скоро
@@ -286,7 +288,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </div>
             <div className={styles.innerFunction}>
                 Музыка
-                <ArrowContext/>
+                <ArrowContext />
                 <div className={styles.showButtons}>
                     <button
                         className={styles.contextButton}
@@ -310,7 +312,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({ modalRef }) => {
             </div>
             <div className={styles.innerFunction}>
                 Особое
-                <ArrowContext/>
+                <ArrowContext />
                 <div className={styles.showButtons}>
                     <div
                         className={styles.contextButton}

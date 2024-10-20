@@ -481,7 +481,9 @@ export default function TrackInfoPage() {
                                                     <div
                                                         className={theme.button}
                                                         onClick={() => {
-                                                           setRickRoll(!rickRollClick)
+                                                            setRickRoll(
+                                                                !rickRollClick,
+                                                            )
                                                         }}
                                                     >
                                                         {app.discordRpc.button
@@ -491,8 +493,15 @@ export default function TrackInfoPage() {
                                                             : '✌️ Open in Yandex Music'}
                                                     </div>
                                                     {rickRollClick && (
-                                                        <video width="600" autoPlay loop>
-                                                            <source src="https://s3.pulsesync.dev/files/heheheha.mp4" type="video/mp4" />
+                                                        <video
+                                                            width="600"
+                                                            autoPlay
+                                                            loop
+                                                        >
+                                                            <source
+                                                                src="https://s3.pulsesync.dev/files/heheheha.mp4"
+                                                                type="video/mp4"
+                                                            />
                                                         </video>
                                                     )}
                                                     <div
