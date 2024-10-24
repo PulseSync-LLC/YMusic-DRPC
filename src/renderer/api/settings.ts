@@ -1,6 +1,6 @@
 import SettingsInterface from './interfaces/settings.interface'
 import React from 'react'
-import settingsInitials from './initials/settings.initials' // Импортируйте интерфейсы из вашего файла с интерфейсами
+import settingsInitials from './initials/settings.initials'
 
 export const fetchSettings = async (
     setApp: React.Dispatch<React.SetStateAction<SettingsInterface>>,

@@ -1,5 +1,4 @@
 import Header from '../../components/layout/header'
-import Container from '../../components/container'
 import { useContext, useEffect, useMemo, useState } from 'react'
 import MarkDown from 'react-markdown'
 import remarkGfm from 'remark-gfm'

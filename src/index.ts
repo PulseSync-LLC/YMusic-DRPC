@@ -23,7 +23,7 @@ import config from './config.json'
 import {
     handleDeeplink,
     handleDeeplinkOnApplicationStartup,
-} from './main/modules/handleDeepLink'
+} from './main/modules/handlers/handleDeepLink'
 import { checkForSingleInstance } from './main/modules/singleInstance'
 import * as Sentry from '@sentry/electron/main'
 import { getTrackInfo, setTheme } from './main/modules/httpServer'

@@ -3,7 +3,6 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { app } from 'electron'
 import { mainWindow } from '../../index'
-import { store } from './storage'
 import {authorized} from "../events";
 import isAppDev from "electron-is-dev";
 import logger from "./logger";

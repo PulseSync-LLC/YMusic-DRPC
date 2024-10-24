@@ -25,13 +25,16 @@ import apolloClient from '../api/apolloClient'
 import SettingsInterface from '../api/interfaces/settings.interface'
 import settingsInitials from '../api/initials/settings.initials'
 import getUserToken from '../api/getUserToken'
-import { YandexMusicClient } from 'yandex-music-client'
 import config from '../api/config'
 import { AppInfoInterface } from '../api/interfaces/appinfo.interface'
 
 import Preloader from '../components/preloader'
 import { replaceParams } from '../utils/formatRpc'
 import { fetchSettings } from '../api/settings'
+import {
+    checkInternetAccess,
+    notifyUserRetries,
+} from '../utils/utils'
 
 function _app() {
     const [socketIo, setSocket] = useState<Socket | null>(null)
@@ -70,68 +73,124 @@ function _app() {
             element: <JointPage />,
         },
     ])
-    const authorize = () => {
-        window.desktopEvents
-            ?.invoke('checkSleepMode')
-            .then(async (res: boolean) => {
-                if (!res) {
-                    const token = await getUserToken()
-                    const sendErrorAuthNotify = () => {
-                        toast.error('Ошибка авторизации')
-                        window.desktopEvents?.send('show-notification', {
-                            title: 'Ошибка авторизации 😡',
-                            body: 'Произошла ошибка при авторизации в программе',
-                        })
-                    }
-                    if (token) {
-                        try {
-                            let res = await apolloClient.query({
-                                query: UserMeQuery,
-                                fetchPolicy: 'no-cache',
-                            })
 
-                            const { data } = res
-                            if (data.getMe && data.getMe.id) {
-                                setUser(data.getMe)
-                                await router.navigate('/trackinfo', {
-                                    replace: true,
-                                })
-                                window.desktopEvents?.send('authStatus', true)
-                                return true
-                            } else {
-                                setLoading(false)
-                                window.electron.store.delete('tokens.token')
+    const authorize = async () => {
+        let retryCount = config.MAX_RETRY_COUNT
 
-                                await router.navigate('/', {
-                                    replace: true,
-                                })
-                                setUser(userInitials)
-                                sendErrorAuthNotify()
-                                window.desktopEvents?.send('authStatus', false)
-                                return false
-                            }
-                        } catch (e) {
-                            setLoading(false)
-                            sendErrorAuthNotify()
+        const attemptAuthorization = async (): Promise<boolean> => {
+            const token = await getUserToken()
+            console.log(token)
 
-                            if (window.electron.store.has('tokens.token')) {
-                                window.electron.store.delete('tokens.token')
-                            }
-                            await router.navigate('/', {
-                                replace: true,
-                            })
-                            setUser(userInitials)
-                            window.desktopEvents?.send('authStatus', false)
-                            return false
-                        }
+            if (token) {
+                const isOnline = await checkInternetAccess()
+                if (!isOnline) {
+                    if (retryCount > 0) {
+                        notifyUserRetries(retryCount)
+                        retryCount--
+                        return false
                     } else {
+                        toast.error(
+                            'Превышено количество попыток подключения.',
+                        )
                         window.desktopEvents?.send('authStatus', false)
                         setLoading(false)
                         return false
                     }
                 }
+
+                const sendErrorAuthNotify = () => {
+                    toast.error('Ошибка авторизации')
+                    window.desktopEvents?.send('show-notification', {
+                        title: 'Ошибка авторизации 😡',
+                        body: 'Произошла ошибка при авторизации в программе',
+                    })
+                }
+
+                try {
+                    let res = await apolloClient.query({
+                        query: UserMeQuery,
+                        fetchPolicy: 'no-cache',
+                    })
+
+                    const { data } = res
+                    if (data.getMe && data.getMe.id) {
+                        setUser(data.getMe)
+
+                        await router.navigate('/trackinfo', {
+                            replace: true,
+                        })
+
+                        window.desktopEvents?.send('authStatus', true)
+                        return true
+                    } else {
+                        setLoading(false)
+
+                        window.electron.store.delete('tokens.token')
+                        await router.navigate('/', {
+                            replace: true,
+                        })
+
+                        setUser(userInitials)
+                        sendErrorAuthNotify()
+
+                        window.desktopEvents?.send('authStatus', false)
+                        return false
+                    }
+                } catch (e) {
+                    setLoading(false)
+                    sendErrorAuthNotify()
+
+                    if (window.electron.store.has('tokens.token')) {
+                        window.electron.store.delete('tokens.token')
+                    }
+                    await router.navigate('/', {
+                        replace: true,
+                    })
+                    setUser(userInitials)
+
+                    window.desktopEvents?.send('authStatus', false)
+                    return false
+                }
+            } else {
+                window.desktopEvents?.send('authStatus', false)
+
+                setLoading(false)
+                return false
+            }
+        }
+
+        const retryAuthorization = async () => {
+            let isAuthorized = await attemptAuthorization()
+
+            if (!isAuthorized) {
+                const retryInterval = setInterval(async () => {
+                    const token = await getUserToken()
+
+                    if (!token) {
+                        window.desktopEvents?.send('authStatus', false)
+                        setLoading(false)
+                        clearInterval(retryInterval)
+                        return
+                    }
+
+                    isAuthorized = await attemptAuthorization()
+
+                    if (isAuthorized || retryCount === 0) {
+                        clearInterval(retryInterval)
+                    }
+                }, config.RETRY_INTERVAL_MS)
+            }
+        }
+
+        window.desktopEvents
+            ?.invoke('checkSleepMode')
+            .then(async (res: boolean) => {
+                if (!res) {
+                    await retryAuthorization()
+                }
             })
     }
+
     useEffect(() => {
         const handleMouseButton = (event: MouseEvent) => {
             if (event.button === 3) {
@@ -202,6 +261,25 @@ function _app() {
                 socket.connect()
             }
             window.desktopEvents?.send('updater-start')
+            const fetchAppInfo = async () => {
+                try {
+                    const res = await fetch(
+                        `${config.SERVER_URL}/api/v1/app/info`,
+                    )
+                    const data = await res.json()
+                    if (data.ok && Array.isArray(data.appInfo)) {
+                        const sortedAppInfos = data.appInfo.sort(
+                            (a: any, b: any) => b.id - a.id,
+                        )
+                        setAppInfo(sortedAppInfos)
+                    } else {
+                        console.error('Invalid response format:', data)
+                    }
+                } catch (error) {
+                    console.error('Failed to fetch app info:', error)
+                }
+            }
+            fetchAppInfo()
             if (
                 !user.badges.some(badge => badge.type === 'supporter') &&
                 app.discordRpc.enableGithubButton
@@ -293,38 +371,16 @@ function _app() {
                     })
                 }
             })
-            const fetchAppInfo = async () => {
-                try {
-                    const res = await fetch(
-                        `${config.SERVER_URL}/api/v1/app/info`,
-                    )
-                    const data = await res.json()
-                    if (data.ok && Array.isArray(data.appInfo)) {
-                        const sortedAppInfos = data.appInfo.sort(
-                            (a: any, b: any) => b.id - a.id,
-                        )
-                        setAppInfo(sortedAppInfos)
-                    } else {
-                        console.error('Invalid response format:', data)
-                    }
-                } catch (error) {
-                    console.error('Failed to fetch app info:', error)
-                }
-            }
             const loadSettings = async () => {
-                await fetchSettings(setApp) // Вызываем функцию для получения настроек
+                await fetchSettings(setApp)
             }
             loadSettings()
-            fetchAppInfo()
         }
     }, [])
     if (typeof window !== 'undefined' && typeof navigator !== 'undefined') {
         ;(window as any).setToken = async (args: any) => {
             window.electron.store.set('tokens.token', args)
             await authorize()
-        }
-        ;(window as any).testEvent = async (args: any) => {
-            eval(args)
         }
     }
     return (

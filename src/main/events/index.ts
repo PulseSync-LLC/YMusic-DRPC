@@ -18,7 +18,6 @@ import { v4 } from 'uuid'
 import { corsAnywherePort, inSleepMode, mainWindow, updated } from '../../index'
 import { getUpdater } from '../modules/updater/updater'
 import checkAndTerminateYandexMusic, {
-    checkAndStartYandexMusic,
     getPathToYandexMusic,
 } from '../../../utils/appUtils'
 import Patcher from '../modules/patcher/patch'
@@ -41,7 +40,7 @@ export const handleEvents = (window: BrowserWindow): void => {
         mainWindow.minimize()
     })
 
-    ipcMain.on('electron-exit', () => {
+    ipcMain.on('electron-window-exit', () => {
         logger.main.info('Exit app')
         app.quit()
     })

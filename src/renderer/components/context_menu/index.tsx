@@ -1,10 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import * as styles from './context_menu.module.scss'
 import userContext from '../../api/context/user.context'
 
 import ArrowContext from './../../../../static/assets/icons/arrowContext.svg'
 import playerContext from '../../api/context/player.context'
-import getTrackUrl from '../../api/createTrackUrl'
 import hotToast from 'react-hot-toast'
 import toast from '../../api/toast'
 import trackInitials from '../../api/initials/track.initials'

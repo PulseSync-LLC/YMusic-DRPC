@@ -1,5 +1,5 @@
-import { app, BrowserWindow, dialog } from 'electron'
-import { checkIsDeeplink, navigateToDeeplink } from './handleDeepLink'
+import { app, BrowserWindow } from 'electron'
+import { checkIsDeeplink, navigateToDeeplink } from './handlers/handleDeepLink'
 import logger from './logger'
 import httpServer from './httpServer'
 import config from '../../config.json'

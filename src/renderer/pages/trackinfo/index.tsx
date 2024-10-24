@@ -145,15 +145,13 @@ export default function TrackInfoPage() {
                             imageName={'discord'}
                             onClick={() => {
                                 window.discordRpc.discordRpc(
-                                    app.discordRpc.status ? false : true,
+                                    !app.discordRpc.status,
                                 )
                                 setApp({
                                     ...app,
                                     discordRpc: {
                                         ...app.discordRpc,
-                                        status: app.discordRpc.status
-                                            ? false
-                                            : true,
+                                        status: !app.discordRpc.status,
                                     },
                                 })
                             }}
@@ -385,7 +383,7 @@ export default function TrackInfoPage() {
                                                                         .requestImgTrack[1]
                                                                         ? currentTrack
                                                                               .requestImgTrack[1]
-                                                                        : './static/assets/logo/logoappsummer.png'
+                                                                        : './static/assets/logo/logoapp.png'
                                                                 }
                                                                 alt=""
                                                             />
